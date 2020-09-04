@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(vi& arr1, vi& arr2, int m, int n) {
     if (m == 0 or n == 0) return 0;

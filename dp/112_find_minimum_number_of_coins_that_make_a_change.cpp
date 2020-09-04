@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 bool rec(int n, int x, int y, bool isA) {
     if (n == 1 or n == x or n == y) return isA;

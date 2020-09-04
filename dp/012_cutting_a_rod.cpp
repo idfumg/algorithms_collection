@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(vi& arr, vi& elems, vi& maxelems, int& maxsum, int length, int sum, int n) {
     if (length == 0) {

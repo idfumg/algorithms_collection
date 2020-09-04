@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 void brute(const string& s, set<string>& seqs, string& current, int from) {
     if (from >= s.size()) {

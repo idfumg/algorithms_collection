@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 void rec(vi& arr, vi& elems, int sum, int n, vvb& dp) {
     if (sum == 0) {

@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int naive(vi& arr) {
     int res = 0, n = arr.size();

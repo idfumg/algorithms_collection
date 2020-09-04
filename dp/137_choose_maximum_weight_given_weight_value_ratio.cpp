@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(vi& weights, vi& values, int k, int n, int diff, int total) {
     if (n == 0) return diff == 0 ? total : -INF;

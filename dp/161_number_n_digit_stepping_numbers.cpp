@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(int n, int prev) {
     if (n == 0) return 1;

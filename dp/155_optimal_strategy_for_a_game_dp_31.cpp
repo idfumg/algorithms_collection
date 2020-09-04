@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 pi rec(vi& arr, int i, int j, bool isFirst, int sum1, int sum2) {
     if (i > j) {

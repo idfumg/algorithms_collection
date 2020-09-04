@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(vi& high, vi& low, int n) {
     if (n <= 0) return 0;

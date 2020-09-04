@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int tab(const vi& arr, const int K = 1) {
     int n = arr.size(), maxi = 0;

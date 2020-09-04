@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(vi& wines, int year, int left, int right) {
     if (left > right) return 0;

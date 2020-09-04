@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int naive(vi& arr) { // O(n^2)
     int n = arr.size();

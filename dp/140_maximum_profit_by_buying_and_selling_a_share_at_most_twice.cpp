@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 // Explanation:
 // https://github.com/Dedalus-Stephen/Traders-Max-Profit

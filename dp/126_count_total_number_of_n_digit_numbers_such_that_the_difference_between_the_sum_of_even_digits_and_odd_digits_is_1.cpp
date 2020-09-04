@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 using CurrentEven = int;
 using CurrentOdd = int;

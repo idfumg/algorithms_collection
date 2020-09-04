@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int dfs(vvi& graph, int from, int to, int k) {
     if (k == 0 and from == to) return 1;

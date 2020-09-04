@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int edit_distance(string& s1, string& s2) {
     int m = s1.size(), n = s2.size();

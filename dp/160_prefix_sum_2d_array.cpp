@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 bool isValid(vvi& arr, int i, int j) {
     return not (i < 0 or j < 0 or i >= arr.size() or j >= arr[0].size());

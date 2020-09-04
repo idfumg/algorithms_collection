@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 bool IsPalindrome(const string& s, int i, int j) {
     while (i <= j) {

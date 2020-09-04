@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 set<string> rec(const string& s1, const string& s2, vvi& dp, int m, int n) {
     set<string> res;

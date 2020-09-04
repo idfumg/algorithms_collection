@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(const int n, const int m, const int k) {
     if (n == 0) return 1;

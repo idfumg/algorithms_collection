@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 bool rec(vector<string>& elems, const unordered_set<string>& words, const string& word, const int at, const int count) {
     if (at == -1 && count == 1) {

@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(const vvi& arr, const int m, const int n, const int i, const int j) {
     if (i == m and j == n) return 1;
