@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 void find_subsequences(const string& s, set<string>& seqs, string& current,const int from) {
     if (from >= s.size()) {

@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 void naive(vi& arr, vi& elems, set<vi>& sets, int from) {
     int n = arr.size();

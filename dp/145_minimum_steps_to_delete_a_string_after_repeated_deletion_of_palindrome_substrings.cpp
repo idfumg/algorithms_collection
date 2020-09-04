@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int tab1(const string& s) {
     int n = s.size();

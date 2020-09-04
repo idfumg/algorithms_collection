@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int lcs(const string& a, const string& b) {
     int m = a.size(), n = b.size();

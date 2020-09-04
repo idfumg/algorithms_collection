@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int countUtil(int n, int d) {
     if (n == 0) {

@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 // dp[i][j] - how many elements we need to remove so arr[i]*2 > arr[j] in this diapason?
 

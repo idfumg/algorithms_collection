@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int kadanes(vi arr) {
     for (int i = 1; i < arr.size(); ++i) {

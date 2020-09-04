@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 vi get_lcs(const vi& arr1, const vi& arr2) {
     int m = arr1.size(), n = arr2.size();

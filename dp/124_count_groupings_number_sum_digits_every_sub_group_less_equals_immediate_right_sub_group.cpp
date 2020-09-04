@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(vi& arr, int from, int prev, vvi& dp) {
     if (from >= arr.size()) return 1;

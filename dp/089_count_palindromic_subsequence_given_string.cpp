@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(const string& s, int i, int j) {
     if (i > j) return 0;

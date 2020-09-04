@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 bool rec(const string& S, const string& P, int m, int n) {
     if (m == 0 and n == 0) return true;

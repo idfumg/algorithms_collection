@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 void rec(vi& arr, int k, int& res, int from, int partitions, int cost) {
     if (partitions == k and from == arr.size()) {

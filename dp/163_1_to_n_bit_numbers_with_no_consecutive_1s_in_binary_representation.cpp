@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int BinaryStringToNumber(const string& s) {
     int res = 0, n = s.size();

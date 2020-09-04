@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(vi& arr, int n, bool skipped) {
     if (n == 0) return 0;

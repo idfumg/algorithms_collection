@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(const vi& arr, const int from, const int n) {
     if (from == n - 1) return 0;

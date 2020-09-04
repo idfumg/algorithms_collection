@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 void naive(const vi& arr, const int k,const int from,vi& elems, set<vi>&reselems) {
     if (from >= arr.size()) {

@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 void get_subsequences_helper(vi& arr, set<vi>& res, vi& elems, int from) {
     if (from >= arr.size()) {

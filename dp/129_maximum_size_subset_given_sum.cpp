@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(vi& arr, int sum, int n, int count, int maxcount, int currentsum) {
     if (sum == currentsum) {

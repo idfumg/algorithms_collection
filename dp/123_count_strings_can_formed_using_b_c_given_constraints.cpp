@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(int n, int b, int c) {
     if (b < 0 or c < 0) return 0;

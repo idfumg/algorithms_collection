@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int tab(vi& arr, int k) {
     int n = arr.size();

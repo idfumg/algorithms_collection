@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int rec(vi& arr, int number, int maxvalue, int n, int prev) {
     if (prev < 0 or prev > maxvalue) return 0;

@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 bool isIncreasing(const vi& arr) {
     if (arr.empty()) return false;
