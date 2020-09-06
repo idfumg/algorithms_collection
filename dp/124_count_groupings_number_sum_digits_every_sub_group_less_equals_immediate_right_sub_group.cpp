@@ -1,29 +1,57 @@
 #include "../template.hpp"
 
-int rec(vi& arr, int from, int prev, vvi& dp) {
-    if (from >= arr.size()) return 1;
-    if (dp[from][prev] != -1) return dp[from][prev];
+int rec(string& s, int from, int prevsum) {
+    int n = s.size();
+    if (from >= n + 1) {
+        return 1;
+    }
+    int count = 0, sum = 0;
+    for (int i = from; i <= n; ++i) {
+        sum += s[i - 1] - '0';
+        if (sum >= prevsum) {
+            count += rec(s, i + 1, sum);
+        }
+    }
+    return count;
+}
 
-    int sum = 0, count = 0;
+int rec(string& s) {
+    return rec(s, 1, 0);
+}
 
-    for (int i = from; i < arr.size(); ++i) {
-        sum += arr[i];
-        if (sum >= prev) {
-            count += rec(arr, i + 1, sum, dp);
+int tab(string& s) {
+    int n = s.size(), total = 0;
+
+    for (int i = 0; i < n; ++i) {
+        total += s[i] - '0';
+    }
+
+    vvi dp(n + 1, vi(total + 1));
+
+    for (int j = 0; j <= total; ++j) {
+        dp[0][j] = 1;
+    }
+
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 0; j <= total; ++j) {
+            int count = 0, sum = 0;
+            for (int k = i; k >= 1; --k) {
+                sum += s[k - 1] - '0';
+                if (sum > j) break;
+                count += dp[k - 1][sum];
+            }
+            dp[i][j] = count;
         }
     }
 
-    return dp[from][prev] = count;
-}
-
-int rec(vi& arr) {
-    vvi dp(arr.size(), vi(accumulate(arr.begin(), arr.end(), 0), -1));
-    return rec(arr, 0, 0, dp);
+    return dp[n][total];
 }
 
 int main() { TimeMeasure _; __x();
-    vi arr1 = {1, 1, 1, 9};
-    vi arr2 = {1, 2, 3, 4};
-    cout << rec(arr1) << endl;
-    cout << rec(arr2) << endl;
+    string s1 = "1119";
+    string s2 = "1234";
+    cout << rec(s1) << endl; // 7
+    cout << rec(s2) << endl; // 6
+    cout << tab(s1) << endl; // 7
+    cout << tab(s2) << endl; // 6
 }
