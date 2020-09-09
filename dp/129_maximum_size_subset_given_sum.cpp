@@ -41,6 +41,31 @@ int tab(vi& arr, int sum) {
     return count[sum][n];
 }
 
+int tab2(vi& arr, int sum) {
+    int n = size(arr);
+    vvi dp(sum + 1, vi(n + 1));
+    vvi count(sum + 1, vi(n + 1));
+
+    for (int j = 0; j <= n; ++j) {
+        dp[0][j] = 1;
+    }
+
+    for (int i = 1; i <= sum; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            dp[i][j] = dp[i][j - 1];
+            count[i][j] = count[i][j - 1];
+            if (i >= arr[j - 1]) {
+                if (dp[i - arr[j - 1]][j - 1]) {
+                    count[i][j] = max(count[i][j], count[i - arr[j - 1]][j - 1]+1);
+                    dp[i][j] = dp[i][j] or dp[i - arr[j - 1]][j - 1];
+                }
+            }
+        }
+    }
+
+    return count[sum][n];
+}
+
 int main() { TimeMeasure _; __x();
     vi arr1 = {2, 3, 5, 7, 10, 15}; int sum1 = 10;
     vi arr2 = {1, 2, 3, 4, 5}; int sum2 = 4;
@@ -52,4 +77,8 @@ int main() { TimeMeasure _; __x();
     cout << tab(arr1, sum1) << endl;
     cout << tab(arr2, sum2) << endl;
     cout << tab(arr3, sum3) << endl;
+    cout << endl;
+    cout << tab2(arr1, sum1) << endl;
+    cout << tab2(arr2, sum2) << endl;
+    cout << tab2(arr3, sum3) << endl;
 }

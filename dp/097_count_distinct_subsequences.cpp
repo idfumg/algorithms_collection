@@ -22,15 +22,15 @@ int brute(const string& s) {
 }
 
 int tab(const string& s) {
-    const int n = s.size();
-    vi dp(n + 1), last_occurence(256, -1);
+    int n = size(s);
+    vi dp(n + 1, 1), prev(256, -1);
     dp[0] = 1;
     for (int i = 1; i <= n; ++i) {
         dp[i] = 2 * dp[i - 1];
-        if (last_occurence[s[i - 1]] != -1) {
-            dp[i] = dp[i] - dp[last_occurence[s[i - 1]]];
+        if (prev[s[i - 1]] != -1) {
+            dp[i] -= dp[prev[s[i - 1]] - 1];
         }
-        last_occurence[s[i - 1]] = i - 1;
+        prev[s[i - 1]] = i;
     }
     return dp[n];
 }

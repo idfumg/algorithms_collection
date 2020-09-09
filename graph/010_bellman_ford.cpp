@@ -1,34 +1,33 @@
 #include "../template.hpp"
-#include "graph.hpp"
-#include "tree_node.hpp"
+#include "../collection/graph.hpp"
+#include "../collection/tree_node.hpp"
 
-void BellmanFord(const Graph& graph, int from) {
-    vi dist(graph.size(), INF);
+void BellmanFord(Graph& graph, int from) {
+    int n = graph.size();
+    vi dist(n, INF);
     dist[from] = 0;
 
-    for (size_t i = 0; i < graph.size() - 1; ++i) {
-        for (const auto& edges : graph) {
+    for (int i = 0; i < n; ++i) {
+        for (const auto& edges : graph.edges()) {
             for (const auto& edge : edges) {
-                if (dist[edge.from] + edge.cost < dist[edge.to]) {
-                    dist[edge.to] = dist[edge.from] + edge.cost;
-                }
+                int cost = dist[edge.from] + edge.cost;
+                if (cost < dist[edge.to]) dist[edge.to] = cost;
             }
         }
     }
 
-    cout << dist;
+    cout << dist << endl;
 
-    for (size_t i = 0; i < graph.size() - 1; ++i) {
-        for (const auto& edges : graph) {
+    for (int i = 0; i < n; ++i) {
+        for (const auto& edges : graph.edges()) {
             for (const auto& edge : edges) {
-                if (dist[edge.from] + edge.cost < dist[edge.to]) {
-                    dist[edge.to] = -INF;
-                }
+                int cost = dist[edge.from] + edge.cost;
+                if (cost < dist[edge.to]) dist[edge.to] = -INF;
             }
         }
     }
 
-    cout << dist;
+    cout << dist << endl;
 }
 
 int main() { TimeMeasure _;
@@ -45,7 +44,6 @@ int main() { TimeMeasure _;
     graph.addDirectedEdge(5, 7, 3);
     BellmanFord(graph, 0);
 }
-
 
 // Output:
 // The cost to get from node 0 to 0 is 0.00

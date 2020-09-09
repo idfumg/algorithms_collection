@@ -1,10 +1,11 @@
 #include "../template.hpp"
-#include "graph.hpp"
+#include "../collection/graph.hpp"
+#include "../collection/tree_node.hpp"
 
-int dfs(const Graph& graph, vector<bool>& visited, int startNode) {
-    visited[startNode] = true;
+int dfs(Graph& graph, vb& visited, int at) {
+    visited[at] = true;
     int count = 1;
-    for (const auto& edge : graph.neighbors(startNode)) {
+    for (const auto& edge : graph.edges(at)) {
         if (not visited[edge.to]) {
             count += dfs(graph, visited, edge.to);
         }
@@ -12,9 +13,9 @@ int dfs(const Graph& graph, vector<bool>& visited, int startNode) {
     return count;
 }
 
-int dfs(const Graph& graph, int startNode) {
-    vector<bool> visited(graph.size());
-    return dfs(graph, visited, startNode);
+int dfs(Graph& graph, int at) {
+    vb visited(graph.size());
+    return dfs(graph, visited, at);
 }
 
 int main() { TimeMeasure _;
