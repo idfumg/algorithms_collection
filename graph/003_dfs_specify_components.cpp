@@ -1,25 +1,26 @@
 #include "../template.hpp"
-#include "graph.hpp"
+#include "../collection/graph.hpp"
+#include "../collection/tree_node.hpp"
 
-void dfs(const Graph& graph, vb& visited, vi& components, int i, int componentCount) {
-    visited[i] = true;
-    components[i] = componentCount;
-    for (const auto& edge : graph.edges(i)) {
+void dfs(Graph& graph, vb& visited, vi& components, int at, int count) {
+    visited[at] = true;
+    components[count]++;
+    for (const auto& edge : graph.edges(at)) {
         if (not visited[edge.to]) {
-            dfs(graph, visited, components, edge.to, componentCount);
+            dfs(graph, visited, components, edge.to, count);
         }
     }
 }
 
-int FindComponents(const Graph& graph, vi& components) {
-    int componentCount = 0;
+int FindComponents(Graph& graph, vi& components) {
+    int count = 0;
     vb visited(graph.size());
-    for (int i = 0; i < graph.size(); ++i) {
-        if (not visited[i]) {
-            dfs(graph, visited, components, i, componentCount++);
+    for (int at = 0; at != graph.size(); ++at) {
+        if (not visited[at]) {
+            dfs(graph, visited, components, at, count++);
         }
     }
-    return componentCount;
+    return count;
 }
 
 int main() { TimeMeasure _;

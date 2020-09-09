@@ -1,48 +1,44 @@
 #include "../template.hpp"
-#include "graph.hpp"
-#include "tree_node.hpp"
+#include "../collection/graph.hpp"
+#include "../collection/tree_node.hpp"
 
-void dfs(Graph& graph, vb& visited, int at, vi& low, vi& disc, int& id, int root, int parent, int& rootNodeOutcomingEdges, vb& apPoint) {
-    if (root == parent) {
-        rootNodeOutcomingEdges++;
+void dfs(Graph& graph, int at, vb& visited, vi& desc, vi& lows, int& id, vb& ap, int root, int parent, int& rootOutcomingEdges) {
+    if (parent == root) {
+        rootOutcomingEdges++;
     }
     visited[at] = true;
-    low[at] = disc[at] = id++;
-
+    desc[at] = lows[at] = id++;
     for (const auto& edge : graph.edges(at)) {
         if (edge.to == parent) {
             continue;
         }
         else if (not visited[edge.to]) {
-            dfs(graph, visited, edge.to, low, disc, id, root, at, rootNodeOutcomingEdges, apPoint);
-            low[at] = min(low[at], low[edge.to]);
-
-            if (disc[at] <= low[edge.to] and at != root) {
-                apPoint[at] = true;
+            dfs(graph, edge.to, visited, desc, lows, id, ap, root, at, rootOutcomingEdges);
+            lows[at] = min(lows[at], lows[edge.to]);
+            if (desc[at] <= lows[edge.to] and at != root) {
+                ap[at] = true;
             }
         }
         else {
-            low[at] = min(low[at], disc[edge.to]);
+            lows[at] = min(lows[at], desc[edge.to]);
         }
     }
 }
 
 void FindArticulationPoints(Graph& graph) {
-    vb visited(graph.size()), apPoint(graph.size());
-    vi low(graph.size()), disc(graph.size());
-    int id = 0;
-
-    for (int at = 0; at < graph.size(); ++at) {
+    int n = graph.size(), id = 0;
+    vb visited(n), ap(n);
+    vi desc(n), lows(n);
+    for (int at = 0; at < n; ++at) {
         if (not visited[at]) {
-            int rootNodeOutcomingEdges = 0;
-            dfs(graph, visited, at, low, disc, id, at, -1, rootNodeOutcomingEdges, apPoint);
-            if (rootNodeOutcomingEdges > 1) {
-                apPoint[at] = true;
+            int rootOutcomingEdges = 0;
+            dfs(graph, at, visited, desc, lows, id, ap, at, -1,rootOutcomingEdges);
+            if (rootOutcomingEdges > 1) {
+                ap[at] = true;
             }
         }
     }
-
-    cout << apPoint;
+    cout << ap << endl;
 }
 
 int main() { TimeMeasure _;

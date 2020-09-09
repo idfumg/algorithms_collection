@@ -1,5 +1,5 @@
 #include "../template.hpp"
-#include "graph.hpp"
+#include "../collection/graph.hpp"
 
 vi FindTreeCenters(const Graph& graph) {
     vi leaves;

@@ -10,4 +10,7 @@ struct TreeNode {
     bool operator==(TreeNode* node) { return node and id == node->id; }
 };
 
-ostream& operator<<(ostream& os, TreeNode* node) { return os << node->id; }
+ostream& operator<<(ostream& os, TreeNode* node) {
+    if (node) return os << node->id;
+    return os;
+}

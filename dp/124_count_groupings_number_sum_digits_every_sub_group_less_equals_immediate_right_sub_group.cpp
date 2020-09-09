@@ -47,6 +47,26 @@ int tab(string& s) {
     return dp[n][total];
 }
 
+int tab2(const string& s) {
+    int n = size(s), total = 0;
+    for (int i = 0; i < n; ++i) total += s[i] - '0';
+    vvi dp(n + 2, vi(total + 2));
+    for (int i = 0; i <= total; ++i) dp[n+1][i] = 1;
+    for (int i = n; i >= 1; --i) {
+        for (int j = 0; j <= total; ++j) {
+            int count = 0, sum = 0;
+            for (int k = i; k <= n; ++k) {
+                sum += s[k - 1] - '0';
+                if (sum >= j) {
+                    count += dp[k + 1][sum];
+                }
+            }
+            dp[i][j] = count;
+        }
+    }
+    return dp[1][0];
+}
+
 int main() { TimeMeasure _; __x();
     string s1 = "1119";
     string s2 = "1234";
@@ -54,4 +74,6 @@ int main() { TimeMeasure _; __x();
     cout << rec(s2) << endl; // 6
     cout << tab(s1) << endl; // 7
     cout << tab(s2) << endl; // 6
+    cout << tab2(s1) << endl; // 7
+    cout << tab2(s2) << endl; // 6
 }

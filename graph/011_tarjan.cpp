@@ -1,49 +1,55 @@
 #include "../template.hpp"
-#include "graph.hpp"
-#include "tree_node.hpp"
+#include "../collection/graph.hpp"
+#include "../collection/tree_node.hpp"
 
-void dfs(const Graph& graph, vb& visited, vb& onstack, stack<int>& saved, vi& lows, vi& ids, int& id, int at) {
+void dfs(Graph& graph, int at, vb& visited, vi& disc, vi& lows, int& id, vb& onstack, stack<int>& saved) {
     visited[at] = true;
-    saved.push(at);
     onstack[at] = true;
-    lows[at] = ids[at] = id++;
-
+    saved.push(at);
+    disc[at] = lows[at] = id++;
     for (const auto& edge : graph.edges(at)) {
         if (not visited[edge.to]) {
-            dfs(graph, visited, onstack, saved, lows, ids, id, edge.to);
-            // which min id node we can reach from the subtree rooted at edge.to?
+            dfs(graph, edge.to, visited, disc, lows, id, onstack, saved);
+            // check if the next node can reach node behind the current one
+            // so, we can reach from the current node the same node behind
+            // thus, the current node is part of SCC but not the start of one
             lows[at] = min(lows[at], lows[edge.to]);
         }
-        // without a cross edge because it violates SCC definition
         else if (onstack[edge.to]) {
-            //take as a part of SCC of an edge.to
-            lows[at] = min(lows[at], ids[edge.to]);
+            // we already was at that node
+            // if we already constructed SCC by it we don't use it
+            // if we at the process of constructing SCC by now we use it by
+            // checking if that node lay on the stack
+            // so we use it discovery value to form our SCC and update lows
+            // for every previous node when backtracking to this lowest discovery
+            // time
+            lows[at] = min(lows[at], disc[edge.to]);
         }
     }
-
-    if (ids[at] == lows[at]) {
+    if (lows[at] == disc[at]) {
         while (true) {
             int node = saved.top(); saved.pop();
-            cout << node << ' ';
             onstack[node] = false;
+            cout << node << ' ';
             if (node == at) break;
         }
         cout << endl;
     }
 }
 
-void TarjanSCC(const Graph& graph) {
-    vb visited(graph.size()), onstack(graph.size());
-    vi lows(graph.size()), ids(graph.size());
-    int id = 0;
+void TarjanSCC(Graph& graph) {
+    int n = graph.size();
+    vb visited(n), onstack(n);
+    vi disc(n), lows(n);
     stack<int> saved;
-    for (int at = 0; at < graph.size(); ++at) {
-        if (not visited[at]) {
-            dfs(graph, visited, onstack, saved, lows, ids, id, at);
+    int id = 0;
+    for (int i = 0; i < n; ++i) {
+        if (not visited[i]) {
+            dfs(graph, i, visited, disc, lows, id, onstack, saved);
         }
     }
-    cout << ids;
-    cout << lows;
+    cout << disc << endl;
+    cout << lows << endl;
 }
 
 int main() { TimeMeasure _;
@@ -66,5 +72,8 @@ int main() { TimeMeasure _;
     }
 }
 
+// 2 1 0
+// 6 5 4
+// 7 3
 // 0 1 2 3 4 5 6 7
 // 0 0 0 3 4 4 4 3

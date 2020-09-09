@@ -1,11 +1,11 @@
 #include "../template.hpp"
-#include "graph.hpp"
-#include "tree_node.hpp"
+#include "../collection/graph.hpp"
+#include "../collection/tree_node.hpp"
 
 vi FindTreeCenters(const Graph& graph) {
     vi leaves, degree(graph.size());
     for (int i = 0; i < graph.size(); ++i) {
-        degree[i] = graph.neighbors(i).size();
+        degree[i] = graph.edges(i).size();
         if (degree[i] <= 1) {
             leaves.push_back(i);
             degree[i] = 0;
@@ -15,7 +15,7 @@ vi FindTreeCenters(const Graph& graph) {
     while (total < graph.size()) {
         vi newleaves;
         for (auto leaf : leaves) {
-            for (const auto& edge : graph.neighbors(leaf)) {
+            for (const auto& edge : graph.edges(leaf)) {
                 if (--degree[edge.to] == 1) {
                     newleaves.push_back(edge.to);
                 }
@@ -28,7 +28,7 @@ vi FindTreeCenters(const Graph& graph) {
 }
 
 TreeNode* BuildTree(const Graph& graph, TreeNode* node) {
-    for (const auto& edge : graph.neighbors(node->id)) {
+    for (const auto& edge : graph.edges(node->id)) {
         if (node->parent && node->parent->id == edge.to) continue;
         TreeNode* child = new TreeNode(edge.to, node);
         node->children.push_back(child);

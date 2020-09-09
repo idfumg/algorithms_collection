@@ -1,6 +1,6 @@
 #include "../template.hpp"
-#include "graph.hpp"
-#include "tree_node.hpp"
+#include "../collection/graph.hpp"
+#include "../collection/tree_node.hpp"
 
 TreeNode* BuildTree(const Graph& graph, TreeNode* node) {
     for (const auto& edge : graph.edges(node->id)) {

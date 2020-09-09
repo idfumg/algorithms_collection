@@ -1,43 +1,34 @@
 #include "../template.hpp"
 
-int BinaryStringToNumber(const string& s) {
-    int res = 0, n = s.size();
-    for (int i = 0; i < n; ++i) {
-        res += (s[n - i - 1] - '0' == 1) << i;
-    }
-    return res;
-}
-
-int rec(int n, int prev, string& elems) {
+void rec(int n, vi& res, int prev, si& elems) {
     if (n == 0) {
-        cout << BinaryStringToNumber(elems) << ' ';
-        return 1;
+        int num = 0;
+        for (int i = size(res) - 1; i >= 0; --i) {
+            if (res[i] == 1) {
+                num += pow(2, size(res) - i - 1);
+            }
+        }
+        elems.insert(num);
+        return;
     }
-    if (n < 0) return 0;
-    int count = 0;
     for (int i : {0, 1}) {
         if (prev == 1 and i == 1) continue;
-        elems.push_back(to_string(i)[0]);
-        count += rec(n - 1, i, elems);
-        elems.pop_back();
+        res[n - 1] = i;
+        rec(n - 1, res, i, elems);
     }
-    return count;
 }
 
-int rec(int n) {
-    if (n == 0) return 0;
-    string elems;
-    int count = 0;
+si rec(int n) {
+    vi res(n);
+    si elems;
     for (int i : {0, 1}) {
-        elems.push_back(to_string(i)[0]);
-        count += rec(n - 1, i, elems);
-        elems.pop_back();
+        res[n - 1] = i;
+        rec(n - 1, res, i, elems);
     }
-    cout << endl;
-    return count;
+    return elems;
 }
 
 int main() { TimeMeasure _; __x();
-    cout << rec(4) << endl; // 8
-    cout << rec(3) << endl; // 5
+    cout << rec(4) << endl;
+    cout << rec(3) << endl;
 }

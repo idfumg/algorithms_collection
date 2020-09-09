@@ -1,83 +1,89 @@
 #include "../template.hpp"
 
-bool rec(vector<string>& elems, const unordered_set<string>& words, const string& word, const int at, const int count) {
-    if (at == -1 && count == 1) {
-        //debug(elems);
-        return true;
-    }
-    if (at < 0) return false;
+static const unordered_set<string> words = {
+    "mobile","samsung","sam","sung",
+    "man","mango","icecream","and",
+    "go","i","like","ice","cream",
+};
 
-    const auto suffix = word.substr(at, count);
-    if (words.count(suffix) > 0) {
-        elems.push_back(suffix);
-        if (rec(elems, words, word, at - 1, 1)) {
-            return true;
-        }
-        elems.pop_back();
-    }
-    return rec(elems, words, word, at - 1, count + 1);
+bool rec(const string& s, int n, int count) {
+    if (n == 0 and count == 1) return true;
+    if (n == 0 and count != 1) return false;
+    if (words.count(s.substr(n - 1, count))) return rec(s, n - 1, 1) or rec(s, n - 1, count + 1);
+    return rec(s, n - 1, count + 1);
 }
 
-bool rec(const unordered_set<string>& words, const string& word) {
-    vector<string> elems;
-    return rec(elems, words, word, word.size() - 1, 1);
+bool rec(const string& s) {
+    return rec(s, s.size(), 1);
 }
 
-bool tab(const unordered_set<string>& words, const string& word) {
-    const int n = word.size();
-    vb dp(n + 1);
-    dp[0] = true;
+bool tab(const string& s) {
+    int n = size(s);
+    vi dp(n + 1);
+    dp[0] = 1;
     for (int i = 1; i <= n; ++i) {
         for (int j = i - 1; j >= 0; --j) {
-            const auto suffix = word.substr(j, i - j);
-            if (dp[j] && words.count(suffix) > 0) {
-                dp[i] = true;
-                break;
+            if (words.count(s.substr(j, i - j)) and dp[j]) {
+                dp[i] = 1;
             }
         }
     }
     return dp[n];
 }
 
-bool tab2(const string& s) noexcept {
-    int n = s.size();
+bool tab2(const string& s) {
+    int n = size(s);
     vvi dp(n + 2, vi(n + 2));
-    for (int i = 0; i <= n; ++i) {
+    dp[0][1] = true;
+    for (int i = 1; i <= n; ++i) {
         for (int j = n; j >= 0; --j) {
-            if (i == 0 and j <= 1) dp[i][j] = 1;
-            else if (i == 0 and j != 1) dp[i][j] = 0;
-            else if (words.count(s.substr(i - 1, j))) dp[i][j] = dp[i - 1][1] or dp[i - 1][j + 1];
+            if (words.count(s.substr(i - 1, j))) dp[i][j] = dp[i - 1][1] or dp[i - 1][j + 1];
             else dp[i][j] = dp[i - 1][j + 1];
         }
     }
     return dp[n][1];
 }
 
-int main() { TimeMeasure _; __x();
-    static const unordered_set<string> wordsList = {
-        "mobile","samsung","sam","sung",
-        "man","mango","icecream","and",
-        "go","i","like","ice","cream",
-    };
+bool opt2(const string& s) {
+    int n = size(s), idx = 0;
+    vvi dp(2, vi(n + 2));
+    dp[0][1] = true;
+    for (int i = 1; i <= n; ++i) {
+        idx = i & 1;
+        for (int j = n; j >= 0; --j) {
+            if (words.count(s.substr(i - 1, j))) dp[idx][j] = dp[1 - idx][1] or dp[1 - idx][j + 1];
+            else dp[idx][j] = dp[1 - idx][j + 1];
+        }
+    }
+    return dp[idx][1];
+}
 
-    cout << rec(wordsList, "ilikesamsung") << endl;
-    cout << rec(wordsList, "iiiiiiii") << endl;
-    cout << rec(wordsList, "") << endl;
-    cout << rec(wordsList, "ilikelikeimangoiii") << endl;
-    cout << rec(wordsList, "samsungandmango") << endl;
-    cout << rec(wordsList, "samsungandmangok") << endl;
+int main() { TimeMeasure _; __x();
+    cout << rec("ilikesamsung") << endl;
+    cout << rec("iiiiiiii") << endl;
+    cout << rec("") << endl;
+    cout << rec("ilikelikeimangoiii") << endl;
+    cout << rec("samsungandmango") << endl;
+    cout << rec("samsungandmangok") << endl;
     cout << endl;
-    cout << tab(wordsList, "ilikesamsung") << endl;
-    cout << tab(wordsList, "iiiiiiii") << endl;
-    cout << tab(wordsList, "") << endl;
-    cout << tab(wordsList, "ilikelikeimangoiii") << endl;
-    cout << tab(wordsList, "samsungandmango") << endl;
-    cout << tab(wordsList, "samsungandmangok") << endl;
+    cout << tab("ilikesamsung") << endl;
+    cout << tab("iiiiiiii") << endl;
+    cout << tab("") << endl;
+    cout << tab("ilikelikeimangoiii") << endl;
+    cout << tab("samsungandmango") << endl;
+    cout << tab("samsungandmangok") << endl;
     cout << endl;
-    cout << tab2(wordsList, "ilikesamsung") << endl;
-    cout << tab2(wordsList, "iiiiiiii") << endl;
-    cout << tab2(wordsList, "") << endl;
-    cout << tab2(wordsList, "ilikelikeimangoiii") << endl;
-    cout << tab2(wordsList, "samsungandmango") << endl;
-    cout << tab2(wordsList, "samsungandmangok") << endl;
+    cout << tab2("ilikesamsung") << endl;
+    cout << tab2("iiiiiiii") << endl;
+    cout << tab2("") << endl;
+    cout << tab2("ilikelikeimangoiii") << endl;
+    cout << tab2("samsungandmango") << endl;
+    cout << tab2("samsungandmangok") << endl;
+    cout << endl;
+    cout << opt2("ilikesamsung") << endl;
+    cout << opt2("iiiiiiii") << endl;
+    cout << opt2("") << endl;
+    cout << opt2("ilikelikeimangoiii") << endl;
+    cout << opt2("samsungandmango") << endl;
+    cout << opt2("samsungandmangok") << endl;
 }

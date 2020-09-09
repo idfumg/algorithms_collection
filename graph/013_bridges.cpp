@@ -1,46 +1,40 @@
 #include "../template.hpp"
-#include "graph.hpp"
-#include "tree_node.hpp"
+#include "../collection/graph.hpp"
+#include "../collection/tree_node.hpp"
 
-void dfs(const Graph& graph, vb& visited, vi& disc, vi& low, int& id, int at, int root, int parent) {
+void dfs(Graph& graph, int at, vb& visited, vi& desc, vi& lows, int& id, int parent) {
     visited[at] = true;
-    disc[at] = low[at] = id++;
+    desc[at] = lows[at] = id++;
     for (const auto& edge : graph.edges(at)) {
         if (edge.to == parent) {
             continue;
         }
         else if (not visited[edge.to]) {
-            dfs(graph, visited, disc, low, id, edge.to, root, at);
-            low[at] = min(low[at], low[edge.to]);
-
-            if (disc[at] < low[edge.to] and at != root) {
-                cout << edge.from << ' ' << edge.to << endl;
+            dfs(graph, edge.to, visited, desc, lows, id, at);
+            lows[at] = min(lows[at], lows[edge.to]);
+            if (desc[at] < lows[edge.to] and at != parent) {
+                cout << "Bridge: " << at << " -> " << edge.to << endl;
             }
         }
         else {
-            low[at] = min(low[at], disc[edge.to]);
+            lows[at] = min(lows[at], desc[edge.to]);
         }
     }
 }
 
-void Tarjan(const Graph& graph) {
-    vb visited(graph.size());
-    vi disc(graph.size()), low(graph.size());
-    int id = 0;
-    for (int i = 0; i < graph.size(); ++i) {
-        if (not visited[i]) {
-            dfs(graph, visited, disc, low, id, i, i, -1);
+void FindBridges(Graph& graph) {
+    int n = graph.size(), id = 0;
+    vb visited(n);
+    vi desc(n), lows(n);
+    for (int at = 0; at < n; ++at) {
+        if (not visited[at]) {
+            dfs(graph, at, visited, desc, lows, id, at);
         }
     }
-}
-
-void FindBridges(const Graph& graph) {
-    Tarjan(graph);
-    cout << endl;
 }
 
 int main() { TimeMeasure _;
-    {
+        {
         Graph graph(9);
         graph.addUndirectedEdge(0, 1);
         graph.addUndirectedEdge(0, 2);

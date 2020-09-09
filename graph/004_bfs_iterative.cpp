@@ -1,5 +1,5 @@
 #include "../template.hpp"
-#include "graph.hpp"
+#include "../collection/graph.hpp"
 
 void bfs(const Graph& graph, vi& prev, int from) {
     vb visited(graph.size());
