@@ -136,8 +136,10 @@ class TimeMeasure final {
     time_t start;
 
 public:
-    TimeMeasure() noexcept {
-        start = clock();
+    TimeMeasure() noexcept
+        : start(clock())
+    {
+
     }
     ~TimeMeasure() noexcept {
         cerr << "\nExecution time: " << ms() << " ms.\n";
@@ -203,27 +205,24 @@ void ruffle_sort(T& arr) { // qsort O(n^2) has complexity if elements sorted
 template <typename T,
           typename TIter = decltype(std::begin(std::declval<T>())),
           typename = decltype(std::end(std::declval<T>()))>
-constexpr auto enumerate(T && iterable)
+constexpr auto enumerate(T && iterable) noexcept
 {
     struct iterator
     {
         size_t i;
         TIter iter;
-        bool operator != (const iterator & other) const { return iter != other.iter; }
-        void operator ++ () { ++i; ++iter; }
-        auto operator * () const { return std::tie(i, *iter); }
+        bool operator != (const iterator & other) const noexcept { return iter != other.iter; }
+        iterator& operator ++ () noexcept { ++i; ++iter; return *this; }
+        auto operator * () const noexcept { return std::tie(i, *iter); }
     };
     struct iterable_wrapper
     {
         T& iterable;
-        auto begin() { return iterator{ 0, std::begin(iterable) }; }
-        auto end() { return iterator{ 0, std::end(iterable) }; }
+        auto begin() noexcept { return iterator{ 0, std::begin(iterable) }; }
+        auto end() noexcept { return iterator{ 0, std::end(iterable) }; }
     };
     return iterable_wrapper{ std::forward<T>(iterable) };
 }
-
-template<class T>
-void print(T&& arg) { cout << std::forward<T>(arg) << endl; }
 
 #define trace() cout << "Line: " << __LINE__ << endl;
 
