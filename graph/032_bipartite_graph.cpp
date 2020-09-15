@@ -2,56 +2,92 @@
 #include "../collection/graph.hpp"
 #include "../collection/tree_node.hpp"
 
-bool bfs(Graph& graph, vb& visited, int from) {
-    deque<int> q;
-    q.push_back(from);
-    vi color(size(graph));
-    color[from] = 1;
+bool bfs(vvi& graph, vi& colors, int from) {
+    int n = size(graph);
+
+    queue<int> q;
+    q.push(from);
+
     while (not q.empty()) {
-        int node = q.front(); q.pop_front();
-        visited[node] = true;
-        for (const auto& edge : graph.edges(node)) {
-            if (not visited[edge.to]) {
-                color[edge.to] = 1 - color[node];
-                q.push_back(edge.to);
-            }
-            else if (color[edge.to] == color[node]) {
-                return false;
+        int at = q.front(); q.pop();
+        if (graph[at][at]) {
+            return false;
+        }
+        for (int node = 0; node < n; ++node) {
+            if (graph[at][node]) {
+                if (colors[node] == -1) {
+                    colors[node] = 1 - colors[at];
+                    q.push(node);
+                }
+                else if (colors[node] == colors[at]) {
+                    return false;
+                }
             }
         }
     }
+
     return true;
 }
 
-bool IsBipartite(Graph& graph) {
-    int  n = size(graph);
-    vb visited(n);
+bool IsBipartiteBFS(vvi& graph) {
+    int n = size(graph);
+    vi colors(n, -1);
+
     for (int i = 0; i < n; ++i) {
-        if (not visited[i]) {
-            if (not bfs(graph, visited, i)) {
+        if (colors[i] == -1) {
+            if (not bfs(graph, colors, i)) {
                 return false;
             }
         }
     }
+
+    return true;
+}
+
+bool dfs(vvi& graph, vi& colors, int at, int prevcolor) {
+    int n = size(graph);
+    colors[at] = 1 - prevcolor;
+
+    if (graph[at][at]) {
+        return false;
+    }
+
+    for (int i = 0; i < n; ++i) {
+        if (graph[at][i]) {
+            if (colors[i] == -1) {
+                if (not dfs(graph, colors, i, colors[at])) {
+                    return false;
+                }
+            }
+            else if (colors[i] == colors[at]) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+bool IsBipartiteDFS(vvi& graph) {
+    int n = size(graph);
+    vi colors(n, -1);
+
+    for (int i = 0; i < n; ++i) {
+        if (colors[i] == -1) {
+            if (not dfs(graph, colors, i, 1)) {
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 
 int main() { TimeMeasure _;
-    vvi matrix = {
-        {0, 1, 0, 1},
-        {1, 0, 1, 0},
-        {0, 1, 0, 1},
-        {1, 0, 1, 0},
-    };
-
-    Graph graph(size(matrix));
-    for (int i = 0; i < size(matrix); ++i) {
-        for (int j = 0; j < size(matrix[0]); ++j) {
-            if (matrix[i][j] == 1) {
-                graph.addUndirectedEdge(i, j);
-            }
-        }
-    }
-
-    cout << IsBipartite(graph) << endl;
+    vvi graph = {{0, 1, 0, 1},
+                 {1, 0, 1, 0},
+                 {0, 1, 0, 1},
+                 {1, 0, 1, 0}};
+    cout << IsBipartiteBFS(graph) << endl;
+    cout << IsBipartiteDFS(graph) << endl;
 }

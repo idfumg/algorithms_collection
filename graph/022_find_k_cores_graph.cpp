@@ -2,42 +2,34 @@
 #include "../collection/graph.hpp"
 #include "../collection/tree_node.hpp"
 
-bool dfs(Graph& graph, vi& degree, vb& visited, int at, int k) {
-    visited[at] = true;
-    for (const auto& edge : graph.edges(at)) {
-        if (degree[at] < k) {
-            degree[edge.to]--;
-        }
-        if (not visited[edge.to]) {
-            if (dfs(graph, degree, visited, edge.to, k)) {
-                degree[at]--;
-            }
-        }
-    }
-    return degree[at] < k;
-}
-
 void PrintKCores(Graph& graph, int k) {
-    int n = graph.size(), smallest_degree = INF;
-    vi degree(n);
+    int n = size(graph);
+    vi degree(n), leaves;
     for (int i = 0; i < n; ++i) {
         degree[i] = graph.edges(i).size();
-        smallest_degree = min(smallest_degree, degree[i]);
-    }
-
-    vb visited(n);
-    dfs(graph, degree, visited, smallest_degree, k);
-
-    for (int i = 0; i < n; ++i) {
-        if (not visited[i]) {
-            dfs(graph, degree, visited, smallest_degree, k);
+        if (degree[i] < k) {
+            degree[i] = -1;
+            leaves.push_back(i);
         }
     }
-
-    cout << "K-Cores: " << endl;
+    while (not leaves.empty()) {
+        vi temp;
+        for (const auto& leaf : leaves) {
+            for (const auto& edge : graph.edges(leaf)) {
+                if (degree[edge.to] != -1) {
+                    if (--degree[edge.to] < k) {
+                        degree[edge.to] = -1;
+                        temp.push_back(edge.to);
+                    }
+                }
+            }
+        }
+        leaves = temp;
+    }
+    cout << "K-Cores:" << endl;
     for (int i = 0; i < n; ++i) {
         if (degree[i] >= k) {
-            cout << i << " -> ";
+            cout << i << ": ";
             for (const auto& edge : graph.edges(i)) {
                 if (degree[edge.to] >= k) {
                     cout << edge.to << " ";

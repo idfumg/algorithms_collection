@@ -66,7 +66,7 @@ public:
     }
 
     void display() const noexcept {
-        for (int i = 0; i < m_graph.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(m_graph.size()); ++i) {
             if (not edges(i).empty()) {
                 std::cout << i << ": ";
                 for (const auto& edge : edges(i)) {

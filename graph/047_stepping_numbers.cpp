@@ -27,44 +27,30 @@ vi Brute(int from, int to) { // O(n^2)
     return res;
 }
 
-void bfs(si& res, int from, int to, int num) {
+void bfs(int from, int to, int num, si& nums) {
     deque<int> q;
     q.push_back(num);
+
     while (not q.empty()) {
-        int n = q.front(); q.pop_front();
-        if (n >= from and n <= to) {
-            res.insert(n);
-        }
-        if (num == 0 or n > to) {
-            continue;
-        }
-        int last = n % 10;
-        int stepA = n * 10 + last - 1;
-        int stepB = n * 10 + last + 1;
-        if (last == 0) {
-            q.push_back(stepB);
-        }
-        else if (last == 9) {
-            q.push_back(stepA);
-        }
-        else {
-            q.push_back(stepA);
-            q.push_back(stepB);
-        }
+        int at = q.front(); q.pop_front();
+        if (at >= from and at <= to) nums.insert(at);
+        if (at < 0 or at > to) continue;
+        q.push_back(at * 10 + at % 10 - 1);
+        q.push_back(at * 10 + at % 10 + 1);
     }
 }
 
-si BfsBased(int from, int to) {
-    si res;
-    for (int i = 0; i <= 9; ++i) {
-        bfs(res, from, to, i);
+si bfs(int from, int to) {
+    si nums;
+    for (int i = 0; i < 10; ++i) {
+        bfs(from, to, i, nums);
     }
-    return res;
+    return nums;
 }
 
 int main() { TimeMeasure _;
     cout << Brute(0, 21) << endl;
     cout << Brute(10, 15) << endl;
-    cout << BfsBased(0, 21) << endl;
-    cout << BfsBased(10, 15) << endl;
+    cout << bfs(0, 21) << endl;
+    cout << bfs(10, 15) << endl;
 }

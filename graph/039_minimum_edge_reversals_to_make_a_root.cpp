@@ -2,39 +2,34 @@
 #include "../collection/graph.hpp"
 #include "../collection/tree_node.hpp"
 
-bool IsPathExists(Graph& graph, int from, int to) {
-    for (const auto& edge : graph.edges(from)) {
-        if (edge.to == to) {
-            return true;
-        }
-    }
-    return false;
+bool IsRealEdge(Graph& graph, int from, int to) {
+    const auto& edges = graph.edges(from);
+    const auto pred = [&to](const auto& edge){ return edge.to == to; };
+    return find_if(begin(edges), end(edges), pred) != end(edges);
 }
 
 void dfs(Graph& graph, Graph& graphReal, vb& visited, int at, int& count) {
     visited[at] = true;
     for (const auto& edge : graph.edges(at)) {
         if (not visited[edge.to]) {
-            if (IsPathExists(graphReal, edge.from, edge.to)) {
-                --count;
-            }
+            if (not IsRealEdge(graphReal, at, edge.to)) ++count;
             dfs(graph, graphReal, visited, edge.to, count);
         }
     }
 }
 
-void FindRootAndHowManyChanges(Graph& graph, Graph& graphReal) {
-    int n = size(graph), vertex = -1, changes = INF;
-    for (int i = 0; i < n; ++i) {
+void MinReversalsToMakeRoot(Graph& graph, Graph& graphReal) {
+    int n = size(graph), reversals = INF, root = -1;
+    for (int at = 0; at < n; ++at) {
+        int count = 0;
         vb visited(n);
-        int count = n - 1;
-        dfs(graph, graphReal, visited, i, count);
-        if (changes > count) {
-            changes = count;
-            vertex = i;
+        dfs(graph, graphReal, visited, at, count);
+        if (count < reversals) {
+            reversals = count;
+            root = at;
         }
     }
-    cout << vertex << ' ' << changes << endl;
+    cout << root << ' ' << reversals << '\n';
 }
 
 int main() { TimeMeasure _;
@@ -56,5 +51,5 @@ int main() { TimeMeasure _;
     graphReal.addDirectedEdge(5, 6);
     graphReal.addDirectedEdge(7, 6);
 
-    FindRootAndHowManyChanges(graph, graphReal);
+    MinReversalsToMakeRoot(graph, graphReal);
 }
