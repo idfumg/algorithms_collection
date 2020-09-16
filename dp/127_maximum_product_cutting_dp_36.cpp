@@ -27,6 +27,17 @@ int tab(int n) {
     return dp[n];
 }
 
+int tab2(int n) {
+    // dp[i] - max product of cutting a rod of length i
+    vi dp(n + 1);
+    for (int i = 2; i <= n; ++i) {
+        for (int j = 1; j <= i - 1; ++j) {
+            dp[i] = max({dp[i], j * (i - j), j * dp[i - j]});
+        }
+    }
+    return dp[n];
+}
+
 int main() { TimeMeasure _; __x();
     cout << rec(2) << endl; // 1
     cout << rec(3) << endl; // 2
@@ -39,4 +50,10 @@ int main() { TimeMeasure _; __x();
     cout << tab(4) << endl; // 4
     cout << tab(5) << endl; // 6
     cout << tab(10) << endl; // 36
+    cout << endl;
+    cout << tab2(2) << endl; // 1
+    cout << tab2(3) << endl; // 2
+    cout << tab2(4) << endl; // 4
+    cout << tab2(5) << endl; // 6
+    cout << tab2(10) << endl; // 36
 }

@@ -36,7 +36,7 @@ int tab(int n) {
                         if (j + k <= n * 9 and even) {
                             count += dp[i - 1][j + k][false];
                         }
-                        else if (j - k >= 0) {
+                        else if (j - k >= 0 and not even) {
                             count += dp[i - 1][j - k][true];
                         }
                     }
@@ -46,6 +46,7 @@ int tab(int n) {
             }
         }
     }
+    debug(dp);
     return total;
 }
 
