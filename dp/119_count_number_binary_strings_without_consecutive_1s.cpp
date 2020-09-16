@@ -78,6 +78,24 @@ int tab2(int n) {
     return dp[n - 1][0] + dp[n - 1][1];
 }
 
+int tab3(int n) {
+    vvi dp(n + 1, vi(2));
+    dp[0][0] = dp[0][1] = 1;
+    int idx = 0;
+    for (int i = 1; i <= n; ++i) {
+        idx = i & 1;
+        for (int j : {0, 1}) {
+            int count = 0;
+            for (int k : {0, 1}) {
+                if (k == 1 and j == 1) continue;
+                count += dp[1 - idx][k];
+            }
+            dp[idx][j] = count;
+        }
+    }
+    return max(dp[idx]);
+}
+
 int main() { TimeMeasure _; __x();
     cout << rec(2) << endl;
     cout << rec(3) << endl;
@@ -89,4 +107,6 @@ int main() { TimeMeasure _; __x();
     cout << rec2(3) << endl;
     cout << tab2(2) << endl;
     cout << tab2(3) << endl;
+    cout << tab3(2) << endl;
+    cout << tab3(3) << endl;
 }

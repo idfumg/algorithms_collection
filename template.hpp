@@ -132,7 +132,8 @@ static istream& operator >> (istream& is, map<T, U>& tab) noexcept {
     return is;
 }
 
-#define debug(VarName) cerr << "'" << #VarName << "': " << boolalpha << (VarName) << '\n';
+#define debug(VarName) cerr << "'" << #VarName << "': " << boolalpha << (VarName) << ' ';
+#define debugn(VarName) cerr << "'" << #VarName << "': " << boolalpha << (VarName) << '\n';
 
 class TimeMeasure final {
     time_t start;

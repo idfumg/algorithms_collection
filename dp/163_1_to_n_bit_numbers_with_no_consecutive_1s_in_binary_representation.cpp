@@ -28,7 +28,25 @@ si rec(int n) {
     return elems;
 }
 
+void rec2(int total, int n, int prev, int num) {
+    if (n == 0) {
+        cout << num << ' ';
+        return;
+    }
+    for (int i : {0, 1}) {
+        if (i == 1 and prev == 1) continue;
+        rec2(total, n - 1, i, num + (i << (total - n)));
+    }
+}
+
+void rec2(int n) {
+    rec2(n, n, 0, 0);
+}
+
 int main() { TimeMeasure _; __x();
     cout << rec(4) << endl;
     cout << rec(3) << endl;
+
+    rec2(4); cout << endl;
+    rec2(3); cout << endl;
 }
