@@ -4,13 +4,30 @@
 struct TreeNode {
     int id;
     TreeNode* parent;
-    vector<TreeNode*> children;
+    std::vector<TreeNode*> children;
 
-    TreeNode(int id, TreeNode* parent) : id(id), parent(parent) {}
-    bool operator==(TreeNode* node) { return node and id == node->id; }
+    TreeNode(const TreeNode& rhs) noexcept
+        : id(rhs.id), parent(rhs.parent), children(rhs.children)
+    {
+    }
+    TreeNode(const int id_, TreeNode* parent_) noexcept
+        : id(id_), parent(parent_), children()
+    {
+    }
+    bool operator==(const TreeNode* node) const noexcept
+    {
+        return node and id == node->id;
+    }
+    TreeNode& operator=(const TreeNode& rhs) noexcept
+    {
+        id = rhs.id;
+        parent = rhs.parent;
+        children = rhs.children;
+        return *this;
+    }
 };
 
-ostream& operator<<(ostream& os, TreeNode* node) {
+std::ostream& operator<<(std::ostream& os, const TreeNode* node) noexcept {
     if (node) return os << node->id;
     return os;
 }

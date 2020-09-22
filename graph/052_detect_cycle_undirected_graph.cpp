@@ -10,15 +10,9 @@ void AddEdge(vvi& graph, int from, int to) {
 bool dfs(vvi& graph, vb& visited, int at, int parent) {
     visited[at] = true;
     for (int adj : graph[at]) {
-        if (adj == parent) {
-            continue;
-        }
-        else if (not visited[adj]) {
-            if (dfs(graph, visited, adj, at)) return true;
-        }
-        else {
-            return true;
-        }
+        if (adj == parent) continue;
+        if (visited[adj]) return true;
+        if (dfs(graph, visited, adj, at)) return true;
     }
     return false;
 }

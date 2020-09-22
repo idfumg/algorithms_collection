@@ -13,9 +13,8 @@ private:
     int start = 0;
 
 public:
-    Graph(const int n, const int start_ = 0) {
-        m_graph.resize(n + start_);
-        start = start_;
+    Graph(const int n, const int start_ = 0) : m_graph(n + start_), start(start_) {
+
     }
 
     void addDirectedEdge(const int from, const int to, const int cost = 0) {

@@ -73,7 +73,7 @@ int main() { TimeMeasure _;
         vvi edges;
         edges.push_back({1, 2});
         edges.push_back({2, 3});
-        HowManyInGroup(edges, V + 1);
+        HowManyInGroup(edges, V + 1); // 3
     }
     {
         int V = 10;
@@ -90,6 +90,6 @@ int main() { TimeMeasure _;
         edges.push_back({1, 2});
         edges.push_back({9, 10});
         edges.push_back({8, 9});
-        HowManyInGroup(edges, V + 1);
+        HowManyInGroup(edges, V + 1); // 7
     }
 }
