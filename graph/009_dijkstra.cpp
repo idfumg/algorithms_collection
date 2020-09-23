@@ -1,6 +1,5 @@
 #include "../template.hpp"
-#include "graph.hpp"
-#include "tree_node.hpp"
+#include "../collection/graph.hpp"
 
 struct Node {
     int id;
