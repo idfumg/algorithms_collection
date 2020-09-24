@@ -12,7 +12,7 @@ void dfs(Graph& graph, int at, vb& visited, vi& desc, vi& lows, int& id, int par
         else if (not visited[edge.to]) {
             dfs(graph, edge.to, visited, desc, lows, id, at);
             lows[at] = min(lows[at], lows[edge.to]);
-            if (desc[at] < lows[edge.to] and at != parent) {
+            if (desc[at] < lows[edge.to]) {
                 cout << "Bridge: " << at << " -> " << edge.to << endl;
             }
         }
@@ -31,10 +31,11 @@ void FindBridges(Graph& graph) {
             dfs(graph, at, visited, desc, lows, id, at);
         }
     }
+    cout << '\n';
 }
 
 int main() { TimeMeasure _;
-        {
+    {
         Graph graph(9);
         graph.addUndirectedEdge(0, 1);
         graph.addUndirectedEdge(0, 2);

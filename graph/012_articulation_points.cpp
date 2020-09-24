@@ -32,7 +32,7 @@ void FindArticulationPoints(Graph& graph) {
     for (int at = 0; at < n; ++at) {
         if (not visited[at]) {
             int rootOutcomingEdges = 0;
-            dfs(graph, at, visited, desc, lows, id, ap, at, -1,rootOutcomingEdges);
+            dfs(graph, at, visited, desc, lows, id, ap, at, -1, rootOutcomingEdges);
             if (rootOutcomingEdges > 1) {
                 ap[at] = true;
             }
