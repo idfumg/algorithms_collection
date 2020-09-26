@@ -7,40 +7,35 @@ void AddEdge(Graph& graph, int from, int to) {
     graph[to].push_back(from);
 }
 
-void dfs(Graph& graph, vb& visited, vb& ap, vi& desc, vi& lows, int& id, int root, int at, int parent, int& rootOutdegree) {
-    if (parent == root) {
-        ++rootOutdegree;
-    }
-    visited[at] = true;
-    desc[at] = lows[at] = id++;
+void dfs(Graph& graph, vb& ap, vi& disc, vi& lows, vi& parent, int& id, int at) {
+    disc[at] = lows[at] = id++;
+    int children = 0;
     for (int adj : graph[at]) {
-        if (adj == parent) {
-            continue;
-        }
-        else if (not visited[adj]) {
-            dfs(graph, visited, ap, desc, lows, id, root, adj, at, rootOutdegree);
+        if (disc[adj] == -1) {
+            children += 1;
+            parent[adj] = at;
+            dfs(graph, ap, disc, lows, parent, id, adj);
             lows[at] = min(lows[at], lows[adj]);
-            if (desc[at] <= lows[adj] and at != root) {
+            if (parent[at] == -1 and children > 1) {
+                ap[at] = true;
+            }
+            if (parent[at] != -1 and disc[at] <= lows[adj]) {
                 ap[at] = true;
             }
         }
-        else {
-            lows[at] = min(lows[at], desc[adj]);
+        else if (parent[at] != adj) {
+            lows[at] = min(lows[at], disc[adj]);
         }
     }
 }
 
 void FindArticulationPoints(Graph& graph) {
     int n = graph.size(), id = 0;
-    vi desc(n), lows(n);
-    vb visited(n), ap(n);
+    vb ap(n);
+    vi disc(n, -1), lows(n), parent(n, -1);
     for (int at = 0; at < n; ++at) {
-        if (not visited[at]) {
-            int rootOutdegree = 0;
-            dfs(graph, visited, ap, desc, lows, id, at, at, -1, rootOutdegree);
-            if (rootOutdegree > 1) {
-                ap[at] = true;
-            }
+        if (disc[at] == -1) {
+            dfs(graph, ap, disc, lows, parent, id, at);
         }
     }
     cout << ap << endl;

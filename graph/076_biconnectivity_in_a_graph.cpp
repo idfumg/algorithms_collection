@@ -7,22 +7,23 @@ void AddEdge(Graph& graph, int from, int to) {
     graph[to].push_back(from);
 }
 
-bool dfs(Graph& graph, vb& visited, int at, vi& disc, vi& lows, int& id, int parent, int root, int& outdegree) {
-    if (parent == root) {
-        ++outdegree;
-    }
-    visited[at] = true;
+bool dfs(Graph& graph, vi& disc, vi& lows, vi& parent, int& id, int at) {
     disc[at] = lows[at] = id++;
+    int children = 0;
     for (int adj : graph[at]) {
-        if (adj == parent) {
-            continue;
-        }
-        else if (not visited[adj]) {
-            if (dfs(graph, visited, adj, disc, lows, id, at, root, outdegree)) return true;
+        if (disc[adj] == -1) {
+            children += 1;
+            parent[adj] = at;
+            if (dfs(graph, disc, lows, parent, id, adj)) return true;
             lows[at] = min(lows[at], lows[adj]);
-            if (disc[at] <= lows[adj] and at != root) return true;
+            if (parent[at] == -1 and children > 1) {
+                return true;
+            }
+            if (parent[at] != -1 and disc[at] <= lows[adj]) {
+                return true;
+            }
         }
-        else {
+        else if (parent[at] != adj) {
             lows[at] = min(lows[at], disc[adj]);
         }
     }
@@ -31,16 +32,12 @@ bool dfs(Graph& graph, vb& visited, int at, vi& disc, vi& lows, int& id, int par
 
 bool IsBiconnected(Graph& graph) {
     int n = graph.size(), id = 0;
-    vb visited(n);
-    vi disc(n), lows(n);
-    for (int i = 0; i < n; ++i) {
-        if (not visited[i]) {
-            int outdegree = 0;
-            if (dfs(graph, visited, i, disc, lows, id, -1, i, outdegree)) return false;
-            if (outdegree > 1) return false;
+    vi disc(n, -1), lows(n), parent(n, -1);
+    for (int at = 0; at < n; ++at) {
+        if (disc[at] == -1) {
+            if (dfs(graph, disc, lows, parent, id, at)) return false;
         }
     }
-    if (not all_of(visited.begin(), visited.end(), [](bool v){return v;})) return false;
     return true;
 }
 

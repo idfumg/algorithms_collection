@@ -7,36 +7,32 @@ void AddEdge(Graph& graph, int from, int to) {
     graph[to].push_back(from);
 }
 
-void dfs(Graph& graph, vb& visited, vi& desc, vi& lows, int& id, int at, int parent) {
-    visited[at] = true;
-    desc[at] = lows[at] = id++;
+void dfs(Graph& graph, vi& disc, vi& lows, vi& parent, int& id, int at) {
+    disc[at] = lows[at] = id++;
     for (int adj : graph[at]) {
-        if (adj == parent) {
-            continue;
-        }
-        else if (not visited[adj]) {
-            dfs(graph, visited, desc, lows, id, adj, at);
+        if (disc[adj] == -1) {
+            parent[adj] = at;
+            dfs(graph, disc, lows, parent, id, adj);
             lows[at] = min(lows[at], lows[adj]);
-            if (desc[at] < lows[adj] and at != parent) {
-                cout << at << ' ' << adj << '\n';
+            if (disc[at] < lows[adj]) {
+                cout << at << '-' << adj << ' ';
             }
         }
-        else {
-            lows[at] = min(lows[at], desc[adj]);
+        else if (parent[at] != adj) {
+            lows[at] = min(lows[at], disc[adj]);
         }
     }
 }
 
 void FindBridges(Graph& graph) {
     int n = graph.size(), id = 0;
-    vb visited(n);
-    vi desc(n), lows(n);
-    for (int i = 0; i < n; ++i) {
-        if (not visited[i]) {
-            dfs(graph, visited, desc, lows, id, i, -1);
+    vi disc(n, -1), lows(n), parent(n, -1);
+    for (int at = 0; at < n; ++at) {
+        if (disc[at] == -1) {
+            dfs(graph, disc, lows, parent, id, at);
+            cout << '\n';
         }
     }
-    cout << '\n';
 }
 
 int main() { TimeMeasure _;
@@ -52,17 +48,13 @@ int main() { TimeMeasure _;
         AddEdge(graph, 6, 7);
         AddEdge(graph, 7, 8);
         AddEdge(graph, 8, 5);
-        FindBridges(graph);
-        // 3 4
-// 2 3
-// 2 5
+        FindBridges(graph); // 3-4 2-3 2-5
     }
     {
         Graph graph(3);
         AddEdge(graph, 0, 1);
         AddEdge(graph, 1, 2);
-        FindBridges(graph);
-        // 1 2
+        FindBridges(graph); // 1-2 0-1
     }
     {
         Graph graph(5);
@@ -71,17 +63,14 @@ int main() { TimeMeasure _;
         AddEdge(graph, 2, 1);
         AddEdge(graph, 0, 3);
         AddEdge(graph, 3, 4);
-        FindBridges(graph);
-        // 3 4
+        FindBridges(graph); // 3-4 0-3
     }
     {
         Graph graph(4);
         AddEdge(graph, 0, 1);
         AddEdge(graph, 1, 2);
         AddEdge(graph, 2, 3);
-        FindBridges(graph);
-        // 2 3
-        // 1 2
+        FindBridges(graph); // 2-3 1-2 0-1
     }
     {
         Graph graph(7);
@@ -93,7 +82,6 @@ int main() { TimeMeasure _;
         AddEdge(graph, 1, 6);
         AddEdge(graph, 3, 5);
         AddEdge(graph, 4, 5);
-        FindBridges(graph);
-        // 1 6
+        FindBridges(graph); // 1-6
     }
 }
