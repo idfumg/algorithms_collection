@@ -6,36 +6,38 @@ void AddEdge(Graph& graph, int from, int to) {
     graph[from].push_back(to);
 }
 
-void PrintPath(vi& prev, int to) {
+void PrintPath(vi& parent, int to) {
     vi path;
-    for (int at = to; at != -1; at = prev[at]) {
+    for (int at = to; at != -1; at = parent[at]) {
         path.push_back(at);
     }
     reverse(path);
     cout << path << endl;
 }
 
-void dfs(Graph& graph, vb& visited, vi& prev, int at, int to) {
+void dfs(Graph& graph, vb& visited, vi& parent, int at, int to) {
     if (at == to) {
-        PrintPath(prev, to);
+        PrintPath(parent, to);
         return;
     }
-    visited[at] = true;
+
     for (int adj : graph[at]) {
         if (not visited[adj]) {
-            prev[adj] = at;
-            dfs(graph, visited, prev, adj, to);
-            prev[adj] = -1;
+            parent[adj] = at;
+            visited[at] = true;
+            dfs(graph, visited, parent, adj, to);
+            parent[adj] = -1;
+            visited[at] = false;
         }
     }
-    visited[at] = false;
 }
 
 void PrintAllPaths(Graph& graph, int from, int to) {
     int n = graph.size();
     vb visited(n);
-    vi prev(n, -1);
-    dfs(graph, visited, prev, from, to);
+    vi parent(n, -1);
+    visited[from] = true;
+    dfs(graph, visited, parent, from, to);
 }
 
 int main() { TimeMeasure _;

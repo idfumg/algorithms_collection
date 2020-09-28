@@ -66,4 +66,7 @@ int main() { TimeMeasure _;
     AddEdge(graph, 0, 3);
     AddEdge(graph, 3, 4);
     PrintSCCs(graph);
+// 0 1 2
+// 3
+// 4
 }

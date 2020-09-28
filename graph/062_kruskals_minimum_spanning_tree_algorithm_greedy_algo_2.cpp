@@ -42,14 +42,15 @@ bool Union(vi& parent, vi& rank, vi& count, int i, int j) {
 void KruskalsMinSpanningTree(vvi& graph, const int n) {
     sort(graph.begin(), graph.end(), [](const auto& a, const auto& b){return a[2] < b[2];});
     vi parent(n, -1), rank(n), count(n, 1);
-    int total_nodes = 0;
+    int total_nodes = 0, total = 0;
     for (const vi& edge : graph) {
         if (Union(parent, rank, count, edge[0], edge[1])) {
             cout << edge[0] << '-' << edge[1] << ' ' << edge[2] << endl;
+            total += edge[2];
             if (++total_nodes == n - 1) break;
         }
     }
-    cout << endl;
+    debugn(total);
 }
 
 int main() { TimeMeasure _;
