@@ -1,41 +1,40 @@
 #include "../template.hpp"
-#include "../collection/graph.hpp"
-#include "../collection/tree_node.hpp"
+
+using Graph = vvi;
+
+void AddEdge(Graph& graph, int from, int to) {
+    graph[from].push_back(to);
+    graph[to].push_back(from);
+}
 
 void PrintKCores(Graph& graph, int k) {
-    int n = size(graph);
-    vi degree(n), leaves;
+    int n = graph.size();
+    qi leaves;
+    vi degree(n);
     for (int i = 0; i < n; ++i) {
-        degree[i] = graph.edges(i).size();
+        degree[i] = graph[i].size();
         if (degree[i] < k) {
-            degree[i] = -1;
-            leaves.push_back(i);
+            leaves.push(i);
         }
     }
     while (not leaves.empty()) {
-        vi temp;
-        for (const auto& leaf : leaves) {
-            for (const auto& edge : graph.edges(leaf)) {
-                if (degree[edge.to] != -1) {
-                    if (--degree[edge.to] < k) {
-                        degree[edge.to] = -1;
-                        temp.push_back(edge.to);
-                    }
-                }
+        int at = leaves.front(); leaves.pop();
+        for (int adj : graph[at]) {
+            if (degree[adj] != 0 and --degree[adj] < k) {
+                leaves.push(adj);
             }
         }
-        leaves = temp;
+        degree[at] = 0;
     }
-    cout << "K-Cores:" << endl;
     for (int i = 0; i < n; ++i) {
-        if (degree[i] >= k) {
-            cout << i << ": ";
-            for (const auto& edge : graph.edges(i)) {
-                if (degree[edge.to] >= k) {
-                    cout << edge.to << " ";
+        if (degree[i] != 0) {
+            cout << i << ':' << ' ';
+            for (int adj : graph[i]) {
+                if (degree[adj] != 0) {
+                    cout << adj << ' ';
                 }
             }
-            cout << endl;
+            cout << '\n';
         }
     }
 }
@@ -43,39 +42,49 @@ void PrintKCores(Graph& graph, int k) {
 int main() { TimeMeasure _;
     int k = 3;
     Graph g1(9);
-    g1.addUndirectedEdge(0, 1);
-    g1.addUndirectedEdge(0, 2);
-    g1.addUndirectedEdge(1, 2);
-    g1.addUndirectedEdge(1, 5);
-    g1.addUndirectedEdge(2, 3);
-    g1.addUndirectedEdge(2, 4);
-    g1.addUndirectedEdge(2, 5);
-    g1.addUndirectedEdge(2, 6);
-    g1.addUndirectedEdge(3, 4);
-    g1.addUndirectedEdge(3, 6);
-    g1.addUndirectedEdge(3, 7);
-    g1.addUndirectedEdge(4, 6);
-    g1.addUndirectedEdge(4, 7);
-    g1.addUndirectedEdge(5, 6);
-    g1.addUndirectedEdge(5, 8);
-    g1.addUndirectedEdge(6, 7);
-    g1.addUndirectedEdge(6, 8);
+    AddEdge(g1, 0, 1);
+    AddEdge(g1, 0, 2);
+    AddEdge(g1, 1, 2);
+    AddEdge(g1, 1, 5);
+    AddEdge(g1, 2, 3);
+    AddEdge(g1, 2, 4);
+    AddEdge(g1, 2, 5);
+    AddEdge(g1, 2, 6);
+    AddEdge(g1, 3, 4);
+    AddEdge(g1, 3, 6);
+    AddEdge(g1, 3, 7);
+    AddEdge(g1, 4, 6);
+    AddEdge(g1, 4, 7);
+    AddEdge(g1, 5, 6);
+    AddEdge(g1, 5, 8);
+    AddEdge(g1, 6, 7);
+    AddEdge(g1, 6, 8);
     PrintKCores(g1, k);
 
     cout << endl << endl;
 
     Graph g2(13);
-    g2.addUndirectedEdge(0, 1);
-    g2.addUndirectedEdge(0, 2);
-    g2.addUndirectedEdge(0, 3);
-    g2.addUndirectedEdge(1, 4);
-    g2.addUndirectedEdge(1, 5);
-    g2.addUndirectedEdge(1, 6);
-    g2.addUndirectedEdge(2, 7);
-    g2.addUndirectedEdge(2, 8);
-    g2.addUndirectedEdge(2, 9);
-    g2.addUndirectedEdge(3, 10);
-    g2.addUndirectedEdge(3, 11);
-    g2.addUndirectedEdge(3, 12);
+    AddEdge(g2, 0, 1);
+    AddEdge(g2, 0, 2);
+    AddEdge(g2, 0, 3);
+    AddEdge(g2, 1, 4);
+    AddEdge(g2, 1, 5);
+    AddEdge(g2, 1, 6);
+    AddEdge(g2, 2, 7);
+    AddEdge(g2, 2, 8);
+    AddEdge(g2, 2, 9);
+    AddEdge(g2, 3, 10);
+    AddEdge(g2, 3, 11);
+    AddEdge(g2, 3, 12);
     PrintKCores(g2, k);
 }
+
+// K-Cores:
+// 2: 3 4 6
+// 3: 2 4 6 7
+// 4: 2 3 6 7
+// 6: 2 3 4 7
+// 7: 3 4 6
+
+
+// K-Cores:

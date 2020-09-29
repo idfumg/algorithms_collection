@@ -1,43 +1,63 @@
 #include "../template.hpp"
 
-int dfs(vvi& graph, vb& visited, vi& ordering, int at, int pos) {
-    visited[at] = true;
-    for (int adj : graph[at]) {
-        if (not visited[adj]) {
-            pos = dfs(graph, visited, ordering, adj, pos);
-        }
-    }
-    ordering[pos] = at;
-    return pos - 1;
+using Graph = vvi;
+
+void AddDirectedEdge(Graph& graph, int from, int to) {
+    graph[from].push_back(to);
 }
 
-vi TopologicalSort(vvi& graph) {
-    int n = graph.size(), pos = n - 1;
-    vb visited(n);
-    vi ordering(n);
+vi KhansTopoSort(Graph& graph) {
+    int n = graph.size();
+    vi ordering;
+    qi q;
+    vi indegree(n);
     for (int i = 0; i < n; ++i) {
-        if (not visited[i]) {
-            pos = dfs(graph, visited, ordering, i, pos);
+        for (int adj : graph[i]) {
+            ++indegree[adj];
+        }
+    }
+    for (int i = 0; i < n; ++i) {
+        if (indegree[i] == 0) {
+            q.push(i);
+        }
+    }
+    while (not q.empty()) {
+        int at = q.front(); q.pop();
+        ordering.push_back(at);
+        for (int adj : graph[at]) {
+            if (--indegree[adj] == 0) {
+                q.push(adj);
+            }
         }
     }
     return ordering;
 }
 
-int MaximumEdgesToAdd(vvi& graph) {
-    int n = graph.size(), total = 0;
-    vi ordering = TopologicalSort(graph);
+int MaximumEdgesToAdd(Graph& graph) {
+    int n = graph.size();
+    vi ordering = KhansTopoSort(graph);
+    int count = 0;
     for (int i = 0; i < n; ++i) {
-        total += n - i - 1 - graph[i].size();
+        vb visited(n);
+        int at = ordering[i];
+        for (int adj : graph[at]) {
+            visited[adj] = true;
+        }
+        for (int j = i + 1; j < n; ++j) {
+            if (not visited[ordering[j]]) {
+                ++count;
+            }
+        }
     }
-    return total;
+    return count;
 }
 
-void MaximumEdgesToPrint(vvi& graph) {
+void MaximumEdgesToPrint(Graph& graph) {
     int n = graph.size();
-    vi ordering = TopologicalSort(graph);
+    vi ordering = KhansTopoSort(graph);
     for (int i = 0; i < n; ++i) {
-        int at = ordering[i];
         vb visited(n);
+        int at = ordering[i];
         for (int adj : graph[at]) {
             visited[adj] = true;
         }
@@ -50,14 +70,14 @@ void MaximumEdgesToPrint(vvi& graph) {
 }
 
 int main() { TimeMeasure _;
-    vvi graph(6);
-    graph[5].push_back(2);
-    graph[5].push_back(0);
-    graph[4].push_back(0);
-    graph[4].push_back(1);
-    graph[2].push_back(3);
-    graph[3].push_back(1);
-    cout << MaximumEdgesToAdd(graph) << endl;
+    Graph graph(6);
+    AddDirectedEdge(graph, 5, 2);
+    AddDirectedEdge(graph, 5, 0);
+    AddDirectedEdge(graph, 4, 0);
+    AddDirectedEdge(graph, 4, 1);
+    AddDirectedEdge(graph, 2, 3);
+    AddDirectedEdge(graph, 3, 1);
+    cout << MaximumEdgesToAdd(graph) << endl; // 9
     MaximumEdgesToPrint(graph);
     /*
 5-4

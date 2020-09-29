@@ -2,15 +2,6 @@
 
 using Graph = vvi;
 
-void AddUndirectedEdge(Graph& graph, int from, int to) {
-    graph[from].push_back(to);
-    graph[to].push_back(from);
-}
-
-void AddDirectedEdge(Graph& graph, int from, int to) {
-    graph[from].push_back(to);
-}
-
 bool bfs(Graph& graph, vi& color, int from) {
     int n = graph.size();
     qi q;

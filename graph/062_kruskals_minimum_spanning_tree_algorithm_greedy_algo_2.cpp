@@ -71,7 +71,7 @@ int main() { TimeMeasure _;
                 {5, 4, 10},
                 {3, 4, 9},
             });
-        KruskalsMinSpanningTree(graph, n);
+        KruskalsMinSpanningTree(graph, n); // 37
     }
     {
         int n = 5;
@@ -92,6 +92,6 @@ int main() { TimeMeasure _;
                 {4, 2, 7},
                 {4, 3, 9},
             });
-        KruskalsMinSpanningTree(graph, n);
+        KruskalsMinSpanningTree(graph, n); // 16
     }
 }
