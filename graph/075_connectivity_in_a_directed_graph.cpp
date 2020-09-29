@@ -18,9 +18,9 @@ void dfs(Graph& graph, vb& visited, int at) {
 Graph Transpose(Graph& graph) {
     int n = graph.size();
     Graph newgraph(n);
-    for (int at = 0; at < n; ++at) {
-        for (int adj : graph[at]) {
-            AddEdge(newgraph, adj, at);
+    for (int i = 0; i < n; ++i) {
+        for (int adj : graph[i]) {
+            AddEdge(newgraph, adj, i);
         }
     }
     return newgraph;
@@ -31,14 +31,12 @@ bool IsStronglyConnected(Graph& graph) {
 
     vb visited(n);
     dfs(graph, visited, 0);
-    if (not all_of(visited.begin(), visited.end(), [](bool v){return v;})) return false;
+    if (any_of(visited.begin(), visited.end(),[](bool v){return !v;}))return false;
 
     visited = vb(n);
     Graph transposed = Transpose(graph);
     dfs(transposed, visited, 0);
-    if (not all_of(visited.begin(), visited.end(), [](bool v){return v;})) return false;
-
-    return true;
+    return !any_of(visited.begin(), visited.end(), [](bool v){return !v;});
 }
 
 int main() { TimeMeasure _;

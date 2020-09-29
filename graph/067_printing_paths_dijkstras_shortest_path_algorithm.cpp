@@ -2,40 +2,41 @@
 
 using Graph = vvi;
 
-struct Node : public vi {
-    using vi::vi;
-    bool operator<(const Node& rhs) const { return (*this)[1] > rhs[1]; }
+struct Node {
+    int idx;
+    int weight;
+    bool operator<(const Node& rhs) const { return weight > rhs.weight; }
 };
 
 void Dijkstra(Graph& graph, int from) {
     int n = graph.size();
-    priority_queue<Node> pq;
-    vi dist(n, INF);
     vb visited(n);
-    vi prev(n, -1);
+    vi dist(n, INF);
     dist[from] = 0;
+    vi prev(n, -1);
+    priority_queue<Node> pq;
     pq.push({from, dist[from]});
     while (not pq.empty()) {
-        int at = pq.top()[0]; pq.pop();
+        int at = pq.top().idx; pq.pop();
         visited[at] = true;
         for (int i = 0; i < n; ++i) {
-            int cost = dist[at] + graph[at][i];
-            if (graph[at][i] and cost < dist[i] and not visited[i]) {
-                dist[i] = cost;
-                prev[i] = at;
-                pq.push({i, cost});
+            if (graph[at][i] and not visited[i]) {
+                int cost = dist[at] + graph[at][i];
+                if (cost < dist[i]) {
+                    dist[i] = cost;
+                    prev[i] = at;
+                    pq.push({i, dist[i]});
+                }
             }
         }
     }
-
-    for (int i = 0; i < n; ++i) {
-        if (i == from) continue;
+    for (int i = 1; i < n; ++i) {
         vi path;
         for (int at = i; at != -1; at = prev[at]) {
             path.push_back(at);
         }
         reverse(path);
-        cout << '[' << from << '-' << '>' << i << ']' << ' ' << path << '[' << dist[i] << ']' << '\n';
+        cout << from << '-' << '>' << i << ' ' << '(' << dist[i] << ')' << ' ' << path << '\n';
     }
 }
 

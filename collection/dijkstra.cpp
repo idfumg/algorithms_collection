@@ -1,65 +1,64 @@
 #include "../template.hpp"
 
-struct Node : public vi {
-    using vi::vi;
-    bool operator<(const Node& rhs) const { return (*this)[1] > rhs[1]; }
+struct Node {
+    int idx;
+    int weight;
+    bool operator<(const Node& rhs) const { return weight > rhs.weight; }
 };
+
+ostream& operator<<(ostream& os, const Node& node) {
+    return os << '{' << node.idx << ',' << node.weight << '}';
+}
 
 using Graph = vector<vector<Node>>;
 
-void AddEdge(Graph& graph, int from, int to, int weight) {
+void AddDirectedEdge(Graph& graph, int from, int to, int weight) {
     graph[from].push_back({to, weight});
-    //graph[to].push_back({from, weight});
 }
 
 void Dijkstra(Graph& graph, int from, int to) {
     int n = graph.size();
-    vb visited(n);
-    vi prev(n, -1);
-
+    priority_queue<Node> pq;
     vi dist(n, INF);
     dist[from] = 0;
-
-    priority_queue<Node> pq;
     pq.push({from, dist[from]});
-
+    vb visited(n);
+    vi prev(n, -1);
     while (not pq.empty()) {
-        Node at = pq.top(); pq.pop();
-        visited[at[0]] = true;
-
-        for (Node& adj : graph[at[0]]) {
-            if (not visited[adj[0]]) {
-                int cost = dist[at[0]] + adj[1];
-                if (cost < dist[adj[0]]) {
-                    dist[adj[0]] = cost;
-                    prev[adj[0]] = at[0];
-                    pq.push({adj[0], cost});
+        int at = pq.top().idx; pq.pop();
+        for (Node& adj : graph[at]) {
+            if (not visited[adj.idx]) {
+                int cost = dist[at] + adj.weight;
+                if (dist[adj.idx] > cost) {
+                    dist[adj.idx] = cost;
+                    prev[adj.idx] = at;
+                    pq.push({adj.idx, cost});
                 }
             }
         }
     }
-
-    debugn(dist);
-
+    cout << "distances: " << dist << '\n';
     vi path;
-    for (int at = to; at != -1; at = prev[at]) path.push_back(at);
+    for (int at = to; at != -1; at = prev[at]) {
+        path.push_back(at);
+    }
     reverse(path);
-    debugn(path);
+    cout << "path: " << path << '\n';
 }
 
 int main() { TimeMeasure _;
     Graph graph(7);
-    AddEdge(graph, 0, 1, 3);
-    AddEdge(graph, 0, 2, 2);
-    AddEdge(graph, 0, 5, 3);
-    AddEdge(graph, 1, 3, 1);
-    AddEdge(graph, 1, 2, 6);
-    AddEdge(graph, 2, 3, 1);
-    AddEdge(graph, 2, 4, 10);
-    AddEdge(graph, 3, 4, 5);
-    AddEdge(graph, 5, 4, 7);
+    AddDirectedEdge(graph, 0, 1, 3);
+    AddDirectedEdge(graph, 0, 2, 2);
+    AddDirectedEdge(graph, 0, 5, 3);
+    AddDirectedEdge(graph, 1, 3, 1);
+    AddDirectedEdge(graph, 1, 2, 6);
+    AddDirectedEdge(graph, 2, 3, 1);
+    AddDirectedEdge(graph, 2, 4, 10);
+    AddDirectedEdge(graph, 3, 4, 5);
+    AddDirectedEdge(graph, 5, 4, 7);
     Dijkstra(graph, 0, 4);
-}
 
 // 0 3 2 3 8 3 1000000000
 // 0 2 3 4
+}
