@@ -1,5 +1,26 @@
 #include "../template.hpp"
 
+bool IsDifferenceOfOddAndEvenDigitsIs1(int n) {
+    int diff = 0;
+    bool isodd = (static_cast<int>(log10(n)) + 1) % 2 != 0;
+    while (n > 0) {
+        diff = isodd ? (diff + n % 10) : (diff - n % 10);
+        n /= 10;
+        isodd = !isodd;
+    }
+    return diff == 1;
+}
+
+int naive(int n) {
+    int count = 0, from = pow(10, n) / 10, to = pow(10, n) - 1;
+    for (int i = from; i <= to; ++i) {
+        if (IsDifferenceOfOddAndEvenDigitsIs1(i)) {
+            ++count;
+        }
+    }
+    return count;
+}
+
 int rec(int n, int prev, bool even) {
     if (n == 0 and prev == 1) return 1;
     if (n == 0) return 0;
@@ -46,13 +67,14 @@ int tab(int n) {
             }
         }
     }
-    debug(dp);
     return total;
 }
 
 int main() { TimeMeasure _; __x();
-    cout << rec(2) << endl;
-    cout << rec(3) << endl;
-    cout << tab(2) << endl;
-    cout << tab(3) << endl;
+    cout << naive(2) << endl; // 9
+    cout << naive(3) << endl; // 54
+    cout << rec(2) << endl; // 9
+    cout << rec(3) << endl; // 54
+    cout << tab(2) << endl; // 9
+    cout << tab(3) << endl; // 54
 }

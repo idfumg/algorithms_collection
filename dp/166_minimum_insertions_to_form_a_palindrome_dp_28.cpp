@@ -1,6 +1,6 @@
 #include "../template.hpp"
 
-int tab(const string& s) {
+int tab(const string& s) { // With Iterative Passes Algorithm (1..1, 1..2, .. , 1..n)
     int n = size(s);
     vvi dp(n + 2, vi(n + 2, INF));
     for (int i = 1; i <= n; ++i) {
@@ -20,20 +20,20 @@ int tab(const string& s) {
                 dp[i][j] = dp[i + 1][j - 1];
             }
             else {
-                dp[i][j] = min({j - 1, dp[i + 1][j] + dp[i][j - 1]});
+                dp[i][j] = min({dp[i + 1][j], dp[i][j - 1]}) + 1;
             }
         }
     }
     return dp[1][n];
 }
 
-int tab2(const string& s) {
+int tab2(const string& s) { // With Straightforward Algorithm (how minimum to insert from i..j)
     int n = size(s);
-    vvi dp(n + 2, vi(n + 2, INF));
+    vvi dp(n + 2, vi(n + 2));
     for (int i = n; i >= 1; --i) {
         for (int j = 1; j <= n; ++j) {
             if (i > j) {
-                dp[i][j] = INF;
+                dp[i][j] = 0;
             }
             else if (i == j) {
                 dp[i][j] = 0;
@@ -45,7 +45,6 @@ int tab2(const string& s) {
                 dp[i][j] = dp[i + 1][j - 1];
             }
             else {
-                //dp[i][j] = min(j - 1, dp[i][j - 1] + dp[i + 1][j]);
                 dp[i][j] = min(dp[i][j - 1], dp[i + 1][j]) + 1;
             }
         }

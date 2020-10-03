@@ -21,4 +21,6 @@ int tab(const string& a) {
 int main() { TimeMeasure _; __x();
     cout << tab("baca") << endl; // 1
     cout << tab("geek") << endl; // 2
+    cout << tab("aebcbda") << endl; // 2
+    cout << tab("geeksforgeeks") << endl; // 8
 }
