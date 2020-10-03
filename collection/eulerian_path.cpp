@@ -7,30 +7,56 @@ void AddEdge(Graph& graph, int from, int to) {
     graph[to].push_back(from);
 }
 
-void ReachAllVertices(Graph& graph, vb& visited, int from) {
-    visited[from] = true;
-    for (int adj : graph[from]) {
+void dfs(Graph& graph, vvb& isBridge, vi& nonBridges, vi& disc, vi& lows, vi& parent, int& id, int at) {
+    disc[at] = lows[at] = id++;
+    for (int adj : graph[at]) {
+        if (disc[adj] == -1) {
+            parent[adj] = at;
+            dfs(graph, isBridge, nonBridges, disc, lows, parent, id, adj);
+            lows[at] = min(lows[at], lows[adj]);
+            if (disc[at] < lows[adj]) {
+                isBridge[adj][at] = isBridge[at][adj] = true;
+            }
+        }
+        else if (adj != parent[at]) {
+            lows[at] = min(lows[at], disc[adj]);
+        }
+        nonBridges[at] += isBridge[at][adj] ? 0 : 1;
+    }
+}
+
+void TarjanBridges(Graph& graph, vvb& isBridge, vi& nonBridges) {
+    int n = graph.size(), id = 0;
+    vi disc(n, -1), lows(n), parent(n, -1);
+    for (int i = 0; i < n; ++i) {
+        if (disc[i] == -1) {
+            dfs(graph, isBridge, nonBridges, disc, lows, parent, id, i);
+        }
+    }
+}
+
+void TraverseAllConnectedVertices(Graph& graph, vb& visited, int at) {
+    visited[at] = true;
+    for (int adj : graph[at]) {
         if (not visited[adj]) {
-            ReachAllVertices(graph, visited, adj);
+            TraverseAllConnectedVertices(graph, visited, adj);
         }
     }
 }
 
 bool IsGraphConnected(Graph& graph) {
-    int n = graph.size(), from = 0;
+    int n = graph.size(), from = -1;
     for (int i = 0; i < n; ++i) {
         if (not graph[i].empty()) {
             from = i;
             break;
         }
     }
-    if (from == n) {
-        return true;
-    }
+    if (from == -1) return true;
     vb visited(n);
-    ReachAllVertices(graph, visited, from);
+    TraverseAllConnectedVertices(graph, visited, from);
     for (int i = 0; i < n; ++i) {
-        if (not graph[i].empty() and not visited[i]) {
+        if (not visited[i] and not graph[i].empty()) {
             return false;
         }
     }
@@ -38,97 +64,71 @@ bool IsGraphConnected(Graph& graph) {
 }
 
 bool IsEulerian(Graph& graph) {
+    int n = graph.size();
+
     if (not IsGraphConnected(graph)) {
-        cout << "Graph is not Eulerian" << endl;
         return false;
     }
-    int odd = 0, n =graph.size();
+
+    int odd = 0;
     for (int i = 0; i < n; ++i) {
         if (graph[i].size() % 2 != 0) {
             ++odd;
         }
     }
-    if (odd > 2) {
-        cout << "Graph is not Eulerian" << endl;
-        return false;
-    }
-    else if (odd == 0) {
+
+    if (odd == 0) {
         cout << "Graph has Eulerian path and cycle" << endl;
         return true;
     }
-    else {
-        cout << "Graph has Eulerian path" << endl;
+    if (odd == 1 or odd == 2) {
+        cout << "Graph has Eulerian path and cycle" << endl;
         return true;
     }
+    cout << "Graph is not Eulerian" << endl;
+    return false;
 }
 
-void dfs(Graph& graph, vi& disc, vi& lows, vi& parent, int& id, int at, vvb& isBridge, vi& nonBridges) {
-    disc[at] = lows[at] = id++;
-    for (int adj : graph[at]) {
-        if (disc[adj] == -1) {
-            parent[adj] = at;
-            dfs(graph, disc, lows, parent, id, adj, isBridge, nonBridges);
-            lows[at] = min(lows[at], lows[adj]);
-            if (disc[at] < lows[adj]) {
-                isBridge[at][adj] = isBridge[adj][at] = true;
-            }
-            else {
-                nonBridges[at] += 1;
-            }
-        }
-        else if (parent[at] != adj) {
-            lows[at] = min(lows[at], disc[adj]);
-        }
-    }
-}
-
-void TarjanFindBridges(Graph& graph, vvb& isBridge, vi& nonBridges) {
-    int n = graph.size(), id = 0;
-    vi disc(n, -1), lows(n, -1), parent(n, -1);
-    for (int i = 0; i < n; ++i) {
-        if (disc[i] == -1) {
-            dfs(graph, disc,  lows, parent, id, i, isBridge, nonBridges);
-        }
-    }
-}
-
-void PrintEuleurPath(Graph& graph, int at, vvb& isDisabled, vvb& isBridge, vi& nonBridges) {
+void dfs_euler(Graph& graph, vvb& isDisabled, vvb& isBridge, vi& nonBridges, int at) {
     for (int adj : graph[at]) {
         if (not isDisabled[at][adj]) {
-            if (nonBridges[at] > 0 and not isBridge[at][adj]) {
+            isDisabled[adj][at] = isDisabled[at][adj] = true;
+            if (isBridge[at][adj] and nonBridges[at] == 0) {
                 cout << at << '-' << adj << ' ';
-                isDisabled[at][adj] = isDisabled[adj][at] = true;
-                nonBridges[at] -= 1;
-                PrintEuleurPath(graph, adj, isDisabled, isBridge, nonBridges);
+                dfs_euler(graph, isDisabled, isBridge, nonBridges, adj);
             }
-            else {
+            else if (not isBridge[at][adj] and nonBridges[at] > 0) {
                 cout << at << '-' << adj << ' ';
-                isDisabled[at][adj] = isDisabled[adj][at] = true;
-                PrintEuleurPath(graph, adj, isDisabled, isBridge, nonBridges);
+                nonBridges[at] -= 1;
+                nonBridges[adj] -= 1;
+                dfs_euler(graph, isDisabled, isBridge, nonBridges, adj);
             }
         }
     }
 }
 
 void PrintEuleurPath(Graph& graph) {
+    int n = graph.size();
+
     if (not IsEulerian(graph)) {
-        cout << '-' << endl;
+        cout << '-' << '\n';
         return;
     }
 
-    int n = graph.size();
-    vvb isDisabled(n, vb(n)), isBridge(n, vb(n));
-    vi nonBridges(n);
-    TarjanFindBridges(graph, isBridge, nonBridges);
+    vvb isBridge(n, vb(n)), isDisabled(n, vb(n));
+    vi nonBridges(n, 0);
+    TarjanBridges(graph, isBridge, nonBridges);
 
     int from = 0;
     for (int i = 0; i < n; ++i) {
         if (graph[i].size() % 2 != 0) {
-            from = i; // start from a vertex with an odd number of edges or just 0
+            from = i;
             break;
         }
     }
-    PrintEuleurPath(graph, from, isDisabled, isBridge, nonBridges); cout << endl;
+
+    dfs_euler(graph, isDisabled, isBridge, nonBridges, from);
+    cout << '\n';
 }
 
 int main() { TimeMeasure _;

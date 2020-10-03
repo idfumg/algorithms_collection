@@ -1,39 +1,42 @@
 #include "../template.hpp"
-#include "../collection/graph.hpp"
-#include "../collection/tree_node.hpp"
 
 void bfs(vi& arr) {
-    int n = size(arr);
-
+    int n = arr.size();
+    vb visited(n);
+    vi dist(n, INF);
+    dist[0] = 0;
     qi q;
     q.push(0);
-
-    unordered_map<int, vi> idxs;
-    for (int i = 0; i < n; ++i) idxs[arr[i]].push_back(i);
-
-    vi dist(n, -1);
-    dist[0] = 0;
-
+    unordered_map<int, vi> idx;
+    for (int i = 0; i < n; ++i) {
+        idx[arr[i]].push_back(i);
+    }
     while (not q.empty()) {
         int at = q.front(); q.pop();
+        visited[at] = true;
 
-        for (int idx : idxs[arr[at]]) {
-            if (dist[idx] == -1) {
-                dist[idx] = dist[at] + 1;
-                q.push(idx);
+        int x = at - 1;
+        int y = at + 1;
+        int z = arr[at];
+
+        if (idx.count(z)) {
+            for (int pos : idx[z]) {
+                if (not visited[pos]) {
+                    dist[pos] = min(dist[pos], dist[at] + 1);
+                    q.push(pos);
+                }
             }
         }
-        if (at > 0 and dist[at - 1] == -1) {
-            dist[at - 1] = dist[at] + 1;
-            q.push(at - 1);
+        if (x >= 0 and not visited[x]) {
+            dist[x] = min(dist[x], dist[at] + 1);
+            q.push(x);
         }
-        if (at + 1 < n and dist[at + 1] == -1) {
-            dist[at + 1] = dist[at] + 1;
-            q.push(at + 1);
+        if (y < n and not visited[y]) {
+            dist[y] = min(dist[y], dist[at] + 1);
+            q.push(y);
         }
     }
-
-    cout << dist.back() << endl;
+    cout << dist[n - 1] << '\n';
 }
 
 int main() { TimeMeasure _;

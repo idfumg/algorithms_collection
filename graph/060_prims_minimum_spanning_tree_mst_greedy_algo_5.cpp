@@ -56,7 +56,7 @@ int main() { TimeMeasure _;
         AddEdge(graph, 2, 5, 4);
         AddEdge(graph, 5, 4, 10);
         AddEdge(graph, 3, 4, 9);
-        PrimsMinSpanningTree(graph);
+        PrimsMinSpanningTree(graph); // 37
     }
     {
         int n = 5;
@@ -75,6 +75,6 @@ int main() { TimeMeasure _;
         AddEdge(graph, 4, 1, 5);
         AddEdge(graph, 4, 2, 7);
         AddEdge(graph, 4, 3, 9);
-        PrimsMinSpanningTree(graph);
+        PrimsMinSpanningTree(graph); // 16
     }
 }

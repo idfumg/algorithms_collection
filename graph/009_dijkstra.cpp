@@ -39,7 +39,9 @@ void Dijkstra(const Graph& graph, int from, int to) {
     vi path;
     for (int at = to; at != -1; at = prev[at]) path.push_back(at);
     reverse(path);
-    cout << path;
+    cout << dist << endl;
+    cout << path << endl;
+    cout << dist[to] << endl;
 }
 
 int main() { TimeMeasure _;

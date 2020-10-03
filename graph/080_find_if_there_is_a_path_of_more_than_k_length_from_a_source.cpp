@@ -7,13 +7,14 @@ void AddEdge(Graph& graph, int from, int to, int weight) {
     graph[to].push_back({from, weight});
 }
 
-bool dfs(Graph& graph, vb& visited, int k, int at) {
-    if (k <= 0) return true;
+bool dfs(Graph& graph, vb& visited, int at, int k) {
+    if (k < 0) return true;
     for (vi& adj : graph[at]) {
-        if (visited[adj[0]]) continue;
-        visited[adj[0]] = true;
-        if (dfs(graph, visited, k - adj[1], adj[0])) return true;
-        visited[adj[0]] = false;
+        if (not visited[adj[0]]) {
+            visited[adj[0]] = true;
+            if (dfs(graph, visited, adj[0], k - adj[1])) return true;
+            visited[adj[0]] = false;
+        }
     }
     return false;
 }
@@ -21,8 +22,7 @@ bool dfs(Graph& graph, vb& visited, int k, int at) {
 bool PathMoreThanK(Graph& graph, int from, int k) {
     int n = graph.size();
     vb visited(n);
-    visited[from] = true;
-    return dfs(graph, visited, k, from);
+    return dfs(graph, visited, from, k);
 }
 
 int main() { TimeMeasure _;
@@ -42,6 +42,6 @@ int main() { TimeMeasure _;
     AddEdge(graph, 6, 8, 6);
     AddEdge(graph, 7, 8, 7);
 
-    PathMoreThanK(graph, 0, 62) ? cout << "Yes\n" : cout << "No\n";
-    PathMoreThanK(graph, 0, 60) ? cout << "Yes\n" : cout << "No\n";
+    PathMoreThanK(graph, 0, 62) ? cout << "Yes\n" : cout << "No\n"; // no
+    PathMoreThanK(graph, 0, 60) ? cout << "Yes\n" : cout << "No\n"; // yes
 }

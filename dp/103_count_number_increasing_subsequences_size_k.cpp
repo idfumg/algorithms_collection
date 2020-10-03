@@ -3,21 +3,23 @@
 int tab(vi& arr, int K) {
     int n = arr.size();
     vvi dp(K + 1, vi(n));
-    for (int k = 1; k <= K; ++k) {
+    for (int i = 0; i < n; ++i) {
+        dp[1][i] = 1;
+    }
+    for (int k = 2; k <= K; ++k) {
         for (int i = 0; i < n; ++i) {
-            if (k == 1) {
-                dp[k][i] = 1;
-            }
-            else {
-                for (int j = 0; j < i; ++j) {
-                    if (arr[i] > arr[j]) {
-                        dp[k][i] += dp[k - 1][j];
-                    }
+            for (int j = 0; j < i; ++j) {
+                if (arr[i] > arr[j]) {
+                    dp[k][i] += dp[k - 1][j];
                 }
             }
         }
     }
-    return accumulate(dp[K].begin(), dp[K].end(), 0);
+    int total = 0;
+    for (int i = 0; i < n; ++i) {
+        total += dp[K][i];
+    }
+    return total;
 }
 
 int main() { TimeMeasure _; __x();

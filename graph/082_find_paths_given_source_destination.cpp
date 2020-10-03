@@ -4,28 +4,29 @@ using Graph = vvi;
 
 void AddEdge(Graph& graph, int from, int to) {
     graph[from].push_back(to);
+    //graph[to].push_back(from);
 }
 
-void PrintPath(vi& prev, int to) {
+void PrintPath(vi& parent, int to) {
     vi path;
-    for (int at = to; at != -1; at = prev[at]) {
+    for (int at = to; at != -1; at = parent[at]) {
         path.push_back(at);
     }
     reverse(path);
-    cout << path << endl;
+    cout << path << '\n';
 }
 
-void dfs(Graph& graph, vb& visited, vi& prev, int at, int to) {
+void dfs(Graph& graph, vb& visited, int at, int to, vi& parent) {
     if (at == to) {
-        PrintPath(prev, to);
+        PrintPath(parent, to);
         return;
     }
     visited[at] = true;
     for (int adj : graph[at]) {
         if (not visited[adj]) {
-            prev[adj] = at;
-            dfs(graph, visited, prev, adj, to);
-            prev[adj] = -1;
+            parent[adj] = at;
+            dfs(graph, visited, adj, to, parent);
+            parent[adj] = -1;
         }
     }
     visited[at] = false;
@@ -34,8 +35,8 @@ void dfs(Graph& graph, vb& visited, vi& prev, int at, int to) {
 void PrintAllPaths(Graph& graph, int from, int to) {
     int n = graph.size();
     vb visited(n);
-    vi prev(n, -1);
-    dfs(graph, visited, prev, from, to);
+    vi parent(n, -1);
+    dfs(graph, visited, from, to, parent);
 }
 
 int main() { TimeMeasure _;
@@ -47,4 +48,7 @@ int main() { TimeMeasure _;
     AddEdge(graph, 2, 1);
     AddEdge(graph, 1, 3);
     PrintAllPaths(graph, 2, 3);
+// 2 0 1 3
+// 2 0 3
+// 2 1 3
 }

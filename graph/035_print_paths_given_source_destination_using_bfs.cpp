@@ -1,23 +1,28 @@
 #include "../template.hpp"
-#include "../collection/graph.hpp"
-#include "../collection/tree_node.hpp"
 
-void FindPaths(const Graph& graph, const int from, const int to) {
-    int n = size(graph);
-    deque<vector<int>> q;
-    q.push_back({from});
+using Graph = vvi;
+
+void AddEdge(Graph& graph, int from, int to) {
+    graph[from].push_back(to);
+}
+
+void FindPaths(Graph& graph, int from, int to) {
+    int n = graph.size();
     vb visited(n);
+    queue<vi> q;
+    q.push({from});
     while (not q.empty()) {
-        vi path = q.front(); q.pop_front();
+        vi path = q.front(); q.pop();
         visited[path.back()] = true;
-        for (const auto& edge : graph.edges(path.back())) {
-            if (not visited[edge.to]) {
-                vi newpath = path; newpath.push_back(edge.to);
+        for (int adj : graph[path.back()]) {
+            if (not visited[adj]) {
+                vi newpath = path;
+                newpath.push_back(adj);
                 if (newpath.back() == to) {
-                    cout << newpath << endl;
+                    cout << newpath << '\n';
                 }
                 else {
-                    q.push_back(newpath);
+                    q.push(newpath);
                 }
             }
         }
@@ -26,11 +31,14 @@ void FindPaths(const Graph& graph, const int from, const int to) {
 
 int main() { TimeMeasure _;
     Graph graph(4);
-    graph.addDirectedEdge(0, 3);
-    graph.addDirectedEdge(0, 1);
-    graph.addDirectedEdge(0, 2);
-    graph.addDirectedEdge(1, 3);
-    graph.addDirectedEdge(2, 0);
-    graph.addDirectedEdge(2, 1);
+    AddEdge(graph, 0, 3);
+    AddEdge(graph, 0, 1);
+    AddEdge(graph, 0, 2);
+    AddEdge(graph, 1, 3);
+    AddEdge(graph, 2, 0);
+    AddEdge(graph, 2, 1);
     FindPaths(graph, 2, 3);
 }
+// 2 0 3
+// 2 1 3
+// 2 0 1 3

@@ -20,29 +20,6 @@ vi DAGShortestPath(Graph& graph, const vi& ordering, int from) {
     return dist;
 }
 
-int dfs(Graph& graph, vb& visited, vi& ordering, int at, int pos) {
-    visited[at] = true;
-    for (vi& adj : graph[at]) {
-        if (not visited[adj[0]]) {
-            pos = dfs(graph, visited, ordering, adj[0], pos);
-        }
-    }
-    ordering[pos] = at;
-    return pos - 1;
-}
-
-vi DFSBasedTopologicalSort(Graph& graph) {
-    int n = graph.size(), pos = n - 1;
-    vi ordering(n);
-    vb visited(n);
-    for (int i = 0; i < n; ++i) {
-        if (not visited[i]) {
-            pos = dfs(graph, visited, ordering, i, pos);
-        }
-    }
-    return ordering;
-}
-
 vi KhansTopologicalSort(Graph& graph) {
     int n = graph.size();
     vi ordering, indegree(n);
@@ -70,23 +47,6 @@ vi KhansTopologicalSort(Graph& graph) {
 }
 
 int main() { TimeMeasure _;
-    Graph graph(6);
-    AddDirectedEdge(graph, 0, 1, 3);
-    AddDirectedEdge(graph, 0, 2, 2);
-    AddDirectedEdge(graph, 0, 5, 3);
-    AddDirectedEdge(graph, 1, 3, 1);
-    AddDirectedEdge(graph, 1, 2, 6);
-    AddDirectedEdge(graph, 2, 3, 1);
-    AddDirectedEdge(graph, 2, 4, 10);
-    AddDirectedEdge(graph, 3, 4, 5);
-    AddDirectedEdge(graph, 5, 4, 7);
-
-    const auto ordering = DFSBasedTopologicalSort(graph);
-    cout << ordering << endl; // 0, 5, 1, 2, 3, 4
-
-    const auto distances = DAGShortestPath(graph, ordering, 0);
-    cout << distances << endl; // 0 3 2 3 8 3
-
     Graph graph2(6);
     AddDirectedEdge(graph2, 0, 1, 3);
     AddDirectedEdge(graph2, 0, 2, 2);

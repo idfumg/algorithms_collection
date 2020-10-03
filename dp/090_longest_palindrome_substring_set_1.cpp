@@ -1,5 +1,40 @@
 #include "../template.hpp"
 
+bool IsPalindrome(const string& s, int i, int j) {
+    while (i <= j) {
+        if (s[i++] != s[j--]) return false;
+    }
+    return true;
+}
+
+int rec(const string& s, int i, int j, int& count, int& pos) {
+    if (i > j) {
+        return 0;
+    }
+    if (i == j) {
+        if (count < 1) {
+            count = 1;
+            pos = i;
+        }
+        return 1;
+    }
+    if (s[i] == s[j] and IsPalindrome(s, i + 1, j - 1)) {
+        if (count < j - i + 1) {
+            count = j - i + 1;
+            pos = i;
+        }
+        return j - i + 1;
+    }
+    return max(rec(s, i + 1, j, count, pos), rec(s, i, j - 1, count, pos));
+}
+
+int rec(const string& s) {
+    int count = 0, pos = 0;
+    rec(s, 0, s.size() - 1, count, pos);
+    cout << s.substr(pos, count) << '\n';
+    return count;
+}
+
 int tab(const string& s) {
     const int n = s.size();
     vvi dp(n, vi(n));
@@ -95,6 +130,8 @@ int fast(const string& s) {
 int main() { TimeMeasure _; __x();
     static const string s1 = "forgeeksskeegfor"; // geeksskeeg // 10
     static const string s2 = "Geeks"; // ee // 2
+    cout << rec(s1) << endl;
+    cout << rec(s2) << endl;
     cout << tab(s1) << endl;
     cout << tab(s2) << endl;
     cout << tab2(s1) << endl;

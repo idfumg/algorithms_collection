@@ -42,5 +42,5 @@ int main() { TimeMeasure _;
     AddEdge(graph, 5, 6, 1);
     AddEdge(graph, 6, 7, 1);
     AddEdge(graph, 7, 8, 1);
-    FindAllShortestDistances(graph, 0);
+    FindAllShortestDistances(graph, 0); // 'dist': 0 0 1 1 2 1 2 1 2
 }

@@ -1,6 +1,4 @@
 #include "../template.hpp"
-#include "../collection/graph.hpp"
-#include "../collection/tree_node.hpp"
 
 struct Cell {
     int num;
@@ -25,7 +23,39 @@ int MinimumOpsToTransfrom(int from, int to) {
     return -1;
 }
 
+int MinimumOpsToTransfrom2(int from, int to) {
+    if (from > to) swap(from, to);
+    qi q;
+    q.push(from);
+    unordered_set<int> visited;
+    unordered_map<int, int> dist;
+    dist[from] = 0;
+    while (not q.empty()) {
+        int at = q.front(); q.pop();
+        if (at == to) break;
+        if (visited.count(at)) continue;
+        visited.insert(at);
+
+        int x = at * 2;
+        if (x <= to * to) {
+            if (not dist.count(x)) dist[x] = INF;
+            dist[x] = min(dist[x], dist[at] + 1);
+            q.push(x);
+        }
+
+        int y = at - 1;
+        if (y >= 0) {
+            if (not dist.count(y)) dist[y] = INF;
+            dist[y] = min(dist[y], dist[at] + 1);
+            q.push(y);
+        }
+    }
+    return dist[to];
+}
+
 int main() { TimeMeasure _;
-    cout << MinimumOpsToTransfrom(4, 7) << endl; // 2
-    cout << MinimumOpsToTransfrom(2, 5) << endl; // 4
+    cout << MinimumOpsToTransfrom(4, 7) << '\n'; // 2
+    cout << MinimumOpsToTransfrom(2, 5) << '\n'; // 4
+    cout << MinimumOpsToTransfrom2(4, 7) << '\n'; // 2
+    cout << MinimumOpsToTransfrom2(2, 5) << '\n'; // 4
 }

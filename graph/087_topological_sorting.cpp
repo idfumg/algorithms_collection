@@ -86,21 +86,4 @@ int main() { TimeMeasure _;
 
     const auto distances = DAGShortestPath(graph, ordering, 0);
     cout << distances << endl; // 0 3 2 3 8 3
-
-    Graph graph2(6);
-    AddDirectedEdge(graph2, 0, 1, 3);
-    AddDirectedEdge(graph2, 0, 2, 2);
-    AddDirectedEdge(graph2, 0, 5, 3);
-    AddDirectedEdge(graph2, 1, 3, 1);
-    AddDirectedEdge(graph2, 1, 2, 6);
-    AddDirectedEdge(graph2, 2, 3, 1);
-    AddDirectedEdge(graph2, 2, 4, 10);
-    AddDirectedEdge(graph2, 3, 4, 5);
-    AddDirectedEdge(graph2, 5, 4, 7);
-
-    const auto ordering2 = KhansTopologicalSort(graph2);
-    cout << ordering2 << endl; // 0 1 5 2 3 4
-
-    const auto distances2 = DAGShortestPath(graph2, ordering2, 0);
-    cout << distances2 << endl; // 0 3 2 3 8 3
 }

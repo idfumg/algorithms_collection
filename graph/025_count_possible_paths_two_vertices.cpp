@@ -1,21 +1,27 @@
 #include "../template.hpp"
-#include "../collection/graph.hpp"
-#include "../collection/tree_node.hpp"
+
+using Graph = vvi;
+
+void AddEdge(Graph& graph, int from, int to) {
+    graph[from].push_back(to);
+}
 
 void dfs(Graph& graph, vb& visited, int at, int to, int& count) {
-    visited[at] = true;
-    for (const auto& edge : graph.edges(at)) {
-        if (edge.to == to) {
-            ++count;
-        }
-        if (not visited[edge.to]) {
-            dfs(graph, visited, edge.to, to, count);
+    if (at == to) {
+        ++count;
+        return;
+    }
+    for (int adj : graph[at]) {
+        if (not visited[adj]) {
+            visited[adj] = true;
+            dfs(graph, visited, adj, to, count);
+            visited[adj] = false;
         }
     }
 }
 
 int HowManyPaths(Graph& graph, int from, int to) {
-    int n = size(graph), count = 0;
+    int n = graph.size(), count = 0;
     vb visited(n);
     dfs(graph, visited, from, to, count);
     return count;
@@ -23,12 +29,12 @@ int HowManyPaths(Graph& graph, int from, int to) {
 
 int main() { TimeMeasure _;
     Graph g(5);
-    g.addDirectedEdge(0, 1);
-    g.addDirectedEdge(0, 2);
-    g.addDirectedEdge(0, 3);
-    g.addDirectedEdge(1, 3);
-    g.addDirectedEdge(2, 3);
-    g.addDirectedEdge(1, 4);
-    g.addDirectedEdge(2, 4);
-    cout << HowManyPaths(g, 0, 3) << endl; // 3
+    AddEdge(g, 0, 1);
+    AddEdge(g, 0, 2);
+    AddEdge(g, 0, 3);
+    AddEdge(g, 1, 3);
+    AddEdge(g, 2, 3);
+    AddEdge(g, 1, 4);
+    AddEdge(g, 2, 4);
+    cout << HowManyPaths(g, 0, 3) << '\n'; // 3
 }

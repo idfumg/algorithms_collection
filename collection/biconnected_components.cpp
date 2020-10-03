@@ -90,6 +90,11 @@ int main() { TimeMeasure _;
         AddEdge(graph, 10, 11);
         AddEdge(graph, 11, 10);
         PrintBiconnectedComponents(graph);
+        // 4,2 3,4 3,1 2,3 1,2
+// 8,9
+// 8,5 7,8 5,7
+// 6,0 5,6 1,5 0,1
+// 10,11
     }
 
     cout << "-------------" << endl;
@@ -103,5 +108,9 @@ int main() { TimeMeasure _;
         AddEdge(graph, 5, 4);
         AddEdge(graph, 4, 1);
         PrintBiconnectedComponents(graph);
+        // 4,1
+// 4,2 5,4 2,5
+// 3,2
+// 0,3
     }
 }

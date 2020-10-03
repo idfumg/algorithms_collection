@@ -68,7 +68,7 @@ int tab2(vector<Job> jobs) { // with LIS
         seq.push_back(jobs[at].profit);
     }
     reverse(seq);
-    cout << "Selected jobs profits: " << seq;
+    cout << "Selected jobs profits: " << seq << '\n';
     return maxi;
 }
 

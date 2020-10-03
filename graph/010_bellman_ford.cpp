@@ -1,47 +1,42 @@
 #include "../template.hpp"
-#include "../collection/graph.hpp"
-#include "../collection/tree_node.hpp"
+
+using Graph = vvi;
+
+void AddDirectedEdge(Graph& graph, int from, int to, int weight) {
+    graph.push_back({from, to, weight});
+}
 
 void BellmanFord(Graph& graph, int from) {
     int n = graph.size();
     vi dist(n, INF);
     dist[from] = 0;
-
     for (int i = 0; i < n; ++i) {
-        for (const auto& edges : graph.edges()) {
-            for (const auto& edge : edges) {
-                int cost = dist[edge.from] + edge.cost;
-                if (cost < dist[edge.to]) dist[edge.to] = cost;
+        for (const auto& edge : graph) {
+            dist[edge[1]] = min(dist[edge[1]], dist[edge[0]] + edge[2]);
+        }
+    }
+    for (int i = 0; i < n; ++i) {
+        for (const auto& edge : graph) {
+            if (dist[edge[0]] + edge[2] < dist[edge[1]]) {
+                dist[edge[1]] = -INF;
             }
         }
     }
-
-    cout << dist << endl;
-
-    for (int i = 0; i < n; ++i) {
-        for (const auto& edges : graph.edges()) {
-            for (const auto& edge : edges) {
-                int cost = dist[edge.from] + edge.cost;
-                if (cost < dist[edge.to]) dist[edge.to] = -INF;
-            }
-        }
-    }
-
-    cout << dist << endl;
+    cout << dist << '\n';
 }
 
 int main() { TimeMeasure _;
-    Graph graph(9);
-    graph.addDirectedEdge(0, 1, 1);
-    graph.addDirectedEdge(1, 2, 1);
-    graph.addDirectedEdge(2, 4, 1);
-    graph.addDirectedEdge(4, 3, -3);
-    graph.addDirectedEdge(3, 2, 1);
-    graph.addDirectedEdge(1, 5, 4);
-    graph.addDirectedEdge(1, 6, 4);
-    graph.addDirectedEdge(5, 6, 5);
-    graph.addDirectedEdge(6, 7, 4);
-    graph.addDirectedEdge(5, 7, 3);
+    Graph graph;
+    AddDirectedEdge(graph, 0, 1, 1);
+    AddDirectedEdge(graph, 1, 2, 1);
+    AddDirectedEdge(graph, 2, 4, 1);
+    AddDirectedEdge(graph, 4, 3, -3);
+    AddDirectedEdge(graph, 3, 2, 1);
+    AddDirectedEdge(graph, 1, 5, 4);
+    AddDirectedEdge(graph, 1, 6, 4);
+    AddDirectedEdge(graph, 5, 6, 5);
+    AddDirectedEdge(graph, 6, 7, 4);
+    AddDirectedEdge(graph, 5, 7, 3);
     BellmanFord(graph, 0);
 }
 
