@@ -10,6 +10,15 @@ int rec(int n) {
     return maxi;
 }
 
+int rec2(int n) {
+    if (n == 0 or n == 1) return 0;
+    int maxi = -INF;
+    for (int i = 1; i < n; ++i) {
+        maxi = max({maxi, rec2(n - i) * i, (n - i) * i});
+    }
+    return maxi;
+}
+
 int tab(int n) {
     vi dp(n + 1);
     for (int i = 0; i <= n; ++i) {
@@ -44,6 +53,12 @@ int main() { TimeMeasure _; __x();
     cout << rec(4) << endl; // 4
     cout << rec(5) << endl; // 6
     cout << rec(10) << endl; // 36
+    cout << endl;
+    cout << rec2(2) << endl; // 1
+    cout << rec2(3) << endl; // 2
+    cout << rec2(4) << endl; // 4
+    cout << rec2(5) << endl; // 6
+    cout << rec2(10) << endl; // 36
     cout << endl;
     cout << tab(2) << endl; // 1
     cout << tab(3) << endl; // 2

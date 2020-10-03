@@ -2,27 +2,20 @@
 
 int tab(vi& arr) {
     int n = arr.size();
-    vi dp(n, 1);
-    vb condition(n);
-
-    for (int i = 1; i < n; ++i) {
-        for (int j = 0; j < i; ++j) {
-            if (arr[i] < arr[j] and (condition[j] == 0 || j == 0)) {
-                if (dp[j] + 1 > dp[i]) {
-                    dp[i] = dp[j] + 1;
-                    condition[i] = j == 0 ? 1 : !condition[j];
+    vvi dp(n + 1, vi(2, 1));
+    for (int i = 2; i <= n; ++i) {
+        for (int j = 1; j < i; ++j) {
+            for (int k : {0, 1}) {
+                if (k == 0 and arr[i - 1] > arr[j - 1]) {
+                    dp[i][k] = max(dp[i][k], dp[j][!k] + 1);
                 }
-            }
-            else if (arr[i] > arr[j] and (condition[j] == 1 || j == 0)) {
-                if (dp[j] + 1 > dp[i]) {
-                    dp[i] = dp[j] + 1;
-                    condition[i] = j == 0 ? 0 : !condition[j];
+                else if (k == 1 and arr[i - 1] < arr[j - 1]) {
+                    dp[i][k] = max(dp[i][k], dp[j][!k] + 1);
                 }
             }
         }
     }
-    debug(dp);
-    return max(dp);
+    return max(dp[n]);
 }
 
 int main() { TimeMeasure _; __x();

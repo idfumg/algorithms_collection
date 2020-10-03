@@ -3,8 +3,8 @@
 int rec(vi& arr, int sum) {
     if (sum == 0) return 1;
     if (sum < 0) return 0;
-    int count = 0;
-    for (int i = 0; i < arr.size(); ++i) {
+    int count = 0, n = arr.size();
+    for (int i = 0; i < n; ++i) {
         count += rec(arr, sum - arr[i]);
     }
     return count;
@@ -15,13 +15,11 @@ int tab(vi& arr, int sum) {
     vi dp(sum + 1);
     dp[0] = 1;
     for (int i = 1; i <= sum; ++i) {
-        int count = 0;
         for (int j = 0; j < n; ++j) {
             if (i >= arr[j]) {
-                count += dp[i - arr[j]];
+                dp[i] += dp[i - arr[j]];
             }
         }
-        dp[i] = count;
     }
     return dp[sum];
 }

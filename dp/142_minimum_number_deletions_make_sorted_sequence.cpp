@@ -15,6 +15,6 @@ int tab(vi& arr) {
 int main() { TimeMeasure _; __x();
     vi arr1 = {5, 6, 1, 7, 4};
     vi arr2 = {30, 40, 2, 5, 1, 7, 45, 50, 8};
-    cout << tab(arr1) << endl;
-    cout << tab(arr2) << endl;
+    cout << tab(arr1) << endl; // 2
+    cout << tab(arr2) << endl; // 4
 }

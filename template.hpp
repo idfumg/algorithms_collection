@@ -32,6 +32,8 @@ using si = set<int>;
 using sll = set<ll>;
 using qi = queue<int>;
 using qll = queue<ll>;
+using di = deque<int>;
+using dll = deque<ll>;
 
 ll mod(const ll x) noexcept {
     return (x % MOD + MOD) % MOD;

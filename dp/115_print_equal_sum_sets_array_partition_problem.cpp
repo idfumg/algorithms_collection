@@ -1,8 +1,18 @@
 #include "../template.hpp"
 
+int FindSum(vi& arr) {
+    int total = accumulate(arr.begin(), arr.end(), 0);
+    int sum = total / 2;
+    if (total != sum * 2) {
+        cout << '[' << ']' << '\n';
+        return -1;
+    }
+    return sum;
+}
+
 void rec(vi& arr, vi& elems, int sum, int n, vvb& dp) {
     if (sum == 0) {
-        debug(elems);
+        cout << '[' << ' ' << elems << ']' << ' ';
         return;
     }
     if (n <= 0 or sum < 0) {
@@ -19,10 +29,9 @@ void rec(vi& arr, vi& elems, int sum, int n, vvb& dp) {
 }
 
 int rec(vi& arr) {
-    vi elems;
-    const int total = accumulate(arr.begin(), arr.end(), 0);
-    if (total % 2 != 0) return -1;
-    const int sum = total / 2, n = arr.size();
+    int sum = FindSum(arr);
+    if (sum == -1) return -1;
+    int n = arr.size();
     vvb dp(sum + 1, vb(n + 1));
     for (int i = 0; i <= sum; ++i) {
         for (int j = 0; j <= n; ++j) {
@@ -37,13 +46,15 @@ int rec(vi& arr) {
             }
         }
     }
+    vi elems;
     rec(arr, elems, sum, n, dp);
+    cout << '\n';
     return 1;
 }
 
 void PrintPaths(const vvvvi& prev, const int sum, const int n, vi& elems, vi& arr){
     if (sum <= 0 or n <= 0) {
-        debug(elems);
+        cout << '[' << ' ' << elems << ']' << ' ';
         return;
     }
     for (vi at : prev[sum][n]) {
@@ -58,9 +69,9 @@ void PrintPaths(const vvvvi& prev, const int sum, const int n, vi& elems, vi& ar
 }
 
 int tab(vi& arr) {
-    const int total = accumulate(arr.begin(), arr.end(), 0);
-    if (total % 2 != 0) return -1;
-    const int sum = total / 2, n = arr.size();
+    int sum = FindSum(arr);
+    if (sum == -1) return -1;
+    int n = arr.size();
     vvb dp(sum + 1, vb(n + 1)); // dp[i][j] when sum is i and count of elems is j
     vvvvi prev(sum + 1, vvvi(n + 1));
     for (int i = 0; i <= sum; ++i) {
@@ -86,6 +97,50 @@ int tab(vi& arr) {
     }
     vi elems;
     PrintPaths(prev, sum, n, elems, arr);
+    cout << '\n';
+    return dp[sum][n];
+}
+
+int tab2(vi& arr) {
+    int n = arr.size();
+    int sum = FindSum(arr);
+    if (sum == -1) return -1;
+    vvi dp(sum + 1, vi(n + 1));
+    vvvi prev(sum + 1, vvi(n + 1));
+    for (int j = 1; j <= n; ++j) {
+        dp[0][j] = 1;
+    }
+    for (int i = 1; i <= sum; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            if (dp[i][j - 1]) {
+                dp[i][j] = 1;
+                prev[i][j] = {i, j - 1, 0};
+            }
+            if (i >= arr[j - 1] and dp[i - arr[j - 1]][j - 1]) {
+                dp[i][j] = 1;
+                prev[i][j] = {i - arr[j - 1], j - 1, 1};
+            }
+        }
+    }
+    vb elems(n);
+    for (vi at = prev[sum][n]; not at.empty(); at = prev[at[0]][at[1]]) {
+        if (at[2] == 1) {
+            elems[at[1]] = true;
+        }
+    }
+    cout << '[' << ' ';
+    for (int i = 0; i < n; ++i) {
+        if (elems[i]) {
+            cout << arr[i] << ' ';
+        }
+    }
+    cout << ']' << ' ' << '[' << ' ';
+    for (int i = 0; i < n; ++i) {
+        if (not elems[i]) {
+            cout << arr[i] << ' ';
+        }
+    }
+    cout << ']' << ' ' << '\n';
     return dp[sum][n];
 }
 
@@ -97,4 +152,7 @@ int main() { TimeMeasure _; __x();
     cout << endl;
     cout << tab(arr1) << endl;
     cout << tab(arr2) << endl;
+    cout << endl;
+    cout << tab2(arr1) << endl;
+    cout << tab2(arr2) << endl;
 }
