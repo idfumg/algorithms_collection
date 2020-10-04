@@ -1,22 +1,15 @@
 #include "../template.hpp"
 
-int rec(vi& arr, int num, int sum, int n, int total) {
-    if (total < 0 or total > sum) {
-        return 0;
-    }
-    if (n > arr.size()) {
-        return total;
-    }
-    if (n == 1) {
-        return max({rec(arr, num, sum, n + 1, num + arr[n - 1]),
-                    rec(arr, num, sum, n + 1, num - arr[n - 1])});
-    }
-    return max({rec(arr, num, sum, n + 1, total + arr[n - 1]),
-                rec(arr, num, sum, n + 1, total - arr[n - 1])});
+int rec(vi& arr, int maxsum, int idx, int sum) {
+    int n = arr.size();
+    if (sum < 0 or sum > maxsum) return -INF;
+    if (idx == n) return sum;
+    return max(rec(arr, maxsum, idx + 1, sum + arr[idx]),
+               rec(arr, maxsum, idx + 1, sum - arr[idx]));
 }
 
-int rec(vi& arr, int num, int sum) {
-    return rec(arr, num, sum, 1, 0);
+int rec(vi& arr, int number, int sum) {
+    return rec(arr, sum, 0, number);
 }
 
 int tab(vi& arr, int num, int sum) {
@@ -50,6 +43,7 @@ int main() { TimeMeasure _; __x();
     vi arr2 = {3, 10, 6, 4, 5}; int n2 = 1, sum2 = 15;
     cout << rec(arr1, n1, sum1) << endl; // 7
     cout << rec(arr2, n2, sum2) << endl; // 9
+    cout << '\n';
     cout << tab(arr1, n1, sum1) << endl; // 7
     cout << tab(arr2, n2, sum2) << endl; // 9
 }
