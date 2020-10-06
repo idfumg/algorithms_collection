@@ -1,37 +1,35 @@
 #include "../template.hpp"
 
-int naive(int num) {
-    int total = 0;
-    for (int i = 1; i <= num; ++i) {
-        int n = i;
-        while (n > 0) {
-            total += n % 10;
-            n /= 10;
-        }
+int SumOfDigits(int n) {
+    int res = 0;
+    while (n > 0) {
+        res += n % 10;
+        n /= 10;
     }
-    return total;
+    return res;
+}
+
+int naive(int n) {
+    int res = 0;
+    for (int i = 1; i <= n; ++i) {
+        res += SumOfDigits(i);
+    }
+    return res;
 }
 
 int tab(int n) {
-    vi dp(n);
-    int total = 0;
+    vi dp(n + 1);
     for (int i = 1; i <= n; ++i) {
-        if (i < 10) {
-            dp[i] = i;
-        }
-        else {
-            dp[i] = i % 10 + dp[i / 10];
-        }
-        total += dp[i];
+        dp[i] = dp[i / 10] + i % 10;
     }
-    return total;
+    return accumulate(dp.begin(), dp.end(), 0);
 }
 
 int main() { TimeMeasure _; __x();
-    cout << naive(5) << endl;
-    cout << naive(12) << endl;
-    cout << naive(328) << endl;
-    cout << tab(5) << endl;
-    cout << tab(12) << endl;
-    cout << tab(328) << endl;
+    cout << naive(5) << endl; // 15
+    cout << naive(12) << endl; // 51
+    cout << naive(328) << endl; // 3241
+    cout << tab(5) << endl; // 15
+    cout << tab(12) << endl; // 51
+    cout << tab(328) << endl; // 3241
 }

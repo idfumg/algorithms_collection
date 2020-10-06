@@ -6,6 +6,23 @@ struct Job {
     int profit;
 };
 
+int rec(vector<Job>& jobs, int n, int prevstart) {
+    if (n == 0) return 0;
+    if (jobs[n - 1].stop <= prevstart) {
+        return max(rec(jobs, n - 1, prevstart),
+                   rec(jobs, n - 1, jobs[n - 1].start) + jobs[n - 1].weight);
+    }
+    return rec(jobs, n - 1, prevstart);
+}
+
+// Straightforward recursive algorithm.
+// Choose job which is appropriate regarding to prev one.
+int rec(vector<Job>& jobs) {
+    sort(jobs);
+    return rec(jobs, jobs.size(), INF);
+}
+
+// Recursive algorithm with greedy approach.
 int rec(vector<Job>& jobs, int n) {
     if (n < 0) return 0;
     const auto a = rec(jobs, n - 1);

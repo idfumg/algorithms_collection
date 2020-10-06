@@ -1,5 +1,43 @@
 #include "../template.hpp"
 
+void rec_authentic(const string& a, const string& b, vvi& dp, string& elems, int m, int n) {
+    if (m == 0 or n == 0) {
+        for_each(elems.rbegin(), elems.rend(), [](char ch){cout << ch;});
+        cout << ' ';
+        return;
+    }
+    if (a[m - 1] == b[n - 1]) {
+        elems.push_back(a[m - 1]);
+        rec_authentic(a, b, dp, elems, m - 1, n - 1);
+        elems.pop_back();
+        // return;
+    }
+    else if (dp[m - 1][n] > dp[m][n - 1]) {
+        rec_authentic(a, b, dp, elems, m - 1, n);
+    }
+    else if (dp[m - 1][n] < dp[m][n - 1]) {
+        rec_authentic(a, b, dp, elems, m, n - 1);
+    }
+    else {
+        rec_authentic(a, b, dp, elems, m - 1, n);
+        rec_authentic(a, b, dp, elems, m, n - 1);
+    }
+}
+
+void rec_authentic(const string& a, const string& b) {
+    int m = a.size(), n = b.size();
+    vvi dp(m + 1, vi(n + 1));
+    for (int i = 1; i <= m; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            if (a[i - 1] == b[j - 1]) dp[i][j] = 1 + dp[i - 1][j - 1];
+            else dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+        }
+    }
+    string elems;
+    rec_authentic(a, b, dp, elems, m, n);
+    cout << '\n';
+}
+
 set<string> rec(vvi& dp, const string& a, const string& b, int m, int n) {
     set<string> res;
 
@@ -41,29 +79,28 @@ void rec(const string& a, const string& b) {
     cout << rec(dp, a, b, m, n) << '\n';
 }
 
-void GetElems(const string& a, set<string>& res, vvvvi& prev, vvi& paths, string& current) {
+void GetElems(const string& a, vvvvi& prev, vvi& paths, string& current) {
     if (paths.empty()) {
-        string temp = current;
-        reverse(temp);
-        res.insert(temp);
+        for_each(current.rbegin(), current.rend(), [](char ch){cout << ch;});
+        cout << ' ';
         return;
     }
     for (const auto& path : paths) {
         if (path[2] == 1) {
             current.push_back(a[path[0]]);
-            GetElems(a, res, prev, prev[path[0]][path[1]], current);
+            GetElems(a, prev, prev[path[0]][path[1]], current);
             current.pop_back();
         }
         else {
-            GetElems(a, res, prev, prev[path[0]][path[1]], current);
+            GetElems(a, prev, prev[path[0]][path[1]], current);
         }
     }
 }
 
-void GetElems(const string& a, set<string>& res, vvvvi& prev) {
+void GetElems(const string& a, vvvvi& prev) {
     int m = prev.size() - 1, n = prev[0].size() - 1;
     string current;
-    GetElems(a, res, prev, prev[m][n], current);
+    GetElems(a, prev, prev[m][n], current);
 }
 
 void tab(const string& a, const string& b) {
@@ -92,15 +129,18 @@ void tab(const string& a, const string& b) {
         }
     }
 
-    set<string> res;
-    GetElems(a, res, prev);
-    cout << res << '\n';
+    GetElems(a, prev);
+    cout << '\n';
 }
 
 int main() { TimeMeasure _; __x();
-    rec("AGTGATG", "GTTAG"); // 4
-    rec("AATCC", "ACACG"); // 3
-    rec("ABCBDAB", "BDCABA"); // 4
+    rec_authentic("AGTGATG", "GTTAG"); // GTAG | GTAG | GTTG |
+    rec_authentic("AATCC", "ACACG"); // AAC | AAC | ACC |
+    rec_authentic("ABCBDAB", "BDCABA"); // BCBA | BCAB | BDAB |
+    cout << '\n';
+    rec("AGTGATG", "GTTAG");
+    rec("AATCC", "ACACG");
+    rec("ABCBDAB", "BDCABA");
     cout << '\n';
     tab("AGTGATG", "GTTAG");
     tab("AATCC", "ACACG");
