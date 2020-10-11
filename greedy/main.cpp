@@ -1,6 +1,6 @@
 #include "../template.hpp"
 
 
-int main() { TimeMeasure _;
+int main() { TimeMeasure _; __x();
 
 }
