@@ -1,22 +1,24 @@
 #include "../template.hpp"
 
 int MaximumSumOfDifferences(vi arr) {
+    int n = arr.size(), ans = 0;
     sort(arr);
-    int n = arr.size(), sum = 0;
-    for (int i = 0, j = n - 1 - i; i <= j; ++i, --j) {
+    for (int i = 0, j = n - 1; i <= j; ++i, --j) {
         if (i == j) {
-            sum += abs(arr[j] - arr[0]);
-            break;
+            ans += arr[j] - arr[0];
         }
-        sum += abs(arr[j] - arr[i]); // max with prev min
-        if (j - i != 1) {
-            sum += abs(arr[j] - arr[i + 1]); // max with next min
-        }
-        if (j - i == 1) { // last minimum of maximums with the 0 one
-            sum += abs(arr[j] - arr[0]);
+        else {
+            ans += arr[j] - arr[i];
+            if (j - i == 1) {
+                ans += arr[j] - arr[0];
+                break;
+            }
+            else if (i + 1 < j) {
+                ans += arr[j] - arr[i + 1];
+            }
         }
     }
-    return sum;
+    return ans;
 }
 
 int main() { TimeMeasure _;

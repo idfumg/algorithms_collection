@@ -1,34 +1,31 @@
 #include "../template.hpp"
 
 struct Item {
-    char ch;
+    char id;
     int freq;
     bool operator<(const Item& rhs) const { return freq < rhs.freq; }
 };
 
-void RearrangeNoTheSameAdjacent(string s) { // O(nlogn)
-    int n = s.size();
-
-    vi freq(26);
-    for (int i = 0; i < n; ++i) {
-        ++freq[s[i] - 'a'];
+void RearrangeNoTheSameAdjacent(string s) {
+    vi freq(27);
+    for (char ch : s) {
+        ++freq[ch - 'a'];
     }
 
     priority_queue<Item> pq;
     for (int i = 0; i <= 26; ++i) {
         if (freq[i] > 0) {
-            pq.push({static_cast<char>('a' + i), freq[i]});
+            pq.push({static_cast<char>(i + 'a'), freq[i]});
         }
     }
 
-    string ans(n, ' ');
-    int idx = 0;
-    Item prev = Item{' ', -1};
+    Item prev = {' ', -1};
+    string ans;
 
     while (not pq.empty()) {
         Item item = pq.top(); pq.pop();
 
-        ans[idx++] = item.ch;
+        ans += item.id;
         --item.freq;
 
         if (prev.freq > 0) {
@@ -38,12 +35,11 @@ void RearrangeNoTheSameAdjacent(string s) { // O(nlogn)
         prev = item;
     }
 
-    if (prev.freq <= 0) {
-        cout << ans << '\n';
+    if (prev.freq > 0) {
+        cout << "Not possible to rearrange" << '\n';
+        return;
     }
-    else {
-        cout << -1 << '\n';
-    }
+    cout << ans << '\n';
 }
 
 int main() { TimeMeasure _; __x();

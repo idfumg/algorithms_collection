@@ -39,9 +39,28 @@ void MaxNumberOfActivities2(vi& start, vi& finish) {
     cout << '\n';
 }
 
+void MaxNumberOfActivities3(vi start, vi finish) {
+    int n = start.size();
+    vi idx(n);
+    iota(idx.begin(), idx.end(), 0);
+    sort(idx.begin(), idx.end(), [&](int i, int j){return finish[i] < finish[j];});
+
+    int last = idx[0];
+    cout << last << ' ';
+    for (int i = 1; i < n; ++i) {
+        int j = idx[i];
+        if (start[j] >= finish[last]) {
+            last = j;
+            cout << last << ' ';
+        }
+    }
+    cout << '\n';
+}
+
 int main() { TimeMeasure _;
     vi start =  {3, 8, 0, 5, 5, 1};
     vi finish = {4, 9, 6, 7, 9, 2};
-    MaxNumberOfActivities(start, finish); // 0 1 3 4
-    MaxNumberOfActivities2(start, finish); // 0 1 3 4
+    // MaxNumberOfActivities(start, finish); // 0 1 3 4
+    // MaxNumberOfActivities2(start, finish); // 0 1 3 4
+    MaxNumberOfActivities3(start, finish); // 5 0 3 1
 }

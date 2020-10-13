@@ -1,65 +1,35 @@
 #include "../template.hpp"
 
 void GenPalindrome(int n) {
-    unordered_map<char, int> freq;
+    vi freq(10);
     while (n > 0) {
-        freq[n % 10 + '0'] += 1;
+        ++freq[n % 10];
         n /= 10;
     }
-    int odd = 0;
-    char oddnum = -1;
-    for (auto& [key, value] : freq) {
-        if (value & 1) {
-            ++odd;
-            oddnum = key;
-        }
-    }
-    if (odd > 1) {
-        cout << "Not possible" << '\n';
-    }
-    else {
-        string ans;
-        for (auto& [key, value] : freq) {
-            if (not (value & 1)) {
-                ans += key;
-            }
-        }
-        if (oddnum != -1) {
-            cout << ans << oddnum;
-        }
-        else {
-            cout << ans;
-        }
-        reverse(ans);
-        cout << ans << '\n';
-    }
-}
 
-void GenPalindrome2(int n) {
-    vi freqs(10);
-    while (n > 0) {
-        ++freqs[n % 10];
-        n /= 10;
-    }
-    int oddNum = -1;
-    for (int i = 0; i < 10; ++i) {
-        if (freqs[i] & 1) {
-            if (oddNum != -1) {
-                cout << "Not possible" << '\n';
-                return;
-            }
-            else {
-                oddNum = i;
-            }
+    int odd = 0, oddNumber = -1;
+    for (int i = 0; i <= 9; ++i) {
+        if (freq[i] % 2 != 0) {
+            ++odd;
+            oddNumber = i;
         }
     }
-    string ans;
-    for (int i = 0; i < 10; ++i) {
-        if ((freqs[i] & 1) or freqs[i] == 0) continue;
-        ans += i + '0';
+
+    if (odd > 1) {
+        cout << "Palindrome cannot be formed" << '\n';
+        return;
     }
-    if (oddNum != -1) {
-        cout << ans << oddNum;
+
+    string ans;
+    for (int i = 9; i >= 0; --i) {
+        if (freq[i] > 0) {
+            int count = freq[i] / 2;
+            ans += string(count, i + '0');
+        }
+    }
+
+    if (oddNumber != -1) {
+        cout << ans << oddNumber;
     }
     else {
         cout << ans;
@@ -68,11 +38,56 @@ void GenPalindrome2(int n) {
     cout << ans << '\n';
 }
 
+void GenPalindrome2(int n) {
+    vi freq(10);
+    while (n > 0) {
+        ++freq[n % 10];
+        n /= 10;
+    }
+
+    int ans = 0, odd = 0, oddNumber = -1;
+    for (int i = 9; i >= 0; --i) {
+        if (freq[i] == 0) {
+            continue;
+        }
+        else if (freq[i] & 1) {
+            ++odd;
+            oddNumber = i;
+        }
+        else {
+            int count = freq[i] / 2;
+            while (count-- > 0) {
+                ans = ans == 0 ? i : ans * 10 + i;
+            }
+        }
+    }
+
+    if (odd > 1) {
+        cout << "Palindrome cannot be formed" << '\n';
+        return;
+    }
+
+    int rev = 0, temp = ans;
+    while (temp > 0) {
+        rev = rev == 0 ? temp % 10 : rev * 10 + temp % 10;
+        temp /= 10;
+    }
+
+    if (oddNumber != -1) {
+        cout << ans << oddNumber << rev << '\n';
+    }
+    else {
+        cout << ans << rev << '\n';
+    }
+}
+
 int main() { TimeMeasure _; __x();
-    GenPalindrome(313551);
-    GenPalindrome(331);
-    GenPalindrome(3444);
-    GenPalindrome2(313551);
-    GenPalindrome2(331);
-    GenPalindrome2(3444);
+    GenPalindrome(35135515); // 55311355
+    GenPalindrome(313551); // 531135
+    GenPalindrome(331); // 313
+    GenPalindrome(3444); // Palindrome cannot be formed
+    GenPalindrome2(35135515); // 55311355
+    GenPalindrome2(313551); // 531135
+    GenPalindrome2(331); // 313
+    GenPalindrome2(3444); // Palindrome cannot be formed
 }

@@ -1,23 +1,51 @@
 #include "../template.hpp"
 
+void GetMinDistance(int a, int b, int k, int& low, int& high) {
+    if (a < 0 or b < 0) return;
+    if (abs(a - b) < abs(low - high)) {
+        low = min(a, b);
+        high = max(a, b);
+    }
+}
+
+pair<int, int> GetDistance(int a, int b, int k) {
+    int low = 0;
+    int high = INF;
+    GetMinDistance(a - k, b - k, k, low, high);
+    GetMinDistance(a + k, b + k, k, low, high);
+    GetMinDistance(a - k, b + k, k, low, high);
+    GetMinDistance(a + k, b - k, k, low, high);
+    return {low, high};
+}
+
 int MinimizeDifferenceBetweenHeightsDP(vi arr, int k) {
+    int n = arr.size();
     sort(arr);
-    int n = arr.size(), a = arr[0] + k, b = arr[n - 1] - k;
-    if (a > b) swap(a, b);
+
+    auto [low, high] = GetDistance(arr[0], arr[n - 1], k);
+
     for (int i = 1; i < n - 1; ++i) {
-        int x = arr[i] - k;
-        int y = arr[i] + k;
-        if (x >= a or y <= b) {
+        int a = arr[i] - k;
+        int b = arr[i] + k;
+
+        if (a < 0) {
+            high = b;
             continue;
         }
-        if (b - x <= y - a) {
-            a = x;
+
+        if (a >= low or b <= high) {
+            continue;
+        }
+
+        if (high - a <= b - low) {
+            low = a;
         }
         else {
-            b = y;
+            high = b;
         }
     }
-    return min(arr[n - 1] - arr[0], b - a);
+
+    return high - low;
 }
 
 int main() { TimeMeasure _; __x();

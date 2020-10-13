@@ -1,28 +1,25 @@
 #include "../template.hpp"
 
-int MaximizeArraySum(vi arr, int K) {
+int MaximizeArraySum(vi arr, int k) {
+    int n = arr.size(), ans = 0;
     sort(arr);
-    int k = K, n = arr.size();
-    for (int i = 0; i < K; ++i) {
-        if (arr[i] < 0) {
-            arr[i] *= -1;
+    for (int i = 0; i < n; ++i) {
+        if (arr[i] < 0 and k > 0) {
+            ans += -arr[i];
             --k;
         }
-    }
-    if (k > 0) {
-        int minpos = 0, minvalue = INF;
-        for (int i = 0; i < n; ++i) {
-            if (minvalue < arr[i]) {
-                minvalue = arr[i];
-                minpos = i;
-                if (minvalue == 0) {
-                    break;
-                }
-            }
+        else if (arr[i] == 0 and k > 0) {
+            k = 0;
         }
-        arr[minpos] *= (k & 1 ? -1 : 1);
+        else if (arr[i] > 0 and k > 0) {
+            ans += k & 1 ? -arr[i] : arr[i];
+            k = 0;
+        }
+        else {
+            ans += arr[i];
+        }
     }
-    return accumulate(arr.begin(), arr.end(), 0);
+    return ans;
 }
 
 int main() { TimeMeasure _;

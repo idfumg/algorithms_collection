@@ -101,17 +101,17 @@ int main() { TimeMeasure _;
     rec(29, 3, 9); // 0 3 2
     rec(24, 4, 7); // 6 0 0
     rec(28, 4, 7); // 0 4 0
-    rec(7, 3, 5); // 0 1 2
+    rec(7, 3, 5); // 2 0 1
     cout << '\n';
     tab(24, 3, 5); // 3 3 0
     tab(29, 3, 9); // 0 3 2
     tab(24, 4, 7); // 6 0 0
     tab(28, 4, 7); // 0 4 0
-    tab(7, 3, 5); // 0 1 2
+    tab(7, 3, 5); // 2 0 1
     cout << '\n';
     FitShelves(24, 3, 5); // 3 3 0
     FitShelves(29, 3, 9); // 0 3 2
     FitShelves(24, 4, 7); // 6 0 0
     FitShelves(28, 4, 7); // 0 4 0
-    FitShelves(7, 3, 5); // 0 1 2
+    FitShelves(7, 3, 5); // 2 0 1
 }
