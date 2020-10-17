@@ -28,6 +28,7 @@ using vvll = vector<vll>;
 using vvvll = vector<vvll>;
 using vb = vector<bool>;
 using vvb = vector<vb>;
+using vvvb = vector<vvb>;
 using si = set<int>;
 using sll = set<ll>;
 using qi = queue<int>;
