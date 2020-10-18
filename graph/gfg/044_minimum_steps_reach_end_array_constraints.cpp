@@ -1,42 +1,33 @@
 #include "../../template.hpp"
 
-void bfs(vi& arr) {
+void bfs(vi arr) {
     int n = arr.size();
-    vb visited(n);
+    qi q;
+    vi visited(n);
     vi dist(n, INF);
     dist[0] = 0;
-    qi q;
     q.push(0);
-    unordered_map<int, vi> idx;
+    unordered_map<int, vi> indicies;
     for (int i = 0; i < n; ++i) {
-        idx[arr[i]].push_back(i);
+        indicies[arr[i]].push_back(i);
     }
     while (not q.empty()) {
         int at = q.front(); q.pop();
         visited[at] = true;
-
-        int x = at - 1;
-        int y = at + 1;
-        int z = arr[at];
-
-        if (idx.count(z)) {
-            for (int pos : idx[z]) {
-                if (not visited[pos]) {
-                    dist[pos] = min(dist[pos], dist[at] + 1);
-                    q.push(pos);
-                }
+        for (int adj : {at - 1, at + 1}) {
+            if (adj >= 0 and adj < n and not visited[adj]) {
+                dist[adj] = min(dist[adj], dist[at] + 1);
+                q.push(adj);
             }
         }
-        if (x >= 0 and not visited[x]) {
-            dist[x] = min(dist[x], dist[at] + 1);
-            q.push(x);
-        }
-        if (y < n and not visited[y]) {
-            dist[y] = min(dist[y], dist[at] + 1);
-            q.push(y);
+        for (int adj : indicies[arr[at]]) {
+            if (adj >= 0 and adj < n and not visited[adj]) {
+                dist[adj] = min(dist[adj], dist[at] + 1);
+                q.push(adj);
+            }
         }
     }
-    cout << dist[n - 1] << '\n';
+    cout << dist.back() << endl;
 }
 
 int main() { TimeMeasure _;
