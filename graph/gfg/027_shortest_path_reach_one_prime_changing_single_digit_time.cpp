@@ -1,6 +1,6 @@
 #include "../../template.hpp"
-#include "../collection/graph.hpp"
-#include "../collection/tree_node.hpp"
+
+using Graph = vvi;
 
 vi GenPrimes(int from, int to) {
     vi prime(to + 1, true);
@@ -38,7 +38,8 @@ Graph GenGraph(const vi& primes) {
     for (int i = 0; i < n; ++i) {
         for (int j = i + 1; j < n; ++j) {
             if (IsValid(primes[i], primes[j])) {
-                graph.addUndirectedEdge(i, j);
+                graph[i].push_back(j);
+                graph[j].push_back(i);
             }
         }
     }
@@ -60,10 +61,10 @@ int bfs(const Graph& graph, int x, int y, const vi& primes) {
         if (primes[at] == y) {
             return dist[at];
         }
-        for (const auto& edge : graph.edges(at)) {
-            if (dist[edge.to] == -1) {
-                q.push(edge.to);
-                dist[edge.to] = dist[at] + 1;
+        for (int adj : graph[at]) {
+            if (dist[adj] == -1) {
+                q.push(adj);
+                dist[adj] = dist[at] + 1;
             }
         }
     }

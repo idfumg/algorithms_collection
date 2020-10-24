@@ -1,5 +1,84 @@
 #include "../../template.hpp"
 
+int tab_logn(vi arr, int K) {
+    int n = arr.size();
+    int maxi = -INF, maxipos = 0;
+    vi dp = arr;
+    vi prev(n, -1);
+    for (int i = 1; i < n; ++i) {
+        if (dp[i - 1] + arr[i] > dp[i]) {
+            dp[i] = dp[i - 1] + arr[i];
+            prev[i] = i - 1;
+        }
+        if (maxi < dp[i]) {
+            maxi = dp[i];
+            maxipos = i;
+        }
+    }
+
+    int to = maxipos;
+    int from = maxipos;
+    for (; prev[from] != -1; from = prev[from]) {}
+
+    if (from == to) {
+        return maxi;
+    }
+
+    sort(arr.begin() + from, arr.begin() + to);
+    while (K-- > 0 and from < to and arr[from] < 0) {
+        maxi -= arr[from++];
+    }
+
+    return maxi;
+}
+
+int tab_logn_elems(vi arr, int K) {
+    int n = arr.size();
+    int maxi = -INF, maxipos = 0;
+    vi dp = arr;
+    vi prev(n, -1);
+    for (int i = 1; i < n; ++i) {
+        if (dp[i - 1] + arr[i] > dp[i]) {
+            dp[i] = dp[i - 1] + arr[i];
+            prev[i] = i - 1;
+        }
+        if (maxi < dp[i]) {
+            maxi = dp[i];
+            maxipos = i;
+        }
+    }
+
+    int to = maxipos;
+    int from = maxipos;
+    for (; prev[from] != -1; from = prev[from]) {}
+
+    if (from == to) {
+        return maxi;
+    }
+
+    vi idxes(n);
+    iota(idxes.begin(), idxes.end(), 0);
+    sort(idxes.begin() + from, idxes.begin() + to, [&](int i, int j){return arr[i] < arr[j];});
+    unordered_set<int> skip;
+    vi elems;
+    for (int i = from; i < to and K > 0; ++i) {
+        int idx = idxes[i];
+        if (arr[idx] < 0 and K-- > 0) {
+            skip.insert(idx);
+        }
+    }
+
+    int ans = 0;
+    for (int i = from; i <= to; ++i) {
+        if (skip.count(i)) continue;
+        ans += arr[i];
+        elems.push_back(arr[i]);
+    }
+    debugn(elems);
+
+    return ans;
+}
+
 int tab(vi& arr, int K) {
     int n = arr.size();
     vvi dp(K + 1, vi(n + 1));
@@ -24,7 +103,7 @@ int tab(vi& arr, int K) {
     return maxi;
 }
 
-di tab_elems(vi& arr, int K) {
+deque<int> tab_elems(vi& arr, int K) {
     int n = arr.size();
     vvi dp(K + 1, vi(n + 1));
     vvvi prev(K + 1, vvi(n + 1));
@@ -64,7 +143,7 @@ di tab_elems(vi& arr, int K) {
             maxpos = i;
         }
     }
-    di elems;
+    deque<int> elems;
     for (vi at = prev[K][maxpos]; not at.empty(); at = prev[at[0]][at[1]]) {
         if (at[2] == 1) {
             elems.push_front(arr[at[1]]);
@@ -81,6 +160,14 @@ int main() { TimeMeasure _; __x();
     vi arr1 = {1, 2, 3, -4, 5}; // 11
     vi arr2 = {-2, -3, 4, -1, -2, 1, 5, -3}; // 9
     vi arr3 = {-2, -3, 4, -1, -2, 1, 5, -3}; // 10
+    cout << tab_logn(arr1, 1) << '\n';
+    cout << tab_logn(arr2, 1) << '\n';
+    cout << tab_logn(arr3, 2) << '\n';
+    cout << '\n';
+    cout << tab_logn_elems(arr1, 1) << '\n';
+    cout << tab_logn_elems(arr2, 1) << '\n';
+    cout << tab_logn_elems(arr3, 2) << '\n';
+    cout << '\n';
     cout << tab(arr1, 1) << '\n';
     cout << tab(arr2, 1) << '\n';
     cout << tab(arr3, 2) << '\n';

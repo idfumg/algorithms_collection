@@ -33,10 +33,10 @@ bool tab(const string& S, const string& P) {
 }
 
 int main() { TimeMeasure _; __x();
-    cout << rec("baaabab", "**a*****ab") << endl;
-    cout << rec("baaabab", "baaa?ab") << endl;
-    cout << rec("baaabab", "ba*a?") << endl;
-    cout << rec("baaabab", "a*ab") << endl;
+    cout << rec("baaabab", "**a*****ab") << endl; // 1
+    cout << rec("baaabab", "baaa?ab") << endl; // 1
+    cout << rec("baaabab", "ba*a?") << endl; // 1
+    cout << rec("baaabab", "a*ab") << endl; // 0
     cout << endl;
     cout << tab("baaabab", "**a*****ab") << endl;
     cout << tab("baaabab", "baaa?ab") << endl;

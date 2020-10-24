@@ -74,7 +74,7 @@ int tab(const string& a, const string& b, int K) {
                 count[i][j] >= K and
                 count[i + 1][j + 1] == 0)
             {
-                    dp[i][j] = count[i][j] + dp[i - 1][j - 1];
+                dp[i][j] = count[i][j] + dp[i - 1][j - 1];
             }
             else {
                 dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
@@ -153,6 +153,7 @@ int main() { TimeMeasure _; __x();
     cout << tab("aggayxysdfa", "aggajxaaasdfa", 4) << endl; // 8
     cout << tab("aggasdfa", "aggajasdfaxy", 5) << endl; // 5
     cout << tab("aabcaaaa", "baaabcd", 3) << endl; // 4
+    cout << tab("aabcaaaakkk", "baaabcdkkk", 3) << endl; // 7
     cout << endl;
     cout << tab_str("aacbb", "aabb", 2) << endl; // aa bb
     cout << tab_str("aggayxysdfa", "aggajxaaasdfa", 4) << endl; // agga sdfa

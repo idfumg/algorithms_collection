@@ -1,6 +1,4 @@
 #include "../../template.hpp"
-#include "../collection/graph.hpp"
-#include "../collection/tree_node.hpp"
 
 bool IsSteppingNumber(int n) {
     int first = -1;
@@ -27,25 +25,31 @@ vi Brute(int from, int to) { // O(n^2)
     return res;
 }
 
-void bfs(int from, int to, int num, si& nums) {
-    deque<int> q;
-    q.push_back(num);
+si bfs(int from, int to) { // O(n)
+    qi q;
+    si ans;
+
+    for (int i = 0; i <= 9; ++i) {
+        q.push(i);
+    }
 
     while (not q.empty()) {
-        int at = q.front(); q.pop_front();
-        if (at >= from and at <= to) nums.insert(at);
-        if (at < 0 or at > to) continue;
-        q.push_back(at * 10 + at % 10 - 1);
-        q.push_back(at * 10 + at % 10 + 1);
-    }
-}
+        int at = q.front(); q.pop();
 
-si bfs(int from, int to) {
-    si nums;
-    for (int i = 0; i < 10; ++i) {
-        bfs(from, to, i, nums);
+        if (at < 0 or at > to) {
+            continue;
+        }
+
+        if (at >= from and at <= to) {
+            ans.insert(at);
+        }
+
+        for (int adj : {at * 10 + (at % 10 - 1), at * 10 + (at % 10 + 1)}) {
+            q.push(adj);
+        }
     }
-    return nums;
+
+    return ans;
 }
 
 int main() { TimeMeasure _;

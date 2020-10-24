@@ -109,17 +109,56 @@ int tab_straight(const string& s) {
     return dp[n][0][sum];
 }
 
+int tab_straight2(string s) {
+    int n = s.size();
+    int sum = accumulate(s.begin(), s.end(), 0) - (n * '0');
+    vvvi dp(n + 2, vvi(sum + 2, vi(sum + 2)));
+
+    for (int j = sum; j >= 0; --j) {
+        for (int k = 0; k <= sum; ++k) {
+            if (j <= k) {
+                dp[0][j][k] = 1;
+            }
+        }
+    }
+
+    for (int i = 1; i <= n; ++i) {
+        for (int j = sum; j >= 0; --j) {
+            for (int k = 0; k <= sum; ++k) {
+                if (j <= k) {
+                    const int digit = s[i - 1] - '0';
+                    if (j + digit <= k) {
+                        dp[i][j][k] = dp[i - 1][j + digit][k] + dp[i - 1][digit][j];
+                    }
+                    else {
+                        dp[i][j][k] = dp[i - 1][digit][j];
+                    }
+                }
+            }
+        }
+    }
+
+    return dp[n][0][sum];
+}
+
 int main() { TimeMeasure _; __x();
     string s1 = "1119";
     string s2 = "1234";
     cout << rec(s1) << endl; // 7
     cout << rec(s2) << endl; // 6
+    cout << '\n';
     cout << tab(s1) << endl; // 7
     cout << tab(s2) << endl; // 6
+    cout << '\n';
     cout << tab2(s1) << endl; // 7
     cout << tab2(s2) << endl; // 6
+    cout << '\n';
     cout << rec_straight(s1) << endl; // 7
     cout << rec_straight(s2) << endl; // 6
+    cout << '\n';
     cout << tab_straight(s1) << endl; // 7
     cout << tab_straight(s2) << endl; // 6
+    cout << '\n';
+    cout << tab_straight2(s1) << endl; // 7
+    cout << tab_straight2(s2) << endl; // 6
 }

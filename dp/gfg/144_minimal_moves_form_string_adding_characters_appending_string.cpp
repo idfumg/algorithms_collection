@@ -1,33 +1,40 @@
 #include "../../template.hpp"
 
-int rec(const string& s, int i) {
-    if (i == 0) return 0;
-    if (i % 2 == 0) {
-        const auto part1 = s.substr(0, i / 2);
-        const auto part2 = s.substr(i / 2, i / 2);
+int rec(string& s, int n) {
+    if (n == 0) {
+        return 0;
+    }
+    if (n % 2 == 0) {
+        const auto part1 = s.substr(0, n / 2);
+        const auto part2 = s.substr(n / 2, n / 2);
         if (part1 == part2) {
-            return min(rec(s, i - 1) + 1, rec(s, i / 2) + 1);
+            return rec(s, n / 2) + 1;
         }
     }
-    return rec(s, i - 1) + 1;
+    return rec(s, n - 1) + 1;
 }
 
-int rec(const string& s) {
-    return rec(s, s.size());
-}
-
-int tab(const string& s) {
+int rec(string& s) {
     int n = s.size();
-    vi dp(n + 1, INF);
-    dp[0] = 0;
+    return rec(s, n);
+}
+
+int tab(string& s) {
+    int n = s.size();
+    vi dp(n + 1);
     for (int i = 1; i <= n; ++i) {
-        dp[i] = min(dp[i], dp[i - 1] + 1);
-        if (i * 2 <= n) {
-            const auto part1 = s.substr(0, i);
-            const auto part2 = s.substr(i, i);
+        if (i % 2 == 0) {
+            const auto part1 = s.substr(0, i / 2);
+            const auto part2 = s.substr(i / 2, i / 2);
             if (part1 == part2) {
-                dp[i * 2] = min(dp[i * 2], dp[i] + 1);
+                dp[i] = min(dp[i - 1], dp[i / 2]) + 1;
             }
+            else {
+                dp[i] = dp[i - 1] + 1;
+            }
+        }
+        else {
+            dp[i] = dp[i - 1] + 1;
         }
     }
     return dp[n];

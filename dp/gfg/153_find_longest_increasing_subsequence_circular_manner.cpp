@@ -18,14 +18,15 @@ int tab1(vi arr) {
 }
 
 int tab2(vi& arr) {
-    int n = arr.size();
-    vi dp(n * 2, 1);
-    for (int i = 1; i < n * 2; ++i) {
+    int m = arr.size();
+    int n = m * 2;
+    vi dp(n, 1);
+    for (int i = 1; i < n; ++i) {
         for (int j = 0; j < i; ++j) {
-            int ifake = i % n;
-            int jfake = j % n;
-            if (arr[ifake] > arr[jfake]) {
-                dp[ifake] = max(dp[ifake], dp[jfake] + 1);
+            int idxi = i % m;
+            int idxj = j % m;
+            if (arr[idxi] > arr[idxj]) {
+                dp[idxi] = max(dp[idxi], dp[idxj] + 1);
             }
         }
     }

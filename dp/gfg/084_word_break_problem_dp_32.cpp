@@ -59,12 +59,12 @@ bool opt2(const string& s) {
 }
 
 int main() { TimeMeasure _; __x();
-    cout << rec("ilikesamsung") << endl;
-    cout << rec("iiiiiiii") << endl;
-    cout << rec("") << endl;
-    cout << rec("ilikelikeimangoiii") << endl;
-    cout << rec("samsungandmango") << endl;
-    cout << rec("samsungandmangok") << endl;
+    cout << rec("ilikesamsung") << endl; // true
+    cout << rec("iiiiiiii") << endl; // true
+    cout << rec("") << endl; // true
+    cout << rec("ilikelikeimangoiii") << endl; // true
+    cout << rec("samsungandmango") << endl; // true
+    cout << rec("samsungandmangok") << endl; // false
     cout << endl;
     cout << tab("ilikesamsung") << endl;
     cout << tab("iiiiiiii") << endl;

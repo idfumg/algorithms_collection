@@ -9,17 +9,15 @@ void AddEdge(Graph& graph, int from, int to) {
 }
 
 void PrintBiconnectedComponent(stack<Edge>& edges, const Edge& currenEdge) {
-    while (not edges.empty() and edges.top() != currenEdge) {
+    while (not edges.empty()) {
         cout << edges.top() << ' ';
+        if (edges.top() == currenEdge) {
+            edges.pop();
+            break;
+        }
         edges.pop();
     }
-    if (not edges.empty()) {
-        cout << edges.top() << ' ' << '\n';
-        edges.pop();
-    }
-    else {
-        cout << '\n';
-    }
+    cout << '\n';
 }
 
 void dfs(Graph& graph, vi& disc, vi& lows, vi& parent, stack<Edge>& edges, int& id, int at) {

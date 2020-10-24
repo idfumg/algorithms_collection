@@ -14,10 +14,27 @@ bool IsBalanced(const string& a) {
     return s.empty();
 }
 
+bool IsBalanced2(const string& s) {
+    int n = s.size();
+    int left = 0, right = 0;
+    for (int i = 0; i < n; ++i) {
+        if (s[i] == '(' and right == 0) {
+            left++;
+        }
+        else if (s[i] == ')' and left == 0) {
+            return false;
+        }
+        else if (s[i] == ')' and left > 0) {
+            --left;
+        }
+    }
+    return left == 0 and right == 0;
+}
+
 void naive(const string& s, int from, int& res, string& current) {
     int n = s.size();
     if (from == s.size()) {
-        if (IsBalanced(current)) {
+        if (IsBalanced2(current)) {
             res = max(res, static_cast<int>(current.size()));
         }
         return;
