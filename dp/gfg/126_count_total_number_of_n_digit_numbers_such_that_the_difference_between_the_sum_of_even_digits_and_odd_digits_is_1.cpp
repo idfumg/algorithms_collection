@@ -1,73 +1,121 @@
 #include "../../template.hpp"
 
-bool IsDifferenceOfOddAndEvenDigitsIs1(int n) {
-    int diff = 0;
-    bool isodd = (static_cast<int>(log10(n)) + 1) % 2 != 0;
+bool IsSatisfy(int n) {
+    int isodd = static_cast<int>(log10(n)) & 1;
+    int odd = 0;
+    int even = 0;
     while (n > 0) {
-        diff = isodd ? (diff + n % 10) : (diff - n % 10);
-        n /= 10;
+        if (isodd) {
+            odd += n % 10;
+        }
+        else {
+            even += n % 10;
+        }
         isodd = !isodd;
+        n /= 10;
     }
-    return diff == 1;
+    return even - odd == 1;
 }
 
 int naive(int n) {
-    int count = 0, from = pow(10, n) / 10, to = pow(10, n) - 1;
-    for (int i = from; i <= to; ++i) {
-        if (IsDifferenceOfOddAndEvenDigitsIs1(i)) {
-            ++count;
+    int start = pow(10, n - 1);
+    int stop = pow(10, n) - 1;
+    int ans = 0;
+    for (int i = start; i <= stop; ++i) {
+        if (IsSatisfy(i)) {
+            ++ans;
         }
     }
-    return count;
+    return ans;
 }
 
-int rec(int n, int prev, bool even) {
-    if (n == 0 and prev == 1) return 1;
-    if (n == 0) return 0;
-    int count = 0;
-    for (int i = 0; i <= 9; ++i) {
-        count += rec(n - 1, even ? (prev + i) : (prev - i), not even);
+int rec(int n, int even, int odd) {
+    bool isodd = (n + 1) & 1;
+    if (n == 0) {
+        if (even - odd == 1) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
-    return count;
+    int ans = 0;
+    for (int i = n == 1; i <= 9; ++i) {
+        if (isodd) {
+            ans += rec(n - 1, even, odd + i);
+        }
+        else {
+            ans += rec(n - 1, even + i, odd);
+        }
+    }
+    return ans;
 }
 
 int rec(int n) {
-    int count = 0;
-    for (int i = 1; i <= 9; ++i) {
-        count += rec(n - 1, i, false);
-    }
-    return count;
+    return rec(n, 0, 0);
 }
 
-int tab(int n) {
-    vvvi dp(n + 1, vvi(n * 9 + 2, vi(2)));
-    int total = 0;
-    for (int i = 0; i <= n; ++i) {
-        for (int j = 1; j <= n * 9; ++j) {
-            for (bool even : {false, true}) {
-                if (i == 0 and j == 1) {
-                    dp[i][j][true] = dp[i][j][false] = 1;
-                }
-                else if (i == 0) {
-                    dp[i][j][true] = dp[i][j][false] = 0;
+int rec2(int n, int diff) {
+    bool isodd = (n + 1) & 1;
+    if (n == 0) {
+        if (diff == 1) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+    int ans = 0;
+    for (int i = n == 1; i <= 9; ++i) {
+        if (isodd) {
+            ans += rec2(n - 1, diff - i);
+        }
+        else {
+            ans += rec2(n - 1, diff + i);
+        }
+    }
+    return ans;
+}
+
+int rec2(int n) {
+    return rec2(n, 0);
+}
+
+int tab(int digits) {
+    int n = digits * 9;
+    vvvi dp(digits + 1, vvi(n + 1, vi(n + 1)));
+    for (int i = 0; i <= digits; ++i) {
+        for (int j = n; j >= 0; --j) {
+            for (int k = n; k >= 0; --k) {
+                if (i == 0) {
+                    if (j - k == 1) {
+                        dp[i][j][k] = 1;
+                    }
+                    else {
+                        dp[i][j][k] = 0;
+                    }
                 }
                 else {
-                    int count = 0;
-                    for (int k = (i == 1 ? 1 : 0); k <= 9; ++k) {
-                        if (j + k <= n * 9 and even) {
-                            count += dp[i - 1][j + k][false];
+                    int ans = 0;
+                    bool isodd = (i + 1) & 1;
+                    for (int p = i == 1; p <= 9; ++p) {
+                        if (isodd) {
+                            if (k + p <= n) {
+                                ans += dp[i - 1][j][k + p];
+                            }
                         }
-                        else if (j - k >= 0 and not even) {
-                            count += dp[i - 1][j - k][true];
+                        else {
+                            if (j + p <= n) {
+                                ans += dp[i - 1][j + p][k];
+                            }
                         }
                     }
-                    dp[i][j][even] = count;
-                    total = max(total, count);
+                    dp[i][j][k] = ans;
                 }
             }
         }
     }
-    return total;
+    return dp[digits][0][0];
 }
 
 int main() { TimeMeasure _; __x();
@@ -75,6 +123,8 @@ int main() { TimeMeasure _; __x();
     cout << naive(3) << endl; // 54
     cout << rec(2) << endl; // 9
     cout << rec(3) << endl; // 54
+    cout << rec2(2) << endl; // 9
+    cout << rec2(3) << endl; // 54
     cout << tab(2) << endl; // 9
     cout << tab(3) << endl; // 54
 }

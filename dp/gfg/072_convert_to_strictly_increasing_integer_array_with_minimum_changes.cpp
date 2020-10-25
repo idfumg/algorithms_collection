@@ -54,9 +54,9 @@ int opt(vi& arr) {
 }
 
 int main() { TimeMeasure _; __x();
-    vi arr1 = {1, 2, 6, 5, 4};
-    vi arr2 = {1, 2, 3, 5, 7, 11};
-    vi arr3 = {1, 2, 5, 3, 4};
+    vi arr1 = {1, 2, 6, 5, 4}; // 2
+    vi arr2 = {1, 2, 3, 5, 7, 11}; // 0
+    vi arr3 = {1, 2, 5, 3, 4}; // 2
     cout << "Recursive: " << rec(arr1) << endl;
     cout << "Recursive: " << rec(arr2) << endl;
     cout << "Recursive: " << rec(arr3) << endl;
