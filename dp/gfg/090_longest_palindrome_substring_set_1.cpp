@@ -1,83 +1,37 @@
 #include "../../template.hpp"
 
-bool IsPalindrome(const string& s, int i, int j) {
+bool IsPalindrome(string s, int i, int j) {
     while (i <= j) {
-        if (s[i++] != s[j--]) return false;
+        if (s[i - 1] != s[j - 1]) {
+            return false;
+        }
+        ++i;
+        --j;
     }
     return true;
 }
 
-int rec(const string& s, int i, int j, int& count, int& pos) {
+int rec(string& s, int i, int j) {
     if (i > j) {
         return 0;
     }
     if (i == j) {
-        if (count < 1) {
-            count = 1;
-            pos = i;
-        }
         return 1;
     }
-    if (s[i] == s[j] and IsPalindrome(s, i + 1, j - 1)) {
-        if (count < j - i + 1) {
-            count = j - i + 1;
-            pos = i;
-        }
+    if (s[i - 1] == s[j - 1] and IsPalindrome(s, i, j)) {
         return j - i + 1;
     }
-    return max(rec(s, i + 1, j, count, pos), rec(s, i, j - 1, count, pos));
+    return max(rec(s, i + 1, j), rec(s, i, j - 1));
 }
 
-int rec(const string& s) {
-    int count = 0, pos = 0;
-    rec(s, 0, s.size() - 1, count, pos);
-    cout << s.substr(pos, count) << '\n';
-    return count;
+int rec(string s) {
+    int n = s.size();
+    return rec(s, 1, n);
 }
 
-int tab(const string& s) {
-    const int n = s.size();
-    vvi dp(n, vi(n));
-    int count = -INF, position = 0;
-
-    for (int i = 0; i < n; ++i) {
-        dp[i][i] = 1;
-        if (count < dp[i][i]) {
-            count = dp[i][i];
-            position = i;
-        }
-    }
-
-    for (int i = 0; i < n - 1; ++i) {
-        if (s[i] == s[i + 1]) {
-            dp[i][i + 1] = 2;
-            if (count < dp[i][i + 1]) {
-                count = dp[i][i + 1];
-                position = i;
-            }
-        }
-    }
-
-    for (int k = 2; k < n; ++k) {
-        for (int i = 0; i < n; ++i) {
-            int j = i + k;
-            if (j < n && s[i] == s[j] && dp[i + 1][j - 1] != 0) {
-                dp[i][j] = 2 + dp[i + 1][j - 1];
-                if (count < dp[i][j]) {
-                    count = dp[i][j];
-                    position = i;
-                }
-            }
-        }
-    }
-
-    cout << s.substr(position, count) << endl;
-    return count;
-}
-
-int tab2(const string& s) {
-    int n = s.size(), maxi = -INF, maxipos = 0;
-    vvi dp(n + 2, vi(n + 2));
+int tab(string s) {
+    int n = s.size();
+    vvi dp(n + 1, vi(n + 1));
     for (int i = n; i >= 1; --i) {
         for (int j = 1; j <= n; ++j) {
             if (i > j) {
@@ -86,45 +40,80 @@ int tab2(const string& s) {
             else if (i == j) {
                 dp[i][j] = 1;
             }
-            else if (j - i == 1 and s[i - 1] == s[j - 1]) {
-                dp[i][j] = 2;
+            else if (s[i - 1] == s[j - 1] and IsPalindrome(s, i, j)) {
+                dp[i][j] = j - i + 1;
             }
-            else if (s[i - 1] == s[j - 1] and dp[i + 1][j - 1] > 0) {
-                dp[i][j] = 2 + dp[i + 1][j - 1];
-            }
-            if (dp[i][j] > maxi) {
-                maxi = dp[i][j];
-                maxipos = i;
+            else {
+                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
             }
         }
     }
-    cout << s.substr(maxipos - 1, maxi) << endl;
-    return maxi;
+    return dp[1][n];
 }
 
-tuple<int, int> FindPalindrome(const string& s, int left, int right) {
-    while (left > 0 && right < s.size() && s[left] == s[right]) {
-        left--;
-        right++;
+int tab2(string s) {
+    int n = s.size();
+    vvi dp(n + 1, vi(n + 1));
+    for (int i = 1; i <= n; ++i) {
+        dp[i][i] = 1;
     }
-    if (s[left + 1] == s[right - 1]) return make_tuple(right - left - 1, left + 1);
-    return make_tuple(-1, -1);
+    for (int i = 2; i <= n; ++i) {
+        if (s[i - 1] == s[i - 2]) {
+            dp[i - 1][i] = 2;
+        }
+    }
+    for (int k = 2; k <= n; ++k) {
+        for (int i = 1, j = i + k; j <= n; ++i, ++j) {
+            if (s[i - 1] == s[j - 1] and dp[i + 1][j - 1] == j - i - 1) {
+                dp[i][j] = j - i + 1;
+            }
+            else {
+                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+    return dp[1][n];
 }
 
-int fast(const string& s) {
-    int count = 0, position = 0;
-    for (int i = 0; i < s.size(); ++i) {
-        const auto& [count1, position1] = FindPalindrome(s, i, i);
-        const auto& [count2, position2] = FindPalindrome(s, i, i + 1);
-        if (count1 > count) {
-            count = count1; position = position1;
-        }
-        if (count2 > count) {
-            count = count2; position = position2;
+int rec_elems(string& s, vvi& dp, int i, int j) {
+    if (i > j) {
+        return 0;
+    }
+    if (i == j) {
+        return 1;
+    }
+    if (s[i - 1] == s[j - 1] and dp[i][j] == j - i + 1) {
+        cout << s.substr(i - 1, j - i + 1) << '\n';
+        return j - i + 1;
+    }
+    if (dp[i + 1][j] > dp[i][j - 1]) {
+        return rec_elems(s, dp, i + 1, j);
+    }
+    return rec_elems(s, dp, i, j - 1);
+}
+
+int rec_elems(string s) {
+    int n = s.size();
+    vvi dp(n + 1, vi(n + 1));
+    for (int i = 1; i <= n; ++i) {
+        dp[i][i] = 1;
+    }
+    for (int i = 2; i <= n; ++i) {
+        if (s[i - 1] == s[i - 2]) {
+            dp[i - 1][i] = 2;
         }
     }
-    cout << s.substr(position, count) << endl;
-    return count;
+    for (int k = 2; k <= n; ++k) {
+        for (int i = 1, j = i + k; j <= n; ++i, ++j) {
+            if (s[i - 1] == s[j - 1] and dp[i + 1][j - 1] == j - i - 1) {
+                dp[i][j] = j - i + 1;
+            }
+            else {
+                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+    return rec_elems(s, dp, 1, n);
 }
 
 int main() { TimeMeasure _; __x();
@@ -132,10 +121,13 @@ int main() { TimeMeasure _; __x();
     static const string s2 = "Geeks"; // ee // 2
     cout << rec(s1) << endl;
     cout << rec(s2) << endl;
+    cout << '\n';
     cout << tab(s1) << endl;
     cout << tab(s2) << endl;
+    cout << '\n';
     cout << tab2(s1) << endl;
     cout << tab2(s2) << endl;
-    cout << fast(s1) << endl;
-    cout << fast(s2) << endl;
+    cout << '\n';
+    cout << rec_elems(s1) << endl;
+    cout << rec_elems(s2) << endl;
 }

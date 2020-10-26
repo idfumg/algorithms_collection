@@ -1,50 +1,75 @@
 #include "../../template.hpp"
 
-int rec(int n) {
-    if (n == 0) return 0;
-    if (n == 1) return 0;
-    int maxi = -INF;
-    for (int i = 1; i < n; ++i) {
-        maxi = max({maxi, i * (n - i), rec(n - i) * i});
+int rec(int n, int len, int prod) {
+    if (n <= len) {
+        return prod * n;
     }
-    return maxi;
+    return max({rec(n - len, len, prod * len),
+                rec(n, len + 1, prod)});
+}
+
+int rec(int n) {
+    int ans = 0;
+    for (int i = 1; i <= 9; ++i) {
+        ans = max(ans, rec(n - i, 1, i));
+    }
+    return ans;
+}
+
+int rec2(int n, int len) {
+    if (n <= len) {
+        return n;
+    }
+    return max({rec2(n - len, len) * len,
+                rec2(n, len + 1)});
 }
 
 int rec2(int n) {
-    if (n == 0 or n == 1) return 0;
-    int maxi = -INF;
-    for (int i = 1; i < n; ++i) {
-        maxi = max({maxi, rec2(n - i) * i, (n - i) * i});
+    int ans = 0;
+    for (int i = 1; i <= 9; ++i) {
+        ans = max(ans, rec2(n - i, 1) * i);
     }
-    return maxi;
+    return ans;
 }
 
 int tab(int n) {
-    vi dp(n + 1);
-    for (int i = 0; i <= n; ++i) {
-        if (i == 0 or i == 1) {
-            dp[i] = 0;
-        }
-        else {
-            int maxi = -INF;
-            for (int k = 1; k < i; ++k) {
-                maxi = max({maxi, k * (i - k), dp[i - k] * k});
+    vvi dp(n + 1, vi(10, 1));
+    int ans = 0;
+    for (int len = min(9, n); len >= 1; --len) {
+        for (int i = 0; i <= n - len; ++i) {
+            for (int j = len; j >= 1; --j) {
+                if (i <= j) {
+                    dp[i][j] = i;
+                }
+                else {
+                    dp[i][j] = max(dp[i - j][j] * j, dp[i][j + 1]);
+                }
             }
-            dp[i] = maxi;
         }
+        ans = max(ans, dp[n - len][1] * len);
     }
-    return dp[n];
+    return ans;
 }
 
-int tab2(int n) {
-    // dp[i] - max product of cutting a rod of length i
-    vi dp(n + 1);
-    for (int i = 2; i <= n; ++i) {
-        for (int j = 1; j <= i - 1; ++j) {
-            dp[i] = max({dp[i], j * (i - j), j * dp[i - j]});
+int tab2(int n) { // TC O(n), MC O(n)
+    vvi dp(n + 1, vi(2, 1));
+    int ans = 0;
+    int idx = 0;
+    for (int len = min(9, n); len >= 1; --len) {
+        for (int i = 0; i <= n - len; ++i) {
+            for (int j = len; j >= 1; --j) {
+                idx = j & 1;
+                if (i <= j) {
+                    dp[i][idx] = i;
+                }
+                else {
+                    dp[i][idx] = max(dp[i - j][idx] * j, dp[i][1 - idx]);
+                }
+            }
         }
+        ans = max(ans, dp[n - len][1] * len);
     }
-    return dp[n];
+    return ans;
 }
 
 int main() { TimeMeasure _; __x();
@@ -66,9 +91,9 @@ int main() { TimeMeasure _; __x();
     cout << tab(5) << endl; // 6
     cout << tab(10) << endl; // 36
     cout << endl;
-    cout << tab2(2) << endl; // 1
-    cout << tab2(3) << endl; // 2
-    cout << tab2(4) << endl; // 4
-    cout << tab2(5) << endl; // 6
-    cout << tab2(10) << endl; // 36
+    cout << tab(2) << endl; // 1
+    cout << tab(3) << endl; // 2
+    cout << tab(4) << endl; // 4
+    cout << tab(5) << endl; // 6
+    cout << tab(10) << endl; // 36
 }

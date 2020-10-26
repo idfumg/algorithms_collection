@@ -1,32 +1,39 @@
 #include "../../template.hpp"
 
-int rec(int n, int k) {
-    if (k == 1 || k == 0) return k;
-    if (n == 1) return k;
-    int mini = INF;
-    for (int i = 1; i <= k; ++i) {
-        mini = min(mini, max(rec(n - 1, i - 1), rec(n, k - i)));
+int rec(int eggs, int floors) {
+    if (eggs == 1) {
+        return floors;
     }
-    return mini + 1;
+    if (floors <= 1) {
+        return floors;
+    }
+    int count = INF;
+    for (int floor = 1; floor <= floors; ++floor) {
+        count = min(count, max(rec(eggs - 1, floor - 1), rec(eggs, floors - floor)) + 1);
+    }
+    return count;
 }
 
-int tab(int n, int k) {
-    vvi dp(n + 1, vi(k + 1, INF));
-    for (int i = 1; i <= n; ++i) {
-        for (int j = 0; j <= k; ++j) {
-            if (j == 0 || j == 1 || i == 1) {
+int tab(int eggs, int floors) {
+    vvi dp(eggs + 1, vi(floors + 1));
+    for (int i = 1; i <= eggs; ++i) {
+        for (int j = 1; j <= floors; ++j) {
+            if (i == 1) {
+                dp[i][j] = j;
+            }
+            else if (j <= 1) {
                 dp[i][j] = j;
             }
             else {
-                int mini = INF;
-                for (int ik = 1; ik <= j; ++ik) {
-                    mini = min(mini, max(dp[i - 1][ik - 1], dp[i][j - ik]));
+                int count = INF;
+                for (int floor = 1; floor <= j; ++floor) {
+                    count = min(count, max(dp[i - 1][floor - 1], dp[i][j - floor]) + 1);
                 }
-                dp[i][j] = mini + 1;
+                dp[i][j] = count;
             }
         }
     }
-    return dp[n][k];
+    return dp[eggs][floors];
 }
 
 int main() { TimeMeasure _; __x();

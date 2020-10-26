@@ -23,23 +23,40 @@ int naive(int n) {
     return count;
 }
 
-int rec(int n, int prev) {
+int rec(int n, int digit, int prev) {
+    if (digit < prev or digit > 9) {
+        return 0;
+    }
     if (n == 0) {
         return 1;
     }
-    int count = 0;
-    for (int i = 0; i <= prev; ++i) {
-        count += rec(n - 1, i);
-    }
-    return count;
+    return
+        rec(n - 1, digit, digit) +
+        rec(n, digit + 1, digit);
 }
 
 int rec(int n) {
-    int count = 0;
-    for (int i = 0; i <= 9; ++i) {
-        count += rec(n - 1, i);
+    return rec(n, 0, 0);
+}
+
+int tab(int n) {
+    vvvi dp(n + 1, vvi(11, vi(11)));
+    for (int i = 0; i <= n; ++i) {
+        for (int j = 9; j >= 0; --j) {
+            for (int k = 9; k >= 0; --k) {
+                if (j < k) {
+                    dp[i][j][k] = 0;
+                }
+                else if (i == 0) {
+                    dp[i][j][k] = 1;
+                }
+                else {
+                    dp[i][j][k] = dp[i - 1][j][j] + dp[i][j + 1][j];
+                }
+            }
+        }
     }
-    return count;
+    return dp[n][0][0];
 }
 
 int main() { TimeMeasure _; __x();
@@ -50,4 +67,8 @@ int main() { TimeMeasure _; __x();
     cout << rec(1) << endl;
     cout << rec(2) << endl;
     cout << rec(3) << endl;
+    cout << '\n';
+    cout << tab(1) << endl;
+    cout << tab(2) << endl;
+    cout << tab(3) << endl;
 }
