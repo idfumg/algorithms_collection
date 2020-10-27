@@ -1,28 +1,24 @@
 #include "../../template.hpp"
 
-int MaximumProductSubset(vi& arr) {
-    int n = arr.size(), negatives = 0, positives = 0, zeroes = 0, maxNegative = -INF, prod = 1;
+int MaximumProductSubset(vi arr) {
+    int n = arr.size();
+    if (n == 0) return -INF;
+    int total = -INF;
+    int maxNegative = -INF;
+    int negatives = 0;
     for (int i = 0; i < n; ++i) {
         if (arr[i] < 0) {
             maxNegative = max(maxNegative, arr[i]);
             ++negatives;
-            prod *= arr[i];
         }
-        else if (arr[i] == 0) {
-            ++zeroes;
-        }
-        else if (arr[i] > 0) {
-            ++positives;
-            prod *= arr[i];
+        if (arr[i] != 0) {
+            total = total == -INF ? arr[i] : total * arr[i];
         }
     }
-    if (n == 0) return 0;
-    if (zeroes == n) return 0;
-    if (positives == 0 and zeroes == 0) return maxNegative;
-    if (positives == 0 and zeroes > 0) return 0;
-    if (prod > 0) return prod;
-    if (negatives & 1) return prod / maxNegative;
-    return prod;
+    if (total == -INF) return 0;
+    if (total > 0) return total;
+    if (negatives == 0 or negatives == 1) return 0;
+    return total / maxNegative;
 }
 
 int main() { TimeMeasure _;

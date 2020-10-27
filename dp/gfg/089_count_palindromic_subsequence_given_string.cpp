@@ -1,40 +1,43 @@
 #include "../../template.hpp"
 
-int rec(const string& s, int i, int j) {
-    if (i > j) return 0;
-    if (i == j) return 1;
-    if (s[i] == s[j]) {
+int rec(string s, int i, int j) {
+    if (i > j) {
+        return 0;
+    }
+    if (i == j) {
+        return 1;
+    }
+    if (s[i - 1] == s[j - 1]) {
         return 1 + rec(s, i + 1, j) + rec(s, i, j - 1);
     }
     return rec(s, i + 1, j) + rec(s, i, j - 1) - rec(s, i + 1, j - 1);
 }
 
-int rec(const string& s) {
-    return rec(s, 0, s.size() - 1);
+int rec(string s) {
+    int n = s.size();
+    return rec(s, 1, n);
 }
 
-int tab(const string& s) {
-    const int n = s.size();
-    vvi dp(n + 1, vi(n + 1));
-    int idx = 0;
-    for (int j = 0; j <= n; ++j) {
-        idx = j & 1;
-        for (int i = n; i >= 0; --i) {
+int tab(string s) {
+    int n = s.size();
+    vvi dp(n + 2, vi(n + 1));
+    for (int i = n; i >= 1; --i) {
+        for (int j = 1; j <= n; ++j) {
             if (i > j) {
-                dp[i][idx] = 0;
+                dp[i][j] = 0;
             }
             else if (i == j) {
-                dp[i][idx] = 1;
+                dp[i][j] = 1;
             }
-            else if (i > 0 && j > 0 && i < n && s[i - 1] == s[j - 1]) {
-                dp[i][idx] = 1 + dp[i + 1][idx] + dp[i][1 - idx];
+            else if (s[i - 1] == s[j - 1]) {
+                dp[i][j] = 1 + dp[i + 1][j] + dp[i][j - 1];
             }
-            else if (i < n && j > 0) {
-                dp[i][idx] = dp[i + 1][idx] + dp[i][1 - idx] - dp[i + 1][1 - idx];
+            else {
+                dp[i][j] = dp[i + 1][j] + dp[i][j - 1] - dp[i + 1][j - 1];
             }
         }
     }
-    return dp[1][idx];
+    return dp[1][n];
 }
 
 int main() { TimeMeasure _; __x();

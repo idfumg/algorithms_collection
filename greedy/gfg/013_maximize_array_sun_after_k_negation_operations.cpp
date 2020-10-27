@@ -1,23 +1,19 @@
 #include "../../template.hpp"
 
 int MaximizeArraySum(vi arr, int k) {
-    int n = arr.size(), ans = 0;
     sort(arr);
+    int n = arr.size();
+    int ans = 0;
     for (int i = 0; i < n; ++i) {
         if (arr[i] < 0 and k > 0) {
-            ans += -arr[i];
+            arr[i] *= -1;
             --k;
         }
-        else if (arr[i] == 0 and k > 0) {
+        else if (k > 0) {
+            arr[i] *= k & 1 ? -1 : 1;
             k = 0;
         }
-        else if (arr[i] > 0 and k > 0) {
-            ans += k & 1 ? -arr[i] : arr[i];
-            k = 0;
-        }
-        else {
-            ans += arr[i];
-        }
+        ans += arr[i];
     }
     return ans;
 }

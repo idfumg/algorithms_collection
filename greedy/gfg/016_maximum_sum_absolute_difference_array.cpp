@@ -21,6 +21,30 @@ int MaximumSumOfDifferences(vi arr) {
     return ans;
 }
 
+int MaximumSumOfDifferences2(vi arr) {
+    int n = arr.size();
+    sort(arr);
+    int i = 0;
+    int j = n - 1;
+    int ans = 0;
+    while (i < j) {
+        ans += arr[j] - arr[i];
+        ++i;
+        if (i < j) {
+            ans += arr[j] - arr[i];
+        }
+        --j;
+    }
+    if (j < i) {
+        ans += arr[j + 1] - arr[0];
+    }
+    if (j == i) {
+        ans += arr[i] - arr[0];
+    }
+    return ans;
+}
+
+
 int main() { TimeMeasure _;
     vi arr1 = { 4, 2, 1, 8 };
     vi arr2 = { 1, 2, 4, 8, 10 };
@@ -31,4 +55,9 @@ int main() { TimeMeasure _;
     cout << MaximumSumOfDifferences(arr2) << '\n'; // 30 | {1, 10, 2, 8, 4}
     cout << MaximumSumOfDifferences(arr3) << '\n'; // 10 | {10, 15, 12}
     cout << MaximumSumOfDifferences(arr4) << '\n'; // 26
+    cout << '\n';
+    cout << MaximumSumOfDifferences2(arr1) << '\n'; // 18 | {1, 8, 2, 4}
+    cout << MaximumSumOfDifferences2(arr2) << '\n'; // 30 | {1, 10, 2, 8, 4}
+    cout << MaximumSumOfDifferences2(arr3) << '\n'; // 10 | {10, 15, 12}
+    cout << MaximumSumOfDifferences2(arr4) << '\n'; // 26
 }

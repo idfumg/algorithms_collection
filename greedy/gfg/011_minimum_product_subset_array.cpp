@@ -57,20 +57,59 @@ int MinimumProductSubset3(vi arr) {
     return total;
 }
 
+int MinimumProductSubset4(vi arr) {
+    int n = arr.size();
+    if (n == 0) {
+        return -INF;
+    }
+    int negativesProd = INF;
+    int positivesProd = -INF;
+    int zeroesCount = 0;
+    int maxNegative = -INF;
+    int minPositive = INF;
+    for (int i = 0; i < n; ++i) {
+        if (arr[i] < 0) {
+            negativesProd = negativesProd == INF ? arr[i] : negativesProd * arr[i];
+            maxNegative = max(maxNegative, arr[i]);
+        }
+        else if (arr[i] > 0) {
+            positivesProd = positivesProd == -INF ? arr[i] : positivesProd * arr[i];
+            minPositive = min(minPositive, arr[i]);
+        }
+        else {
+            ++zeroesCount;
+        }
+    }
+    if (negativesProd == INF and positivesProd == -INF) return 0;
+    if (negativesProd == INF) return minPositive;
+    if (positivesProd == -INF) return negativesProd;
+    if (negativesProd > 0) negativesProd /= maxNegative;
+    return negativesProd * positivesProd;
+}
+
 int main() { TimeMeasure _;
-    vi arr1 = { -1, -1, -2, 4, 3 };
-    vi arr2 = { -1, 0 };
-    vi arr3 = { 0, 0, 0 };
+    vi arr1 = { -1, -1, -2, 4, 3 }; // -24
+    vi arr2 = { -1, 0 }; // -1
+    vi arr3 = { 0, 0, 0 }; // 0
+    vi arr4 = { 1, 2, 3 }; // 1
 
     cout << MinimumProductSubset(arr1) << '\n';
     cout << MinimumProductSubset(arr2) << '\n';
     cout << MinimumProductSubset(arr3) << '\n';
+    cout << MinimumProductSubset(arr4) << '\n';
     cout << '\n';
     cout << MinimumProductSubset2(arr1) << '\n';
     cout << MinimumProductSubset2(arr2) << '\n';
     cout << MinimumProductSubset2(arr3) << '\n';
+    cout << MinimumProductSubset2(arr4) << '\n';
     cout << '\n';
     cout << MinimumProductSubset3(arr1) << '\n';
     cout << MinimumProductSubset3(arr2) << '\n';
     cout << MinimumProductSubset3(arr3) << '\n';
+    cout << MinimumProductSubset3(arr4) << '\n';
+    cout << '\n';
+    cout << MinimumProductSubset4(arr1) << '\n';
+    cout << MinimumProductSubset4(arr2) << '\n';
+    cout << MinimumProductSubset4(arr3) << '\n';
+    cout << MinimumProductSubset4(arr4) << '\n';
 }

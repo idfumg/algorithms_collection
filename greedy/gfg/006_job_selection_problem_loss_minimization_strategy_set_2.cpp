@@ -21,7 +21,7 @@ int main() { TimeMeasure _;
         LossMinimization(arr, 0.10);
     }
     {
-        vi arr{3, 1, 41, 52, 15, 4, 1, 63, 12}; // 1 1 3 4 12 15 41 52 63 : 145.91и
+        vi arr{3, 1, 41, 52, 15, 4, 1, 63, 12}; // 1 1 3 4 12 15 41 52 63 : 145.91
         LossMinimization(arr, 0.20);
     }
 }
