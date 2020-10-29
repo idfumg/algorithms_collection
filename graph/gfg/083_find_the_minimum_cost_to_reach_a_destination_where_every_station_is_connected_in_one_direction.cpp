@@ -20,5 +20,5 @@ int main() { TimeMeasure _;
                  {INF, INF, 0, 70},
                  {INF, INF, INF, 0}};
     int n = graph.size();
-    cout << "The Minimum cost to reach station " << n << " is " << MinCost(graph);
+    cout << "The Minimum cost to reach station " << n << " is " << MinCost(graph); // 65
 }

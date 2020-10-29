@@ -48,4 +48,6 @@ int main() { TimeMeasure _;
     AddEdge(graph, 5, 6);
     AddEdge(graph, 6, 7);
     PrintShortestDistance(graph, 0, 7);
+// MinimumDistance is: 2
+// Path to the final vertex is: 0 3 7
 }

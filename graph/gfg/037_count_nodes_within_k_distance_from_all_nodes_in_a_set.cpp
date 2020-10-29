@@ -35,6 +35,40 @@ vi FindKDistance(Graph& graph, const vi& terminals, int k) {
     return ans;
 }
 
+void dfs2(Graph& graph, vb& visited, vb& reach, int k, int at) {
+    visited[at] = true;
+    reach[at] = k >= 0;
+    for (int adj : graph[at]) {
+        if (not visited[adj]) {
+            dfs2(graph, visited, reach, k - 1, adj);
+        }
+    }
+}
+
+vi FindKDistance2(Graph& graph, vi terminals, int k) {
+    int n = graph.size();
+    vb reachFinal(n);
+
+    for (int terminal : terminals) {
+        vb visited(n);
+        vb reach(n);
+
+        dfs2(graph, visited, reach, k, terminal);
+
+        for (int i = 0; i < n; ++i) {
+            reachFinal[i] = (terminal == terminals[0]) ? reach[i] : (reach[i] and reachFinal[i]);
+        }
+    }
+
+    vi ans;
+    for (int i = 0; i < n; ++i) {
+        if (reachFinal[i]) {
+            ans.push_back(i);
+        }
+    }
+    return ans;
+}
+
 int main() { TimeMeasure _;
     Graph graph(10);
     AddEdge(graph, 1, 0);
@@ -47,4 +81,5 @@ int main() { TimeMeasure _;
     AddEdge(graph, 4, 5);
     AddEdge(graph, 5, 9);
     cout << FindKDistance(graph, {1, 2, 4}, 3) << endl;
+    cout << FindKDistance2(graph, {1, 2, 4}, 3) << endl;
 }

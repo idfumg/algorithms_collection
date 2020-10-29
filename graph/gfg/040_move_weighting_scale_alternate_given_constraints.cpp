@@ -39,6 +39,6 @@ vi rec(vi arr, int steps) {
 }
 
 int main() { TimeMeasure _;
-    cout << rec({2, 3, 5, 6}, 10) << '\n';
-    cout << rec({7, 11}, 3) << '\n';
+    cout << rec({2, 3, 5, 6}, 10) << '\n'; // 3, 2, 3, 5, 6, 5, 3, 2, 3
+    cout << rec({7, 11}, 3) << '\n'; // 7 11 7
 }

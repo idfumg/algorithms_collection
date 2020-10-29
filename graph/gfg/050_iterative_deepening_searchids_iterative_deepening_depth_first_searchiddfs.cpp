@@ -35,5 +35,5 @@ int main() { TimeMeasure _;
     AddEdge(graph, 1, 4);
     AddEdge(graph, 2, 5);
     AddEdge(graph, 2, 6);
-    cout << iddfs(graph, 0, 6, 3) << endl;
+    cout << iddfs(graph, 0, 6, 3) << endl; // 1
 }

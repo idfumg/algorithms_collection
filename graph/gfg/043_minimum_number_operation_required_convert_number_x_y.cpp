@@ -33,23 +33,13 @@ int MinimumOpsToTransfrom2(int x, int y) {
     while (not q.empty()) {
         int at = q.front(); q.pop();
 
-        if (at == y) {
-            break;
-        }
-
-        int a = at - 1;
-        int b = at * 2;
-
-        if (a >= 0 and not dist.count(a)) {
-            dist[a] = dist[at] + 1;
-            q.push(a);
-        }
-        if (b <= y * 2 and not dist.count(b)) {
-            dist[b] = dist[at] + 1;
-            q.push(b);
+        for (int adj : {at - 1, at * 2}) {
+            if (adj >= 0 and adj <= 2 * y and not dist.count(adj)) {
+                dist[adj] = dist[at] + 1;
+                q.push(adj);
+            }
         }
     }
-
     return dist[y];
 }
 
