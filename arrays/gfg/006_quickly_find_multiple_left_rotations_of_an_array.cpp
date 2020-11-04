@@ -30,12 +30,11 @@ void RotateSeveralTimes2(vi elems, const vi& ks) {
     cout << '\n';
 }
 
-void RotateSeveralTimes3(vi arr, const vi& ks) {
+void RotateSeveralTimes3(vi arr, vi ks) {
     int n = arr.size();
     for (int k : ks) {
-        k %= n;
-        for (int i = k; i < k + n; ++i) {
-            cout << arr[i % n] << ' ';
+        for (int i = 0; i < n; ++i) {
+            cout << arr[(i + k) % n] << ' ';
         }
         cout << '\n';
     }

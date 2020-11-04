@@ -25,19 +25,25 @@ void LeftRotate2(vi arr, int k) {
 }
 
 void LeftRotate3(vi arr, int k) {
-    int n = arr.size();
-    if (k > n) {
-        k = k % n;
-    }
+    k = k % arr.size();
     reverse(arr.begin(), arr.begin() + k);
     reverse(arr.begin() + k, arr.end());
     reverse(arr.begin(), arr.end());
     debugn(arr);
 }
 
+void RightRotate3(vi arr, int k) {
+    k = k % arr.size();
+    reverse(arr.rbegin(), arr.rbegin() + k);
+    reverse(arr.rbegin() + k, arr.rend());
+    reverse(arr.rbegin(), arr.rend());
+    debugn(arr);
+}
+
 int main() { TimeMeasure _;
-    vi arr = { 1, 2, 3, 4, 5, 6, 7 };
+    vi arr = { 1, 2, 3, 4, 5, 6, 7 }; // 3 4 5 6 7 1 2
     LeftRotate(arr, 2); // O(n*K)
     LeftRotate2(arr, 2); // O(n)
     LeftRotate3(arr, 2); // O(n)
+    RightRotate3(arr, 2); // O(n)
 }

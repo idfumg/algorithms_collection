@@ -42,8 +42,8 @@ int MaxHammingDistance2(vi arr) {
 }
 
 int main() { TimeMeasure _;
-    vi arr1 = {1, 4, 1};
-    vi arr2 = {2, 4, 8, 0};
+    vi arr1 = {1, 4, 1}; // 2
+    vi arr2 = {2, 4, 8, 0}; //4
 
     cout << MaxHammingDistance(arr1) << '\n'; // Ot(n^2), Om(n)
     cout << MaxHammingDistance(arr2) << '\n';
