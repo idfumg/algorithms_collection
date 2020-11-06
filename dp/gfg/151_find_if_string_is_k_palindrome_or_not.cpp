@@ -30,7 +30,7 @@ bool tab2(const string& a, int k) { // longest palindromic subsequence
     return n - dp[1][n] <= k;
 }
 
-bool tab3(string s, int K) {
+bool tab3(string s, int K) { // How many charachater we should delete from 1..n
     int n = s.size();
     vvi dp(n + 1, vi(n + 1));
 
@@ -54,6 +54,33 @@ bool tab3(string s, int K) {
     return dp[1][n] <= K;
 }
 
+bool tab4(string s, int K) {  // longest palindromic subsequence 2
+    int n = s.size();
+    vvi dp(n + 1, vi(n + 1));
+    for (int i = 1; i <= n; ++i) {
+        dp[i][i] = 1;
+    }
+    for (int i = 2; i <= n; ++i) {
+        if (s[i - 1] == s[i - 2]) {
+            dp[i - 1][i] = 2;
+        }
+        else {
+            dp[i - 1][i] = 1;
+        }
+    }
+    for (int k = 2; k <= n; ++k) {
+        for (int i = 1, j = i + k; j <= n; ++i, ++j) {
+            if (s[i - 1] == s[j - 1]) {
+                dp[i][j] = 2 + dp[i + 1][j - 1];
+            }
+            else {
+                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+    return n - dp[1][n] <= K;
+}
+
 int main() { TimeMeasure _; __x();
     string s1 = "abcdecba"; int k1 = 1;
     string s2 = "abcdeca"; int k2 = 2;
@@ -70,4 +97,8 @@ int main() { TimeMeasure _; __x();
     cout << tab3(s1, k1) << endl;
     cout << tab3(s2, k2) << endl;
     cout << tab3(s3, k3) << endl;
+    cout << endl;
+    cout << tab4(s1, k1) << endl;
+    cout << tab4(s2, k2) << endl;
+    cout << tab4(s3, k3) << endl;
 }

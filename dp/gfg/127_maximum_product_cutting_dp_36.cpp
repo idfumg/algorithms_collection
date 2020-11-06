@@ -32,6 +32,21 @@ int rec2(int n) {
     return ans;
 }
 
+int rec3(int init, int n, int i, int total) {
+    if (i > 9 or n < 0 or i == init) {
+        return -1;
+    }
+    if (n == 0) {
+        return total;
+    }
+    return max(rec3(init, n - i, i, total * i),
+               rec3(init, n, i + 1, total));
+}
+
+int rec3(int n) {
+    return rec3(n, n, 1, 1);
+}
+
 int tab(int n) {
     vvi dp(n + 1, vi(10, 1));
     int ans = 0;
@@ -72,6 +87,24 @@ int tab2(int n) { // TC O(n), MC O(n)
     return ans;
 }
 
+int tab3(int n) {
+    vvi dp(n + 1, vi(11, 1));
+    for (int j = 9; j >= 1; --j) {
+        dp[0][j] = 1;
+    }
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 9; j >= 1; --j) {
+            if (j != n) {
+                dp[i][j] = dp[i][j + 1];
+                if (i >= j) {
+                    dp[i][j] = max(dp[i][j], dp[i - j][j] * j);
+                }
+            }
+        }
+    }
+    return dp[n][1];
+}
+
 int main() { TimeMeasure _; __x();
     cout << rec(2) << endl; // 1
     cout << rec(3) << endl; // 2
@@ -85,15 +118,27 @@ int main() { TimeMeasure _; __x();
     cout << rec2(5) << endl; // 6
     cout << rec2(10) << endl; // 36
     cout << endl;
-    cout << tab(2) << endl; // 1
-    cout << tab(3) << endl; // 2
-    cout << tab(4) << endl; // 4
-    cout << tab(5) << endl; // 6
-    cout << tab(10) << endl; // 36
+    cout << rec3(2) << endl; // 1
+    cout << rec3(3) << endl; // 2
+    cout << rec3(4) << endl; // 4
+    cout << rec3(5) << endl; // 6
+    cout << rec3(10) << endl; // 36
     cout << endl;
     cout << tab(2) << endl; // 1
     cout << tab(3) << endl; // 2
     cout << tab(4) << endl; // 4
     cout << tab(5) << endl; // 6
     cout << tab(10) << endl; // 36
+    cout << endl;
+    cout << tab2(2) << endl; // 1
+    cout << tab2(3) << endl; // 2
+    cout << tab2(4) << endl; // 4
+    cout << tab2(5) << endl; // 6
+    cout << tab2(10) << endl; // 36
+    cout << endl;
+    cout << tab3(2) << endl; // 1
+    cout << tab3(3) << endl; // 2
+    cout << tab3(4) << endl; // 4
+    cout << tab3(5) << endl; // 6
+    cout << tab3(10) << endl; // 36
 }

@@ -64,19 +64,21 @@ si rec(int n) {
     return elems;
 }
 
-void rec2(int total, int n, int prev, int num) {
+void rec_elems(int init, int n, int prev, int result) {
     if (n == 0) {
-        cout << num << ' ';
+        cout << result << ' ';
         return;
     }
-    for (int i : {0, 1}) {
-        if (i == 1 and prev == 1) continue;
-        rec2(total, n - 1, i, num + (i << (total - n)));
+    if (prev == 0) {
+        rec_elems(init, n - 1, 0, result);
+        rec_elems(init, n - 1, 1, result + (1 << (init - n)));
+        return;
     }
+    rec_elems(init, n - 1, 0, result);
 }
 
-void rec2(int n) {
-    rec2(n, n, 0, 0);
+void rec_elems(int n) {
+    return rec_elems(n, n, 0, 0);
 }
 
 int main() { TimeMeasure _; __x();
@@ -89,6 +91,6 @@ int main() { TimeMeasure _; __x();
     cout << rec(4) << endl; // 0 1 2 4 5 8 9 10
     cout << rec(3) << endl; // 0 1 2 4 5
 
-    rec2(4); cout << endl; // 0 8 4 2 10 1 9 5
-    rec2(3); cout << endl; // 0 4 2 1 5
+    rec_elems(4); cout << endl; // 0 1 2 4 5 8 9 10
+    rec_elems(3); cout << endl; // 0 1 2 4 5
 }

@@ -1,26 +1,25 @@
 #include "../../template.hpp"
 
-int choose(vi& arr, int n) {
-    return n > 0 ? arr[n - 1] : 0;
+int rec(vi arr, int n) {
+    if (n == 0) return 0;
+    if (n == 1) return 0;
+    if (n == 2) return min(arr[n - 1], arr[n - 2]);
+    return min(rec(arr, n - 2) + arr[n - 2],
+               rec(arr, n - 1) + arr[n - 1]);
 }
 
-int rec(vi& arr, int n) {
-    if (n <= 0) return 0;
-    return min(rec(arr, n - 1) + choose(arr, n),
-               rec(arr, n - 2) + choose(arr, n - 1));
-}
-
-int rec(vi& arr) {
-    return rec(arr, arr.size());
-}
-
-int tab(vi& arr) {
+int rec(vi arr) {
     int n = arr.size();
-    vi dp(n + 1, 0);
+    return rec(arr, n);
+}
 
-    for (int i = 2; i <= n; ++i) {
-        dp[i] = min(dp[i - 1] + arr[i - 1],
-                    dp[i - 2] + arr[i - 2]);
+int tab(vi arr) {
+    int n = arr.size();
+    vi dp(n + 1);
+    dp[2] = min(arr[0], arr[1]);
+    for (int i = 3; i <= n; ++i) {
+        dp[i] = min(dp[i - 2] + arr[i - 2],
+                    dp[i - 1] + arr[i - 1]);
     }
     return dp[n];
 }
