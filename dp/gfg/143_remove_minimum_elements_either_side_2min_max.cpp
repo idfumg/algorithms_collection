@@ -1,50 +1,61 @@
 #include "../../template.hpp"
 
-pair<vvi, vvi> GetMaxElements(vi& arr) {
+int rec(vi arr, int i, int j) {
+    if (i > j) {
+        return INF;
+    }
+    int mini = *min_element(arr.begin() + i - 1, arr.begin() + j);
+    int maxi = *max_element(arr.begin() + i - 1, arr.begin() + j);
+    if (2 * mini > maxi) {
+        return 0;
+    }
+    return min(rec(arr, i + 1, j),
+               rec(arr, i, j - 1)) + 1;
+}
+
+int rec(vi arr) {
     int n = arr.size();
-    vvi mins(n, vi(n));
-    vvi maxs(n, vi(n));
-    for (int i = 0; i < n; ++i) {
-        mins[i][i] = maxs[i][i] = arr[i];
+    return rec(arr, 1, n);
+}
+
+int tab(vi arr) {
+    int n = arr.size();
+
+    vvi mini(n + 1, vi(n + 1, INF));
+    vvi maxi(n + 1, vi(n + 1, -INF));
+
+    for (int j = 1; j <= n; ++j) {
+        mini[j][j] = arr[j - 1];
+        maxi[j][j] = arr[j - 1];
     }
-    for (int i = 0; i < n - 1; ++i) {
-        mins[i][i + 1] = min(arr[i], arr[i + 1]);
-        maxs[i][i + 1] = max(arr[i], arr[i + 1]);
+
+    for (int j = 2; j <= n; ++j) {
+        mini[j - 1][j] = min(arr[j - 1], arr[j - 2]);
+        maxi[j - 1][j] = max(arr[j - 1], arr[j - 2]);
     }
-    for (int k = 1; k <= n; ++k) {
-        for (int i = 0, j = i + k; j < n; ++i, ++j) {
-            mins[i][j] = min(mins[i][j - 1], arr[j]);
-            maxs[i][j] = max(maxs[i][j - 1], arr[j]);
+
+    for (int k = 2; k <= n; ++k) {
+        for (int i = 1, j = i + k; j <= n; ++i, ++j) {
+            mini[i][j] = min(arr[i - 1], mini[i + 1][j]);
+            maxi[i][j] = max(arr[i - 1], maxi[i + 1][j]);
         }
     }
-    return {mins, maxs};
-}
 
-int rec(vi& arr, vvi& mins, vvi& maxs, int left, int right, int k) {
-    if (left == right or mins[left][right] * 2 > maxs[left][right]) return k;
-    return min(rec(arr, mins, maxs, left + 1, right, k + 1),
-               rec(arr, mins, maxs, left, right - 1, k + 1));
-}
-
-int rec(vi& arr) {
-    auto [mins, maxs] = GetMaxElements(arr);
-    return rec(arr, mins, maxs, 0, arr.size() - 1, 0);
-}
-
-int tab(vi& arr) {
-    int n = arr.size();
-    auto [mins, maxs] = GetMaxElements(arr);
-    vvi dp(n, vi(n));
-    for (int i = n; i >= 0; --i) {
-        for (int j = 1; j < n; ++j) {
-            if (i <= j) {
-                if (mins[i][j] * 2 <= maxs[i][j]) {
-                    dp[i][j] = min(dp[i + 1][j], dp[i][j - 1]) + 1;
-                }
+    vvi dp(n + 1, vi(n + 1, INF));
+    for (int i = n; i >= 1; --i) {
+        for (int j = 1; j <= n; ++j) {
+            if (i > j) {
+                dp[i][j] = INF;
+            }
+            else if (2 * mini[i][j] > maxi[i][j]) {
+                dp[i][j] = 0;
+            }
+            else {
+                dp[i][j] = min(dp[i + 1][j], dp[i][j - 1]) + 1;
             }
         }
     }
-    return dp[0][n - 1];
+    return dp[1][n];
 }
 
 int main() { TimeMeasure _; __x();
