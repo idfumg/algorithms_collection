@@ -22,6 +22,22 @@ si naive(vi& arr) {
     return res;
 }
 
+void rec(vi arr, int n, int total, si& ans) {
+    if (n == 0) {
+        ans.insert(total);
+        return;
+    }
+    rec(arr, n - 1, total, ans);
+    rec(arr, n - 1, total + arr[n - 1], ans);
+}
+
+si rec(vi arr) {
+    int n = arr.size();
+    si ans;
+    rec(arr, n, 0, ans);
+    return ans;
+}
+
 // Can we make some sum with or without an element [sum][element]
 vi tab(vi& arr) {
     vi res;
@@ -93,6 +109,10 @@ int main() { TimeMeasure _; __x();
     cout << naive(arr1) << '\n';
     cout << naive(arr2) << '\n';
     cout << naive(arr3) << '\n';
+    cout << '\n';
+    cout << rec(arr1) << '\n';
+    cout << rec(arr2) << '\n';
+    cout << rec(arr3) << '\n';
     cout << '\n';
     cout << tab(arr1) << '\n';
     cout << tab(arr2) << '\n';
