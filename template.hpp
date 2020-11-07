@@ -1,3 +1,5 @@
+#pragma once
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -183,23 +185,60 @@ ll power(ll a, ll p) noexcept {
 }
 
 template<class T>
-void sort(T& arr) {
+T sort(T arr) {
     sort(arr.begin(), arr.end());
+    return arr;
 }
 
 template<class T>
-void reverse(T& arr) {
+T reverse(T arr) {
     reverse(arr.begin(), arr.end());
+    return arr;
 }
 
 template<class T>
-int max(const T& elems) {
+decay_t<decltype(*T().begin())> max(const T& elems) {
     return *max_element(elems.begin(), elems.end());
 }
 
 template<class T>
-int min(const T& elems) {
+decay_t<decltype(*T().begin())> min(const T& elems) {
     return *min_element(elems.begin(), elems.end());
+}
+
+template<class T>
+vector<decay_t<decltype(*T().begin())>> minmax(const T& elems) {
+    return {max(elems), min(elems)};
+}
+
+template<class T>
+T min(T&& param) {
+    return forward<T>(param);
+}
+
+template<class T>
+T min(T&& param1, T&& param2) {
+    return param1 < param2 ? forward<T>(param1) : forward<T>(param2);
+}
+
+template<class T, class ... Args>
+T min(T param, Args&& ...args) {
+    return min(forward<T>(param), min(forward<Args>(args)...));
+}
+
+template<class T>
+T max(T&& param) {
+    return forward<T>(param);
+}
+
+template<class T>
+T max(T&& param1, T&& param2) {
+    return param1 > param2 ? forward<T>(param1) : forward<T>(param2);
+}
+
+template<class T, class ... Args>
+T max(T&& param, Args&& ...args) {
+    return max(forward<T>(param), max(forward<Args>(args)...));
 }
 
 template<class T>
@@ -228,6 +267,12 @@ constexpr auto enumerate(T && iterable) noexcept
         auto end() noexcept { return iterator{ 0, std::end(iterable) }; }
     };
     return iterable_wrapper{ std::forward<T>(iterable) };
+}
+
+vi operator+(const vi& a, const vi& b) {
+    vi ans = a;
+    for_each(b.begin(), b.end(), [&ans](int v){ans.push_back(v);});
+    return ans;
 }
 
 #define trace() cout << "Line: " << __LINE__ << endl;
