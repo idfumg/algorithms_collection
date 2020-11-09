@@ -74,4 +74,9 @@ int main() { TimeMeasure _;
         AddEdge(graph, 5, 0);
         PrintSCCs(graph);
     }
+// 2 1 0
+// 6 5 4
+// 7 3
+// 'disc': 0 1 2 3 4 5 6 7
+// 'lows': 0 0 0 3 4 4 4 3
 }
