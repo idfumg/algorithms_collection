@@ -212,33 +212,23 @@ vector<decay_t<decltype(*T().begin())>> minmax(const T& elems) {
 }
 
 template<class T>
-T min(T&& param) {
-    return forward<T>(param);
-}
-
-template<class T>
-T min(T&& param1, T&& param2) {
-    return param1 < param2 ? forward<T>(param1) : forward<T>(param2);
+T min(const T& param) {
+    return param;
 }
 
 template<class T, class ... Args>
-T min(T param, Args&& ...args) {
-    return min(forward<T>(param), min(forward<Args>(args)...));
+T min(const T& param, const Args& ...args) {
+    return min(param, min(args...));
 }
 
 template<class T>
-T max(T&& param) {
-    return forward<T>(param);
-}
-
-template<class T>
-T max(T&& param1, T&& param2) {
-    return param1 > param2 ? forward<T>(param1) : forward<T>(param2);
+T max(const T& param) {
+    return param;
 }
 
 template<class T, class ... Args>
-T max(T&& param, Args&& ...args) {
-    return max(forward<T>(param), max(forward<Args>(args)...));
+T max(const T& param, const Args& ...args) {
+    return max(param, max(args...));
 }
 
 template<class T>
@@ -272,6 +262,19 @@ constexpr auto enumerate(T && iterable) noexcept
 vi operator+(const vi& a, const vi& b) {
     vi ans = a;
     for_each(b.begin(), b.end(), [&ans](int v){ans.push_back(v);});
+    return ans;
+}
+
+vi operator+(const vi& a, int value) {
+    vi ans = a;
+    ans.push_back(value);
+    return ans;
+}
+
+template<class T>
+set<T> operator+(const set<T>& a, int value) {
+    set<T> ans = a;
+    ans.insert(value);
     return ans;
 }
 
