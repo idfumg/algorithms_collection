@@ -196,18 +196,18 @@ T reverse(T arr) {
     return arr;
 }
 
-template<class T>
-decay_t<decltype(*T().begin())> max(const T& elems) {
+template<template<class...> class T, class ... U>
+decay_t<decltype(*T<U...>().begin())> max(const T<U...>& elems) {
     return *max_element(elems.begin(), elems.end());
 }
 
-template<class T>
-decay_t<decltype(*T().begin())> min(const T& elems) {
+template<template<class...> class T, class ... U>
+decay_t<decltype(*T<U...>().begin())> min(const T<U...>& elems) {
     return *min_element(elems.begin(), elems.end());
 }
 
-template<class T>
-vector<decay_t<decltype(*T().begin())>> minmax(const T& elems) {
+template<template<class...> class T, class ... U>
+vector<decay_t<decltype(*T<U...>().begin())>> minmax(const T<U...>& elems) {
     return {max(elems), min(elems)};
 }
 
