@@ -2,44 +2,49 @@
 
 using Graph = vvi;
 
-void AddDirectedEdge(Graph& graph, int from, int to, int weight) {
-    graph.push_back({from, to, weight});
+void AddEdge(Graph& graph, int from, int to, int cost = 0) {
+    // graph[from].push_back(to);
+    // graph[to].push_back(from);
+    // graph.push_back({from, to});
+    // graph[from].push_back({to, cost});
+    // graph[to].push_back({from, cost});
+    graph.push_back({from, to, cost});
+    // graph[from][to] = cost;
+    // graph[to][from] = cost;
 }
 
-void BellmanFord(Graph& graph, int from) {
-    int n = graph.size();
-    vi dist(n, INF);
+void BellmanFord(Graph& graph, int from, int V) {
+    vi dist(V, INF);
     dist[from] = 0;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < V; ++i) {
         for (const auto& edge : graph) {
             dist[edge[1]] = min(dist[edge[1]], dist[edge[0]] + edge[2]);
         }
     }
-    for (int i = 0; i < n; ++i) {
+    debugn(dist);
+    for (int i = 0; i < V; ++i) {
         for (const auto& edge : graph) {
             if (dist[edge[0]] + edge[2] < dist[edge[1]]) {
                 dist[edge[1]] = -INF;
             }
         }
     }
-    cout << dist << '\n';
+    debugn(dist);
 }
 
 int main() { TimeMeasure _;
     Graph graph;
-    AddDirectedEdge(graph, 0, 1, 1);
-    AddDirectedEdge(graph, 1, 2, 1);
-    AddDirectedEdge(graph, 2, 4, 1);
-    AddDirectedEdge(graph, 4, 3, -3);
-    AddDirectedEdge(graph, 3, 2, 1);
-    AddDirectedEdge(graph, 1, 5, 4);
-    AddDirectedEdge(graph, 1, 6, 4);
-    AddDirectedEdge(graph, 5, 6, 5);
-    AddDirectedEdge(graph, 6, 7, 4);
-    AddDirectedEdge(graph, 5, 7, 3);
-    BellmanFord(graph, 0);
-}
-
+    AddEdge(graph, 0, 1, 1);
+    AddEdge(graph, 1, 2, 1);
+    AddEdge(graph, 2, 4, 1);
+    AddEdge(graph, 4, 3, -3);
+    AddEdge(graph, 3, 2, 1);
+    AddEdge(graph, 1, 5, 4);
+    AddEdge(graph, 1, 6, 4);
+    AddEdge(graph, 5, 6, 5);
+    AddEdge(graph, 6, 7, 4);
+    AddEdge(graph, 5, 7, 3);
+    BellmanFord(graph, 0, 8);
 // Output:
 // The cost to get from node 0 to 0 is 0.00
 // The cost to get from node 0 to 1 is 1.00
@@ -49,4 +54,4 @@ int main() { TimeMeasure _;
 // The cost to get from node 0 to 5 is 5.00
 // The cost to get from node 0 to 6 is 5.00
 // The cost to get from node 0 to 7 is 8.00
-// The cost to get from node 0 to 8 is Infinity
+}
