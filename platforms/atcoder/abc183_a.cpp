@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+//#include "../../template.hpp"
 
 #include <bits/stdc++.h>
 
@@ -18,5 +18,6 @@ using vvb = vector<vb>;
 [[maybe_unused]] static const auto ___x = [](){ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0); cout.precision(15); cout.setf(ios::boolalpha);};
 
 int main() {
-
+    int x; cin >> x;
+    cout << (x >= 0 ? x : 0) << endl;
 }
