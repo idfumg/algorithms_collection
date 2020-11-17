@@ -27,7 +27,7 @@ public:
     std::uint64_t size() const noexcept {
         return mWritePos >= mReadPos
             ? (mWritePos - mReadPos)
-            : (mSize - (mReadPos - mWritePos) - 1);
+            : (mSize - (mReadPos - mWritePos + 1));
     }
 
     const T& front() const {
