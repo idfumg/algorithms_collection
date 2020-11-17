@@ -99,6 +99,26 @@ static ostream& operator << (ostream& os, const unordered_map<T, U>& tab) noexce
 }
 
 template<class T>
+static ostream& operator << (ostream& os, const stack<T>& v) noexcept {
+    auto temp = v;
+    while (not temp.empty()) {
+        os << temp.top();
+        temp.pop();
+    }
+    return os;// << endl;
+}
+
+template<class T>
+static ostream& operator << (ostream& os, const queue<T>& v) noexcept {
+    auto temp = v;
+    while (not temp.empty()) {
+        os << temp.front();
+        temp.pop();
+    }
+    return os;// << endl;
+}
+
+template<class T>
 static istream& operator >> (istream& is, set<T>& s) noexcept {
     while (is) {
         T value; is >> value;
