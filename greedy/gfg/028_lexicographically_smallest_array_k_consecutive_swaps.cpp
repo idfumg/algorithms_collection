@@ -2,17 +2,19 @@
 
 vi LexicoSmallestAfterKSwaps(vi arr, int k) {
     int n = arr.size();
-    for (int i = 0; i < n and k > 0; ++i) {
-        int to = i;
-        for (int j = i; j <= i + k and j < n; ++j) {
-            if (arr[to] > arr[j]) {
-                to = j;
+    int current = 0;
+    while (k > 0) {
+        int smallest = current;
+        for (int i = smallest, j = i + k; i <= j; ++i) {
+            if (arr[i] < arr[smallest]) {
+                smallest = i;
             }
         }
-        k -= to - i;
-        for (int from = i; from < to; ++from) {
-            swap(arr[from], arr[to]);
+        k -= smallest;
+        for (; smallest > current; --smallest) {
+            swap(arr[smallest], arr[smallest - 1]);
         }
+        current++;
     }
     return arr;
 }
