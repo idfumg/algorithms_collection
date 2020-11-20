@@ -22,21 +22,15 @@ int MaxHammingDistance(vi arr1) {
     return ans;
 }
 
-int HammingDistance2(vi arr, int j, int n) {
-    int count = 0;
-    for (int i = 0; i < n; ++i) {
-        if (arr[i] != arr[(j + i) % n]) {
-            ++count;
-        }
-    }
-    return count;
-}
-
 int MaxHammingDistance2(vi arr) {
     int n = arr.size();
     int ans = 0;
-    for (int j = 0; j < n; ++j) {
-        ans = max(ans, HammingDistance2(arr, j, n));
+    for (int i = 0; i < n; ++i) {
+        int sum = 0;
+        for (int k = 0; k < n; ++k) {
+            sum += arr[k] != arr[(k + i) % n];
+        }
+        ans = max(ans, sum);
     }
     return ans;
 }
