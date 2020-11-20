@@ -3,20 +3,48 @@
 void GetKMaxSums(vi arr, int k) {
     int n = arr.size();
     vi presum(n + 1);
-    presum[1] = arr[0];
-    for (int i = 2; i <= n; ++i) {
-        presum[i] = presum[i - 1] + arr[i - 1];
+    for (int i = 1; i <= n; ++i) {
+        presum[i] = arr[i - 1] + presum[i - 1];
     }
-
     vi sums;
     for (int i = 1; i <= n; ++i) {
         for (int j = i; j <= n; ++j) {
             sums.push_back(presum[j] - presum[i - 1]);
         }
     }
-    sort(sums.begin(), sums.end());
-    for_each(sums.rbegin(), sums.rbegin() + k, [](int param){cout << param << ' ';});
-    cout << '\n';
+    sort(sums.rbegin(), sums.rend());
+    for (int i = 0; i < k; ++i) {
+        cout << sums[i] << ' ';
+    }
+    cout << endl;
+}
+
+void GetKMaxSums2(vi arr, int k) {
+    int n = arr.size();
+    vi presum(n + 1);
+    for (int i = 1; i <= n; ++i) {
+        presum[i] += arr[i - 1] + presum[i - 1];
+    }
+    priority_queue<int, vector<int>, greater<int>> pq;
+    for (int i = 1; i <= n; ++i) {
+        for (int j = i; j <= n; ++j) {
+            int sum = presum[j] - presum[i - 1];
+            if (pq.size() < k) {
+                pq.push(sum);
+            }
+            else {
+                if (pq.top() < sum) {
+                    pq.pop();
+                    pq.push(sum);
+                }
+            }
+        }
+    }
+    while (not pq.empty()) {
+        cout << pq.top() << ' ';
+        pq.pop();
+    }
+    cout << endl;
 }
 
 int main() { TimeMeasure _;
@@ -25,4 +53,7 @@ int main() { TimeMeasure _;
 
     GetKMaxSums(arr1, k1);
     GetKMaxSums(arr2, k2);
+    cout << endl;
+    GetKMaxSums2(arr1, k1);
+    GetKMaxSums2(arr2, k2);
 }
