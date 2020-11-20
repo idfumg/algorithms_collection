@@ -32,7 +32,7 @@ void LeftRotate3(vi arr, int k) {
     debugn(arr);
 }
 
-void RightRotate3(vi arr, int k) {
+void RightRotate(vi arr, int k) {
     k = k % arr.size();
     reverse(arr.rbegin(), arr.rbegin() + k);
     reverse(arr.rbegin() + k, arr.rend());
@@ -45,5 +45,6 @@ int main() { TimeMeasure _;
     LeftRotate(arr, 2); // O(n*K)
     LeftRotate2(arr, 2); // O(n)
     LeftRotate3(arr, 2); // O(n)
-    RightRotate3(arr, 2); // O(n)
+
+    RightRotate(arr, 2); // O(n) // 6 7 1 2 3 4 5
 }
