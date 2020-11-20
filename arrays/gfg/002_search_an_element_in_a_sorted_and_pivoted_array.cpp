@@ -9,17 +9,6 @@ int SearchInRotatedAndSorted(vi arr, int key) {
         if (arr[mid] == key) {
             return mid;
         }
-        else if (arr[mid] < key) {
-            if (arr[left] < key and arr[right] < key) {
-                left = mid + 1;
-            }
-            else if (arr[right] < key) {
-                right = mid - 1;
-            }
-            else {
-                left = mid + 1;
-            }
-        }
         else if (arr[mid] > key) {
             if (arr[left] > key) {
                 left = mid + 1;
@@ -29,7 +18,12 @@ int SearchInRotatedAndSorted(vi arr, int key) {
             }
         }
         else {
-            right = mid - 1;
+            if (arr[left] >= key and arr[right] < key) {
+                right = mid - 1;
+            }
+            else {
+                left = mid + 1;
+            }
         }
     }
     return -1;
