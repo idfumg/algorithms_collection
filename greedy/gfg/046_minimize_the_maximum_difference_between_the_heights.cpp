@@ -1,50 +1,38 @@
 #include "../../template.hpp"
 
-void GetMinDiff(int a, int b, int k, int& x, int& y) {
-    if (a < 0 or b < 0) {
+void rec(vi arr, int k, int n, int mini, int maxi, int& diff) {
+    if (n == 0) {
+        if (mini >= 0 and maxi >= 0) {
+            diff = min(diff, abs(maxi - mini));
+        }
         return;
     }
-    if (abs(x - y) > abs(a - b)) {
-        x = a;
-        y = b;
-    }
+
+    rec(arr, k, n - 1, min(mini, arr[n - 1] + k), max(maxi, arr[n - 1] + k), diff);
+    rec(arr, k, n - 1, min(mini, arr[n - 1] - k), max(maxi, arr[n - 1] - k), diff);
 }
 
-pair<int, int> GetMinDiff(int a, int b, int k) {
-    int x = 0, y = INF;
-    GetMinDiff(a - k, b - k, k, x, y);
-    GetMinDiff(a + k, b + k, k, x, y);
-    GetMinDiff(a - k, b + k, k, x, y);
-    GetMinDiff(a + k, b - k, k, x, y);
-    return {min(x, y), max(x, y)};
+int rec(vi arr, int k) {
+    int diff = INF;
+    rec(arr, k, arr.size(), INF, -INF, diff);
+    return diff;
 }
 
-int MinimizeDifferenceBetweenHeightsDP(vi arr, int k) {
-    int n = arr.size();
-    if (n < 1) return arr.front();
-    sort(arr);
-    auto [low, high] = GetMinDiff(arr[0], arr[n - 1], k);
-    for (int i = 1; i < n - 1; ++i) {
-        int a = arr[i] - k;
-        int b = arr[i] + k;
-
-        if (a < 0) {
-            high = max(high, b);
-            continue;
+int rec2(vi arr, int k, int n, int mini, int maxi) {
+    if (n == 0) {
+        if (mini >= 0 and maxi >= 0) {
+            return abs(maxi - mini);
         }
-
-        if (a >= low or b <= high) {
-            continue;
-        }
-
-        if (high - a <= b - low) {
-            low = a;
-        }
-        else {
-            high = b;
-        }
+        return INF;
     }
-    return high - low;
+
+    return min(
+        rec2(arr, k, n - 1, min(mini, arr[n - 1] + k), max(maxi, arr[n - 1] + k)),
+        rec2(arr, k, n - 1, min(mini, arr[n - 1] - k), max(maxi, arr[n - 1] - k)));
+}
+
+int rec2(vi arr, int k) {
+    return rec2(arr, k, arr.size(), INF, -INF);
 }
 
 int main() { TimeMeasure _; __x();
@@ -55,10 +43,17 @@ int main() { TimeMeasure _; __x();
     vi arr5 = {1, 10, 14, 14, 14, 15}; int k5 = 6;
     vi arr6 = {1, 2, 3}; int k6 = 2;
 
-    cout << MinimizeDifferenceBetweenHeightsDP(arr1, k1) << '\n'; // 5
-    cout << MinimizeDifferenceBetweenHeightsDP(arr2, k2) << '\n'; // 8
-    cout << MinimizeDifferenceBetweenHeightsDP(arr3, k3) << '\n'; // 2
-    cout << MinimizeDifferenceBetweenHeightsDP(arr4, k4) << '\n'; // 2
-    cout << MinimizeDifferenceBetweenHeightsDP(arr5, k5) << '\n'; // 5
-    cout << MinimizeDifferenceBetweenHeightsDP(arr6, k6) << '\n'; // 2
+    cout << rec(arr1, k1) << '\n'; // 5
+    cout << rec(arr2, k2) << '\n'; // 8
+    cout << rec(arr3, k3) << '\n'; // 2
+    cout << rec(arr4, k4) << '\n'; // 2
+    cout << rec(arr5, k5) << '\n'; // 5
+    cout << rec(arr6, k6) << '\n'; // 2
+    cout << '\n';
+    cout << rec2(arr1, k1) << '\n'; // 5
+    cout << rec2(arr2, k2) << '\n'; // 8
+    cout << rec2(arr3, k3) << '\n'; // 2
+    cout << rec2(arr4, k4) << '\n'; // 2
+    cout << rec2(arr5, k5) << '\n'; // 5
+    cout << rec2(arr6, k6) << '\n'; // 2
 }
