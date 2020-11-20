@@ -22,9 +22,9 @@ int MaximumProductSubset(vi arr) {
 }
 
 int main() { TimeMeasure _;
-    vi arr1 = { -1, -1, -2, 4, 3 };
-    vi arr2 = { -1, 0 };
-    vi arr3 = { 0, 0, 0 };
+    vi arr1 = { -1, -1, -2, 4, 3 }; // 24
+    vi arr2 = { -1, 0 }; // 0
+    vi arr3 = { 0, 0, 0 }; // 0
     cout << MaximumProductSubset(arr1) << '\n';
     cout << MaximumProductSubset(arr2) << '\n';
     cout << MaximumProductSubset(arr3) << '\n';
