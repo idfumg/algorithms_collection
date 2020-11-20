@@ -2,13 +2,12 @@
 
 int FindMaxRightRotationsCount(vi arr) {
     int n = arr.size();
-    int left = -1;
-    for (int i = 0; i < n - 1; ++i) {
-        if (arr[i] > arr[i + 1]) {
-            left = i + 1;
+    for (int i = 1; i < n; ++i) {
+        if (arr[i] < arr[i - 1]) {
+            return i;
         }
     }
-    return left == -1 ? 0 : left;
+    return 0;
 }
 
 int main() { TimeMeasure _;
