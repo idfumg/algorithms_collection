@@ -1,25 +1,40 @@
 #include "../../template.hpp"
 
 void KthSmallest(vi arr, int k) {
-    sort(arr);
-    int i = 0;
+    sort(arr.begin(), arr.end());
+    if (k == 1) {
+        cout << arr[0] << endl;
+        return;
+    }
+    int i = 1;
     int n = arr.size();
-    while (i < n - 1 and k > 1) {
-        if (arr[i] != arr[i + 1]) {
+    --k;
+    while (i < n) {
+        if (arr[i] != arr[i - 1]) {
             --k;
+        }
+        if (k == 0) {
+            break;
         }
         ++i;
     }
-    cout << arr[i] << '\n';
+    if (i != n) {
+        cout << arr[i] << endl;
+    }
+    else {
+        cout << -1 << endl;
+    }
 }
 
 void KthSmallest2(vi arr, int k) {
-    si elems;
-    for_each(arr.begin(), arr.end(), [&](int x){elems.insert(x);});
-    auto it = elems.begin();
-    for (; k > 1; ++it, --k) {
+    set<int> set(arr.begin(), arr.end());
+    for (const auto& elem : set) {
+        if (--k == 0) {
+            cout << elem << endl;
+            return;
+        }
     }
-    cout << *it << '\n';
+    cout << -1 << endl;
 }
 
 int main() { TimeMeasure _;
