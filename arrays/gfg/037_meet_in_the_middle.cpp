@@ -1,26 +1,7 @@
 #include "../../template.hpp"
 
-void FindAllSums(vi arr, int i, int j, int current, vi& sums, int sum) {
-    if (current == j) {
-        sums.push_back(sum);
-        return;
-    }
-    for (int k = current; k < j; ++k) {
-        FindAllSums(arr, i, j, k + 1, sums, sum);
-        FindAllSums(arr, i, j, k + 1, sums, sum + arr[k]);
-    }
-}
-
-vi FindAllSums(vi arr, int i, int j) {
-    vi sums;
-    FindAllSums(arr, i, j, i, sums, 0);
-    sort(sums.begin(), sums.end());
-    sums.resize(distance(sums.begin(), unique(sums.begin(), sums.end())));
-    return sums;
-}
-
-vi FindAllSums2(vi& arr, int from, int n, int maximum) {
-    vi sums;
+vi GetSums(vi arr, int from, int n, int total) {
+    vi ans;
     for (int i = 0; i < (1 << n); ++i) {
         int sum = 0;
         for (int j = 0; j < n; ++j) {
@@ -28,47 +9,34 @@ vi FindAllSums2(vi& arr, int from, int n, int maximum) {
                 sum += arr[from + j];
             }
         }
-        if (sum <= maximum) {
-            sums.push_back(sum);
+        if (sum <= total) {
+            ans.push_back(sum);
         }
     }
-    return sums;
+    return ans;
 }
 
-int BinarySearch(int x, vi& arr, int total) {
-    int left = 0;
-    int right = arr.size() - 1;
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (x + arr[mid] == total) {
-            return mid;
-        }
-        else if (x + arr[mid] < total and mid + 1 <= right and x + arr[mid + 1] > total) {
-            return mid;
-        }
-        else if (x + arr[mid] > total) {
-            right = mid - 1;
-        }
-        else {
-            left = mid + 1;
-        }
+int BinarySearch(vi arr, int key) {
+    int n = arr.size();
+    int low = 0;
+    int high = n - 1;
+    while (low != high) {
+        int mid = low + (high - low) / 2;
+        if (arr[mid] < key) low = mid + 1;
+        else high = mid;
     }
-    return -1;
+    return arr[low] == key ? low : low - 1;
 }
 
 int MaxSumSubsetLessThanS(vi arr, int total) {
     int n = arr.size();
-
-    if (n == 0) return 0;
-    if (n == 1) return arr[0];
-
-    vi left = FindAllSums2(arr, 0, n / 2, total);
-    vi right = FindAllSums2(arr, n / 2, n - n / 2, total);
+    vi left = GetSums(arr, 0, n / 2, total);
+    vi right = GetSums(arr, n / 2, n - n / 2, total);
     sort(right.begin(), right.end());
-
+    int m = left.size();
     int ans = 0;
-    for (int i = 0; i < static_cast<int>(left.size()); ++i) {
-        int idx = BinarySearch(left[i], right, total);
+    for (int i = 0; i < m; ++i) {
+        int idx = LowerBound(right, total - left[i]);
         if (idx != -1) {
             ans = max(ans, left[i] + right[idx]);
         }
