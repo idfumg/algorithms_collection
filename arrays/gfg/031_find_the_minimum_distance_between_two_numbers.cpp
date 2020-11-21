@@ -1,12 +1,9 @@
 #include "../../template.hpp"
 
 int FindMinDistance(vi arr, int x, int y) {
-    int n = arr.size();
-
     vi xs;
     vi ys;
-
-    for (int i = 0; i < n; ++i) {
+    for (size_t i = 0; i < arr.size(); ++i) {
         if (arr[i] == x) {
             xs.push_back(i);
         }
@@ -14,26 +11,21 @@ int FindMinDistance(vi arr, int x, int y) {
             ys.push_back(i);
         }
     }
-
     int i = 0;
     int j = 0;
     int m = xs.size();
-    n = ys.size();
-    int ans = INF;
-
+    int n = ys.size();
+    int minidist = INF;
     while (i < m and j < n) {
-        ans = min(ans, abs(ys[j]  - xs[i]));
-        ++i;
-
-        if (abs(ys[j] - xs[i]) < ans) {
-            continue;
+        minidist = min(minidist, abs(xs[i] - ys[j]));
+        if (xs[i] < ys[j]) {
+            ++i;
         }
-        else if (abs(ys[j] - xs[i]) > ans) {
+        else {
             ++j;
         }
     }
-
-    return ans;
+    return minidist;
 }
 
 int main() { TimeMeasure _;
