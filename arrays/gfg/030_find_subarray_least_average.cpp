@@ -1,6 +1,6 @@
 #include "../../template.hpp"
 
-vi FindLeastAverage(vi arr, int k) {
+void FindLeastAverage(vi arr, int k) {
     int n = arr.size();
 
     vi presum(n + 1);
@@ -19,14 +19,37 @@ vi FindLeastAverage(vi arr, int k) {
         }
     }
 
-    vi ans;
     for (int i = idx; i < idx + k; ++i) {
-        ans.push_back(arr[i]);
+        cout << arr[i] << ' ';
     }
-    return ans;
+    cout << endl;
+}
+
+void FindLeastAverage2(vi arr, int k) {
+    int window = 0;
+    for (int i = 0; i < k; ++i) {
+        window += arr[i];
+    }
+    int miniavg = window;
+    int from = 0;
+    int n = arr.size();
+    for (int i = k; i < n; ++i) {
+        window = window - arr[i - k] + arr[i];
+        if (miniavg > window / k) {
+            miniavg = window / k;
+            from = i - k + 1;
+        }
+    }
+    for (int i = from; i < from + k; ++i) {
+        cout << arr[i] << ' ';
+    }
+    cout << endl;
 }
 
 int main() { TimeMeasure _;
-    cout << FindLeastAverage({3, 7, 90, 20, 10, 50, 40}, 3) << '\n';
-    cout << FindLeastAverage({3, 7, 5, 20, -10, 0, 12}, 2) << '\n';
+    FindLeastAverage({3, 7, 90, 20, 10, 50, 40}, 3);
+    FindLeastAverage({3, 7, 5, 20, -10, 0, 12}, 2);
+    cout << endl;
+    FindLeastAverage2({3, 7, 90, 20, 10, 50, 40}, 3);
+    FindLeastAverage2({3, 7, 5, 20, -10, 0, 12}, 2);
 }
