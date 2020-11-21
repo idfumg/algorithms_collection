@@ -81,12 +81,32 @@ int efficient(vi arr) {
     return profit[n - 1];
 }
 
+int efficient2(vi arr) {
+    int n = arr.size();
+    vi profit1(n);
+    int maxi = arr[n - 1];
+    for (int i = n - 2; i >= 0; --i) {
+        maxi = max(maxi, arr[i]);
+        profit1[i] = max(profit1[i + 1], maxi - arr[i]);
+    }
+    vi profit2(n);
+    int mini = arr[0];
+    for (int i = 1; i < n; ++i) {
+        mini = min(mini, arr[i]);
+        profit2[i] = max(profit2[i - 1], arr[i] - mini);
+    }
+    for (int i = 1; i < n; ++i) {
+        profit2[i] = max({profit1[i], profit2[i], profit1[i] + profit2[i], profit2[i - 1]});
+    }
+    return profit2[n - 1];
+}
+
 int main() { TimeMeasure _;
-    cout << rec({10, 22, 5, 75, 65, 80}) << '\n';
-    cout << rec({2, 30, 15, 10, 8, 25, 80}) << '\n';
-    cout << rec({100, 30, 15, 10, 8, 25, 80}) << '\n';
-    cout << rec({90, 80, 70, 60, 50}) << '\n';
-    cout << rec({75, 4, 25, 20, 60, 45}) << '\n';
+    cout << rec({10, 22, 5, 75, 65, 80}) << '\n'; // 87
+    cout << rec({2, 30, 15, 10, 8, 25, 80}) << '\n'; // 100
+    cout << rec({100, 30, 15, 10, 8, 25, 80}) << '\n'; // 72
+    cout << rec({90, 80, 70, 60, 50}) << '\n'; // 0
+    cout << rec({75, 4, 25, 20, 60, 45}) << '\n'; // 61
     cout << '\n';
     cout << rec2({10, 22, 5, 75, 65, 80}) << '\n';
     cout << rec2({2, 30, 15, 10, 8, 25, 80}) << '\n';
@@ -105,5 +125,11 @@ int main() { TimeMeasure _;
     cout << efficient({100, 30, 15, 10, 8, 25, 80}) << '\n';
     cout << efficient({90, 80, 70, 60, 50}) << '\n';
     cout << efficient({75, 4, 25, 20, 60, 45}) << '\n';
+    cout << '\n';
+    cout << efficient2({10, 22, 5, 75, 65, 80}) << '\n';
+    cout << efficient2({2, 30, 15, 10, 8, 25, 80}) << '\n';
+    cout << efficient2({100, 30, 15, 10, 8, 25, 80}) << '\n';
+    cout << efficient2({90, 80, 70, 60, 50}) << '\n';
+    cout << efficient2({75, 4, 25, 20, 60, 45}) << '\n';
 
 }
