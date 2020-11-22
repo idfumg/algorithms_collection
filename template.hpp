@@ -16,22 +16,31 @@ using ll = int64_t;
 using ull = uint64_t;
 using vd = vector<double>;
 using vi = vector<int>;
+using cvi = const vector<int>&;
 using vll = vector<ll>;
 using pi = pair<int, int>;
+using cpi = const pair<int, int>&;
 using vpi = vector<pi>;
+using cvpi = const vector<pi>&;
 using vvpi = vector<vpi>;
+using cvvpi = const vector<vpi>&;
 using vvvpi = vector<vvpi>;
 using vvvvpi = vector<vvvpi>;
 using vvi = vector<vi>;
+using cvvi = const vector<vi>&;
 using vvd = vector<vd>;
 using vvvi = vector<vvi>;
+using cvvvi = const vector<vvi>&;
 using vvvvi = vector<vvvi>;
 using vvll = vector<vll>;
 using vvvll = vector<vvll>;
 using vb = vector<bool>;
+using cvb = const vector<bool>&;
 using vvb = vector<vb>;
+using cvvb = const vector<vb>&;
 using vvvb = vector<vvb>;
 using si = set<int>;
+using csi = const set<int>&;
 using sll = set<ll>;
 using qi = queue<int>;
 using qll = queue<ll>;
@@ -69,6 +78,12 @@ template<class T>
 static ostream& operator << (ostream& os, const vector<vector<T>>& v) noexcept {
     os << '\n';
     for (const auto& L : v) os << L << endl;
+    return os;// << endl;
+}
+
+template<class T>
+static ostream& operator << (ostream& os, const multiset<T>& s) noexcept {
+    for (const auto& value : s) os << value << ' ';
     return os;// << endl;
 }
 
