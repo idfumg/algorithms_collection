@@ -1,20 +1,18 @@
 #include "../../template.hpp"
 
-bool rec_(vi arr, int sum, int n) {
-    if (sum == 0) return true;
-    if (sum < 0) return false;
-    if (n == 0) return false;
-    return rec_(arr, sum, n - 1) or rec_(arr, sum - arr[n - 1], n - 1);
+bool rec__(vi& arr, int total, int n) {
+    if (total == 0) return true;
+    if (total < 0 or n == 0) return false;
+    return rec__(arr, total, n - 1) or rec__(arr, total - arr[n - 1], n - 1);
 }
 
-int rec(vi arr, int total, int initial) {
-    if (not rec_(arr, initial, arr.size())) return initial;
-    return rec(arr, total, initial + 1);
+int rec_(vi& arr, int total, int current) {
+    if (not rec__(arr, current, arr.size())) return current;
+    return rec_(arr, total, current + 1);
 }
 
 int rec(vi arr) {
-    int total = accumulate(arr.begin(), arr.end(), 0) + 1;
-    return rec(arr, total, 1);
+    return rec_(arr, accumulate(arr.begin(), arr.end(), 0) + 1, 1);
 }
 
 bool rec2(vi arr, int sum, int n) {
@@ -66,17 +64,15 @@ int tab(vi arr) {
 }
 
 int SmallestPosIntegerWhichCantBeSummed(vi arr) {
+    int prevsum = 0;
     int n = arr.size();
-    int maxi = 0;
     for (int i = 0; i < n; ++i) {
-        if (arr[i] > maxi + 1) {
-            return maxi + 1;
+        if (prevsum + 1 < arr[i]) {
+            return prevsum + 1;
         }
-        else {
-            maxi += arr[i];
-        }
+        prevsum += arr[i];
     }
-    return maxi + 1;
+    return prevsum + 1;
 }
 
 int main() { TimeMeasure _;
