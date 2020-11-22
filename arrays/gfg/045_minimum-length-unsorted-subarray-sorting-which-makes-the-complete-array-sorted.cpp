@@ -2,17 +2,16 @@
 
 int MinLengthUnsorted(vi arr) {
     int n = arr.size();
-    int left = 0;
-    int right = n - 1;
+    int left = 1;
+    int right = n - 2;
 
-    while (left <= right and arr[left] < arr[left + 1]) ++left;
-    if (left == n - 1) return 0;
-    while (right >= left and arr[right] > arr[right - 1]) --right;
+    while (left < right and arr[left] > arr[left - 1]) ++left;
+    while (right > left and arr[right] < arr[right + 1]) --right;
 
-    const int mini = *min_element(arr.begin() + left, arr.begin() + right + 1);
-    const int maxi = *max_element(arr.begin() + left, arr.begin() + right + 1);
-
+    int mini = *min_element(arr.begin() + left, arr.begin() + right);
     while (left > 0 and arr[left - 1] > mini) --left;
+
+    int maxi = *max_element(arr.begin() + left, arr.begin() + right);
     while (right < n - 1 and arr[right + 1] < maxi) ++right;
 
     return right - left;
