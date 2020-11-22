@@ -112,7 +112,17 @@ template<class T>
 static ostream& operator << (ostream& os, const queue<T>& v) noexcept {
     auto temp = v;
     while (not temp.empty()) {
-        os << temp.front();
+        os << temp.front() << ' ';
+        temp.pop();
+    }
+    return os;// << endl;
+}
+
+template<class ... T>
+static ostream& operator << (ostream& os, const priority_queue<T...>& v) noexcept {
+    auto temp = v;
+    while (not temp.empty()) {
+        os << temp.top() << ' ';
         temp.pop();
     }
     return os;// << endl;
