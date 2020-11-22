@@ -14,25 +14,18 @@ int naive(vi arr) {
 }
 
 int Merge(vi& arr, vi& temp, int left, int mid, int right) {
+    int count = 0;
     int i = left;
     int j = mid + 1;
-    int idx = left;
-    int count = 0;
-
+    int k = left;
     while (i <= mid and j <= right) {
-        if (arr[i] <= arr[j]) {
-            temp[idx++] = arr[i++];
-        }
-        else {
-            temp[idx++] = arr[j++];
-            count += mid - i + 1;
-        }
+        if (arr[i] > arr[j]) count += mid - i + 1;
+        if (arr[i] <= arr[j]) temp[k++] = arr[i++];
+        else temp[k++] = arr[j++];
     }
-
-    while (i <= mid) temp[idx++] = arr[i++];
-    while (j <= right) temp[idx++] = arr[j++];
+    while (i <= mid) temp[k++] = arr[i++];
+    while (j <= right) temp[k++] = arr[j++];
     for (i = left; i <= right; ++i) arr[i] = temp[i];
-
     return count;
 }
 
