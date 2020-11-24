@@ -44,6 +44,14 @@ int ExtendedGcd2(int a, int b) {
     return g;
 }
 
+int iter(int a, int b) {
+    while (a != b) {
+        if (a > b) a -= b;
+        else b -= a;
+    }
+    return a;
+}
+
 int main() { TimeMeasure _;
     cout << gcd(3, 15) << endl; // 3
     cout << gcd(2, 4) << endl; // 2
@@ -64,4 +72,9 @@ int main() { TimeMeasure _;
     cout << ExtendedGcd2(2, 4) << endl; // 2
     cout << ExtendedGcd2(3, 5) << endl; // 1
     cout << ExtendedGcd2(6, 36) << endl; // 6
+    cout << endl;
+    cout << iter(3, 15) << endl; // 3
+    cout << iter(2, 4) << endl; // 2
+    cout << iter(3, 5) << endl; // 1
+    cout << iter(6, 36) << endl; // 6
 }
