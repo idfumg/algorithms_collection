@@ -3,35 +3,34 @@
 string LongMultiplication(const string& a, const string& b) {
     int m = a.size();
     int n = b.size();
+    string result(m + n, '0');
 
-    vi result(m + n);
     for (int i = m - 1, ai = 0; i >= 0; --i, ++ai) {
         int carry = 0;
-        int bi = 0;
-        for (int j = n - 1; j >= 0; --j, ++bi) {
-            int sum = (a[i] - '0') * (b[j] - '0') + carry + result[ai + bi];
+        for (int j = n - 1, bi = 0; j >= 0; --j, ++bi) {
+            int sum = (a[i] - '0') * (b[j] - '0') + carry + (result[ai + bi] - '0');
             carry = sum / 10;
-            result[ai + bi] = sum % 10;
+            result[ai + bi] = (sum % 10) + '0';
         }
         if (carry > 0) {
-            result[ai + bi] += carry;
+            result[ai + n] += carry;
         }
     }
 
     int i = m + n - 1;
-    for (; i >= 0 and result[i] == 0; --i) {
+    for (; i >= 0 and result[i] == '0'; --i) {
     }
 
-    string s;
-    for (; i >= 0; --i) {
-        s += result[i] + '0';
-    }
+    result.resize(i + 1);
 
-    if (s.empty()) {
+    if (result.empty()) {
         return "0";
     }
-    return s;
+
+    reverse(result.begin(), result.end());
+    return result;
 }
+
 
 int main() { TimeMeasure _;
     // 2118187521397235888154583183918321221520083884298838480662480
