@@ -1,71 +1,90 @@
 #include "../template.hpp"
 
 template<class T>
-class Heap {
-public:
-    size_t size() const noexcept { return arr.size(); }
-    bool empty() const noexcept { return arr.empty(); }
-    T& top() noexcept { return arr[0]; }
+bool compare(const T& a, const T& b) { return a > b; }
 
-    void push(const T& key) {
-        arr.push_back(key);
-        for (int i = arr.size() - 1; i >= 0 and arr[i] < arr[(i - 1) / 2]; i = (i - 1) / 2) {
-            swap(arr[(i - 1) / 2], arr[i]);
-        }
+template<class T>
+void heap_heapify(vector<T>& heap, int i, int n) {
+    int l = i * 2 + 1, r = i * 2 + 2;
+    while (true) {
+        int smallest = i;
+        if (l < n and compare(heap[smallest], heap[l])) smallest = l;
+        if (r < n and compare(heap[smallest], heap[r])) smallest = r;
+        if (i == smallest) break;
+        swap(heap[smallest], heap[i]);
+        i = smallest;
+        l = i * 2 + 1;
+        r = i * 2 + 2;
     }
+}
 
-    void minHeapify() { // move big value down
-        size_t i = 0;
-        for (size_t l = 2 * i + 1, r = 2 * i + 2; ; l = 2 * i + 1, r = 2 * i + 2) {
-            size_t smallest = i;
-            if (l < arr.size() and arr[smallest] > arr[l]) smallest = l;
-            if (r < arr.size() and arr[smallest] > arr[r]) smallest = r;
-            if (i == smallest) break;
-            swap(arr[smallest], arr[i]);
-            i = smallest;
-        }
+template<class T>
+void heap_rise(vector<T>& heap, int i) {
+    for (; i >= 0 and compare(heap[i / 2], heap[i]); i = i / 2) {
+        swap(heap[i / 2], heap[i]);
     }
+}
 
-    void pop() {
-        if (empty()) throw std::runtime_error("The heap is empty");
-        swap(arr.front(), arr.back());
-        arr.pop_back();
-        minHeapify();
+template<class T>
+void heap_push(vector<T>& heap, int key) {
+    heap.push_back(key);
+    heap_rise(heap, heap.size() - 1);
+}
+
+template<class T>
+void heap_update(vector<T>& heap, int i, int key) {
+    heap[i] = key;
+    heap_rise(heap, i);
+    heap_heapify(heap, i, heap.size());
+}
+
+template<class T>
+void heap_pop(vector<T>& heap) {
+    heap[0] = heap.back();
+    heap.pop_back();
+    heap_heapify(heap, 0, heap.size());
+}
+
+template<class T>
+void heap_make(vector<T>& heap) {
+    for (int i = heap.size() / 2; i >= 0; --i) {
+        heap_heapify(heap, i, heap.size());
     }
+}
 
-    template<class U>
-    static void sort(U& arr) {
-        Heap heap;
-        for (const auto& elem : arr) heap.push(elem);
-        for (size_t i = 0; i < arr.size() and not heap.empty(); ++i) {
-            arr[i] = heap.top(); heap.pop();
-        }
+template<class T>
+void heap_sort(vector<T>& heap) {
+    heap_make(heap);
+    for (int i = heap.size() - 1; i >= 1; --i) {
+        swap(heap[0], heap[i]);
+        heap_heapify(heap, 0, i);
     }
+}
 
-private:
-    std::vector<T> arr;
-};
+void HeapInit(vector<int> values) {
+    heap_make(values);
+
+    auto it = find(values.begin(), values.end(), 9);
+    int i = it - values.begin();
+    heap_update(values, i, -100); // update down
+
+    auto it2 = find(values.begin(), values.end(), 2);
+    int j = it2 - values.begin();
+    heap_update(values, j, 100); // update up
+
+    while (not values.empty()) {
+        cout << values[0] << ' ';
+        heap_pop(values);
+    }
+    cout << endl;
+}
+
+void HeapSort(vector<int> values) {
+    heap_sort(values);
+    cout << values << endl;
+}
 
 int main() { TimeMeasure _;
-    Heap<int> heap;
-    heap.push(3);
-    heap.push(2);
-    heap.push(15);
-    heap.push(9);
-    heap.push(4);
-    heap.push(45);
-    heap.push(6);
-
-    cout << "heap size = " << heap.size() << endl;
-    cout << "heap top = " << heap.top() << endl;
-    heap.pop();
-    cout << "heap top = " << heap.top() << endl;
-    heap.pop();
-    cout << "heap top = " << heap.top() << endl;
-    heap.pop();
-    cout << "heap top = " << heap.top() << endl;
-
-    std::vector<int> arr = {5, 3, 1, 2, 4, -2, -40, 100};
-    Heap<int>::sort(arr);
-    debugn(arr);
+    HeapInit({3, 2, 15, 9, 4, 45, 6});
+    HeapSort({5, 3, 1, 2, 4, -2, -40, 100});
 }
