@@ -37,24 +37,24 @@ int UpperBound(vi arr, int key) {
 }
 
 void CeilingInSortedArray(vi arr, int key) {
-    int n = arr.size();
-    int floor = LowerBound(arr, key);
-    int ceil = UpperBound(arr, key);
+    int i = LowerBound(arr, key);
 
-    if (arr[floor] == key or arr[ceil] == key) {
-        cout << key << ' ' << key;
-    }
-    else if (floor == n - 1 and arr[floor] < key) {
-        cout << arr[floor] << ' ' << -1;
-    }
-    else if (ceil == 0 and arr[ceil] > key) {
-        cout << -1 << ' ' << arr[ceil];
-    }
-    else {
-        cout << arr[floor - 1] << ' ' << arr[ceil];
+    if (arr[i] == key) {
+        cout << key << ' ' << key << endl;
+        return;
     }
 
-    cout << '\n';
+    if (arr[i] < key) {
+        cout << arr[i] << ' ' << -1 << endl;
+        return;
+    }
+
+    if (arr[i] > key and i == 0) {
+        cout << -1 << ' ' << arr[i] << endl;
+        return;
+    }
+
+    cout << arr[i - 1] << ' ' << arr[i] << endl;
 }
 
 int main() { TimeMeasure _;
