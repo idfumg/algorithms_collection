@@ -1,4 +1,4 @@
-#include "../../template.hpp"
+#include "../template.hpp"
 
 int lcm(int a, int b) {
     return (a * b) / std::gcd(a, b);
