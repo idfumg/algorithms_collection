@@ -15,9 +15,9 @@ int ExtendedGcd(int a, int b) {
     return ExtendedGcd(b, a - floor(a / b) * b);
 }
 
-int ExtendedGcd2(int a, int b, int& x, int& y) {
+int ExtendedGcdXY(int a, int b, int& x, int& y) {
     if (a < b) {
-        return ExtendedGcd2(b, a, x, y);
+        return ExtendedGcdXY(b, a, x, y);
     }
 
     if (b == 0) {
@@ -28,18 +28,18 @@ int ExtendedGcd2(int a, int b, int& x, int& y) {
 
     int x1 = 0;
     int y1 = 0;
-    int g = ExtendedGcd2(b, a % b, x1, y1);
+    int g = ExtendedGcdXY(b, a % b, x1, y1);
     x = y1;
     y = x1 - (a / b) * y1;
 
     return g;
 }
 
-int ExtendedGcd2(int a, int b) {
+int ExtendedGcdXY(int a, int b) {
     // a*x + b*y = gcd(a, b)
     int x = 0;
     int y = 0;
-    int g = ExtendedGcd2(a, b, x, y);
+    int g = ExtendedGcdXY(a, b, x, y);
     debug(x); debugn(y);
     return g;
 }
@@ -68,10 +68,10 @@ int main() { TimeMeasure _;
     cout << ExtendedGcd(3, 5) << endl; // 1
     cout << ExtendedGcd(6, 36) << endl; // 6
     cout << endl;
-    cout << ExtendedGcd2(3, 15) << endl; // 3
-    cout << ExtendedGcd2(2, 4) << endl; // 2
-    cout << ExtendedGcd2(3, 5) << endl; // 1
-    cout << ExtendedGcd2(6, 36) << endl; // 6
+    cout << ExtendedGcdXY(3, 15) << endl; // 3
+    cout << ExtendedGcdXY(2, 4) << endl; // 2
+    cout << ExtendedGcdXY(3, 5) << endl; // 1
+    cout << ExtendedGcdXY(6, 36) << endl; // 6
     cout << endl;
     cout << iter(3, 15) << endl; // 3
     cout << iter(2, 4) << endl; // 2
