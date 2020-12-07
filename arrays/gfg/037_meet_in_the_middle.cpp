@@ -1,7 +1,7 @@
 #include "../../template.hpp"
 
 vi GetSums(vi arr, int from, int n, int total) {
-    vi ans;
+    vi sums;
     for (int i = 0; i < (1 << n); ++i) {
         int sum = 0;
         for (int j = 0; j < n; ++j) {
@@ -10,13 +10,13 @@ vi GetSums(vi arr, int from, int n, int total) {
             }
         }
         if (sum <= total) {
-            ans.push_back(sum);
+            sums.push_back(sum);
         }
     }
-    return ans;
+    return sums;
 }
 
-int BinarySearch(vi arr, int key) {
+int LowerBound(vi arr, int key) {
     int n = arr.size();
     int low = 0;
     int high = n - 1;
@@ -25,22 +25,27 @@ int BinarySearch(vi arr, int key) {
         if (arr[mid] < key) low = mid + 1;
         else high = mid;
     }
-    return arr[low] == key ? low : low - 1;
+    return low;
 }
 
-int MaxSumSubsetLessThanS(vi arr, int total) {
+int MaxSumSubsetLessThanS(vi arr, int sum) {
     int n = arr.size();
-    vi left = GetSums(arr, 0, n / 2, total);
-    vi right = GetSums(arr, n / 2, n - n / 2, total);
+
+    vi left = GetSums(arr, 0, n / 2, sum);
+    vi right = GetSums(arr, n / 2, n - n / 2, sum);
     sort(right.begin(), right.end());
-    int m = left.size();
-    int ans = 0;
-    for (int i = 0; i < m; ++i) {
-        int idx = LowerBound(right, total - left[i]);
-        if (idx != -1) {
-            ans = max(ans, left[i] + right[idx]);
+
+    int ans = -INF;
+    for (int i = 0; i < left.size(); ++i) {
+        int j = LowerBound(right, sum - left[i]);
+        if (left[i] + right[j] == sum) {
+            return sum;
+        }
+        if (j > 0 and left[i] + right[j - 1] <= sum) {
+            ans = max(ans, left[i] + right[j - 1]);
         }
     }
+
     return ans;
 }
 
