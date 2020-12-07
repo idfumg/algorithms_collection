@@ -118,6 +118,43 @@ int tab(int digits) {
     return dp[digits][0][0];
 }
 
+int rec3(int total, int n, int odd, int even) {
+    if (n == total) return even - odd == 1;
+    int count = 0;
+    for (int i = ((odd == 0 and even == 0) ? 1 : 0); i < 10; ++i) {
+        if (n % 2 == 0) count += rec3(total, n + 1, odd, even + i);
+        else count += rec3(total, n + 1, odd + i, even);
+    }
+    return count;
+}
+
+int rec3(int n) {
+    return rec3(n, 0, 0, 0);
+}
+
+int tab3(int n) {
+    int total = pow(9, n / 2 + 1);
+    vvvi dp(n + 2, vvi(total + 10, vi(total + 10)));
+    for (int i = n; i >= 0; --i) {
+        for (int j = total; j >= 0; --j) {
+            for (int k = total; k >= 0; --k) {
+                if (i == n) {
+                    dp[i][j][k] = k - j == 1;
+                }
+                else {
+                    int count = 0;
+                    for (int p = (j == 0 and k == 0); p < 10; ++p) {
+                        if (i % 2 == 0) count += dp[i + 1][j][k + p];
+                        else count += dp[i + 1][j + p][k];
+                    }
+                    dp[i][j][k] = count;
+                }
+            }
+        }
+    }
+    return dp[0][0][0];
+}
+
 int main() { TimeMeasure _; __x();
     cout << naive(2) << endl; // 9
     cout << naive(3) << endl; // 54
@@ -127,4 +164,8 @@ int main() { TimeMeasure _; __x();
     cout << rec2(3) << endl; // 54
     cout << tab(2) << endl; // 9
     cout << tab(3) << endl; // 54
+    cout << rec3(2) << endl; // 9
+    cout << rec3(3) << endl; // 54
+    cout << tab3(2) << endl; // 9
+    cout << tab3(3) << endl; // 54
 }
