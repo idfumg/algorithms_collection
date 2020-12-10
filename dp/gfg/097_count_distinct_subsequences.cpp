@@ -21,15 +21,31 @@ int naive(string s) {
     return ans.size();
 }
 
+int naive2(string s) {
+    int n = s.size();
+    unordered_set<string> tab;
+    for (int i = 0; i < (1 << n); ++i) {
+        string seq;
+        for (int j = 0; j < n; ++j) {
+            if (i & (1 << j)) {
+                seq += s[j];
+            }
+        }
+        tab.insert(seq);
+    }
+    return tab.size();
+}
+
 int tab(string s) {
     int n = s.size();
     vi dp(n + 1, 1);
     vi last(27, -1);
     for (int i = 1; i <= n; ++i) {
-        int ch = s[i - 1] - 'a';
         dp[i] = 2 * dp[i - 1];
+
+        int ch = s[i - 1] - 'a';
         if (last[ch] != -1) {
-            dp[i] = 2 * dp[i - 1] - dp[last[ch] - 1];
+            dp[i] -= dp[last[ch] - 1];
         }
         last[ch] = i;
     }
@@ -39,8 +55,13 @@ int tab(string s) {
 int main() { TimeMeasure _; __x();
     const string s1 = "gfg"; // 7
     const string s2 = "ggg"; // 4
+
     cout << naive(s1) << endl;
     cout << naive(s2) << endl;
+    cout << endl;
+    cout << naive2(s1) << endl;
+    cout << naive2(s2) << endl;
+    cout << endl;
     cout << tab(s1) << endl;
     cout << tab(s2) << endl;
 }
