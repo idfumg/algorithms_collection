@@ -1,11 +1,19 @@
 #include "../../template.hpp"
 
-struct Node {
+struct TreeNode {
     int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int value) : value(value), left(nullptr), right(nullptr) {}
 };
+
+void Inorder(TreeNode* root) {
+    if (not root) return;
+    Inorder(root->left);
+    cout << root->value << ' ';
+    Inorder(root->right);
+}
+
 
 
 int main() { TimeMeasure _; __x();

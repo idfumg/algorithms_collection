@@ -14,20 +14,14 @@ void InorderTraversal(Node* root) {
     InorderTraversal(root->right);
 }
 
-void InorderTraversalIter(Node* root) {
+void InorderTraversalIter(Node* node) {
     stack<Node*> stack;
-
-    for (; root; root = root->left) {
-        stack.push(root);
-    }
-
+    for (; node; node = node->left) stack.push(node);
     while (not stack.empty()) {
         Node* node = stack.top(); stack.pop();
         cout << node->value << ' ';
-        root = node->right;
-        for (; root; root = root->left) {
-            stack.push(root);
-        }
+        node = node->right;
+        for (; node; node = node->left) stack.push(node);
     }
 }
 
