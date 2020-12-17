@@ -5,7 +5,7 @@
 using namespace std;
 
 #define endl '\n'
-#define MOD static_cast<int64_t>(1e18 + 7)
+#define MOD static_cast<int64_t>(1e9 + 7)
 #define PI (3.1415926535897932384626433832795)
 #define INF static_cast<int32_t>(1e9)
 #define LLINF static_cast<int64_t>(1e18)
