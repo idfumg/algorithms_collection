@@ -17,28 +17,35 @@ void naive(vi& arr) {
     cout << '\n';
 }
 
-void rec(vi& arr, vi& dp, int n) {
-    if (n < 0) return;
-    else if (arr[n] * arr[n + 1] < 0) dp[n] += dp[n + 1];
-    rec(arr, dp, n - 1);
-}
-
-void rec(vi& arr) {
-    const auto n = arr.size();
-    vi dp(n, 1);
-    rec(arr, dp, n - 2);
-    cout << dp << '\n';
-}
-
-void tab(vi& arr) {
+int rec(vi arr, int i) {
     int n = arr.size();
-    vi dp(n, 1);
+    if (i == n) return 0;
+    if (arr[i] * arr[i + 1] < 0) return rec(arr, i + 1) + 1;
+    return 1;
+}
+
+void rec(vi arr) {
+    int n = arr.size();
+    vi ans(n, 1);
+    for (int i = 0; i < n - 1; ++i) {
+        ans[i] = rec(arr, i);
+    }
+    cout << ans << endl;
+}
+
+void tab(vi arr) {
+    int n = arr.size();
+    vi dp(n);
+    dp[n - 1] = 1;
     for (int i = n - 2; i >= 0; --i) {
         if (arr[i] * arr[i + 1] < 0) {
-            dp[i] = max(dp[i], dp[i + 1] + 1);
+            dp[i] = 1 + dp[i + 1];
+        }
+        else {
+            dp[i] = 1;
         }
     }
-    cout << dp << '\n';
+    cout << dp << endl;
 }
 
 int main() { TimeMeasure _; __x();
