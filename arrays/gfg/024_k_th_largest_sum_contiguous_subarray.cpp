@@ -2,23 +2,25 @@
 
 int KthLargestSum(vi arr, int k) {
     int n = arr.size();
-    vi presum(n + 1);
-    presum[1] = arr[0];
-    for (int i = 2; i <= n; ++i) {
-        presum[i] = presum[i - 1] + arr[i - 1];
+
+    vi prefix(n + 1);
+    for (int i = 1; i <= n; ++i) {
+        prefix[i] = prefix[i - 1] + arr[i - 1];
     }
-    vi sums;
+
+    multiset<int> sums;
     for (int i = 1; i <= n; ++i) {
         for (int j = i; j <= n; ++j) {
-            sums.push_back(presum[j] - presum[i - 1]);
+            sums.insert(prefix[j] - prefix[i - 1]);
+            if (sums.size() > k) {
+                sums.erase(sums.begin());
+            }
         }
     }
-    sort(sums.begin(), sums.end());
-    int m = sums.size();
-    return m >= k ? sums[m - k] : sums.back();
+    return *sums.begin();
 }
 
 int main() { TimeMeasure _;
-    cout << KthLargestSum({20, -5, -1}, 3) << '\n';
-    cout << KthLargestSum({10, -10, 20, -40}, 6) << '\n';
+    cout << KthLargestSum({20, -5, -1}, 3) << '\n'; // 14
+    cout << KthLargestSum({10, -10, 20, -40}, 6) << '\n'; // -10
 }
