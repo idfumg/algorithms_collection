@@ -51,7 +51,7 @@ void KSmallestElems3(vi arr, int k) {
 
 int main() { TimeMeasure _;
     vi arr1 = {4, 2, 6, 1, 5}; int k1 = 3; // 4 2 1
-    vi arr2 = {4, 12, 16, 21, 25}; int k2 = 3; // 16 12 4
+    vi arr2 = {4, 12, 16, 21, 25}; int k2 = 3; // 4, 12, 16
 
     KSmallestElems(arr1, k1); // O(nlogn) + Om(n)
     KSmallestElems(arr2, k2);
