@@ -1,57 +1,57 @@
-#include "../template.hpp"
+#include "../../template.hpp"
 
 using Graph = vvi;
 
-void AddEdge(Graph& graph, int from, int to) {
+void AddEdge(Graph& graph, int from, int to, int cost = 0) {
     graph[from].push_back(to);
 }
 
-Graph Transpose(Graph& graph) {
-    int n = graph.size();
-    Graph newgraph(n);
-    for (int i = 0; i < n; ++i) {
-        for (int adj : graph[i]) {
-            newgraph[adj].push_back(i);
-        }
-    }
-    return newgraph;
-}
-
-void dfs(Graph& graph, vb& visited, int at) {
+void dfs(vvi graph, vb& visited, int at, int& handled) {
     visited[at] = true;
+    ++handled;
     for (int adj : graph[at]) {
         if (not visited[adj]) {
-            dfs(graph, visited, adj);
+            dfs(graph, visited, adj, handled);
         }
     }
 }
 
-bool IsStronglyConnected(Graph& graph) {
+vvi transpose(vvi graph) {
     int n = graph.size();
+    vvi res(n);
+    for (int at = 0; at < n; ++at) {
+        for (int adj : graph[at]) {
+            res[adj].push_back(at);
+        }
+    }
+    return res;
+}
+
+bool IsStronglyConnected(vvi graph) {
+    int n = graph.size(), handled = 0;
 
     vb visited(n);
-    dfs(graph, visited, 0);
-    if (not all_of(visited.begin(), visited.end(), [](bool v){return v;})) return false;
+    dfs(graph, visited, 0, handled);
+    if (handled != n) return false;
 
+    graph = transpose(graph);
+    handled = 0;
     visited = vb(n);
-    Graph transposed = Transpose(graph);
-    dfs(transposed, visited, 0);
-    if (not all_of(visited.begin(), visited.end(), [](bool v){return v;})) return false;
-
-    return true;
+    dfs(graph, visited, 0 , handled);
+    return handled == n;
 }
 
-void dfs_forward(Graph& graph, vb& visited, vector<int>& order, int at) {
+void dfs_forward(vvi graph, vb& visited, vi& ordering, int at) {
     visited[at] = true;
     for (int adj : graph[at]) {
         if (not visited[adj]) {
-            dfs_forward(graph, visited, order, adj);
+            dfs_forward(graph, visited, ordering, adj);
         }
     }
-    order.push_back(at);
+    ordering.push_back(at);
 }
 
-void dfs_backward(Graph& graph, vb& visited, int at) {
+void dfs_backward(vvi graph, vb& visited, int at) {
     visited[at] = true;
     cout << at << ' ';
     for (int adj : graph[at]) {
@@ -61,26 +61,26 @@ void dfs_backward(Graph& graph, vb& visited, int at) {
     }
 }
 
-void PrintSCCs(Graph& graph) {
+void PrintSCCs(vvi graph) {
     int n = graph.size();
-    vector<int> order;
 
     vb visited(n);
-    for (int i = 0; i < n; ++i) {
-        if (not visited[i]) {
-            dfs_forward(graph, visited, order, i);
+    vi ordering;
+    for (int at = 0; at < n; ++at) {
+        if (not visited[at]) {
+            dfs_forward(graph, visited, ordering, at);
         }
     }
 
     visited = vb(n);
-    Graph newgraph = Transpose(graph);
+    graph = transpose(graph);
     for (int i = n - 1; i >= 0; --i) {
-        if (not visited[order[i]]) {
-            dfs_backward(newgraph, visited, order[i]);
+        int at = ordering[i];
+        if (not visited[at]) {
+            dfs_backward(graph, visited, at);
             cout << endl;
         }
     }
-
     cout << endl;
 }
 
@@ -111,7 +111,10 @@ int main() { TimeMeasure _;
         AddEdge(graph, 2, 1);
         AddEdge(graph, 0, 3);
         AddEdge(graph, 3, 4);
-        PrintSCCs(graph); // [0, 1, 2] [3] [4]
+        PrintSCCs(graph);
+        // 0 1 2
+        // 3
+        // 4
     }
 
     {
@@ -130,5 +133,8 @@ int main() { TimeMeasure _;
         AddEdge(graph, 7, 3);
         AddEdge(graph, 5, 0);
         PrintSCCs(graph);
+        // 3 7
+        // 4 6 5
+        // 0 2 1
     }
 }
