@@ -2,43 +2,41 @@
 
 using Graph = vvi;
 
-void AddEdge(Graph& graph, int from, int to) {
+void AddEdge(Graph& graph, int from, int to, int cost = 0) {
     graph[from].push_back(to);
     graph[to].push_back(from);
 }
 
-void dfs(Graph& graph, vb& ap, vi& disc, vi& lows, vi& parent, int& id, int at) {
+void dfs(vvi graph, vi& disc, vi& lows, int& id, vi& parent, vi& ap, int at) {
     disc[at] = lows[at] = id++;
     int children = 0;
     for (int adj : graph[at]) {
-        if (disc[adj] == -1) {
-            children += 1;
-            parent[adj] = at;
-            dfs(graph, ap, disc, lows, parent, id, adj);
-            lows[at] = min(lows[at], lows[adj]);
-            if (parent[at] == -1 and children > 1) {
-                ap[at] = true;
-            }
-            if (parent[at] != -1 and disc[at] <= lows[adj]) {
-                ap[at] = true;
-            }
+        if (parent[at] == adj) {
+            continue;
         }
-        else if (parent[at] != adj) {
+        else if (disc[adj] == -1) {
+            ++children;
+            parent[adj] = at;
+            dfs(graph, disc, lows, id, parent, ap, adj);
+            lows[at] = min(lows[at], lows[adj]);
+            if (parent[at] != -1 and disc[at] <= lows[adj]) ap[at] = 1;
+            if (parent[at] == -1 and children > 1) ap[at] = 1;
+        }
+        else {
             lows[at] = min(lows[at], disc[adj]);
         }
     }
 }
 
-void FindArticulationPoints(Graph& graph) {
+void FindArticulationPoints(vvi graph) {
     int n = graph.size(), id = 0;
-    vb ap(n);
-    vi disc(n, -1), lows(n), parent(n, -1);
+    vi disc(n, -1), lows(n), parent(n, -1), ap(n);
     for (int at = 0; at < n; ++at) {
         if (disc[at] == -1) {
-            dfs(graph, ap, disc, lows, parent, id, at);
+            dfs(graph, disc, lows, id, parent, ap, at);
         }
     }
-    cout << ap << endl;
+    debugn(ap);
 }
 
 int main() { TimeMeasure _;
