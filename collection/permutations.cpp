@@ -22,6 +22,7 @@ void GenPermutationsRec(vi arr) {
 }
 
 void GenPermutationsIter(vi perm) {
+    sort(arr.begin(), arr.end());
     do {
         cout << perm << endl;
     } while (next_permutation(perm.begin(), perm.end()));
