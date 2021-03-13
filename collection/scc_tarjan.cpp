@@ -6,20 +6,18 @@ void AddEdge(Graph& graph, int from, int to) {
     graph[from].push_back(to);
 }
 
-void dfs(Graph& graph, vb& visited, int at, vi& disc, vi& lows, int& id, vb& onstack, stack<int>& path) {
-    visited[at] = true;
-    onstack[at] = true;
-    disc[at] = lows[at] = id++;
-    path.push(at);
+void dfs(Graph graph, vi& disc, vi& lows, vi& parent, vi& onpath, vi& path, int& idx, int at) {
+    onpath[at] = disc[at] = lows[at] = idx++;
+    path.push_back(at);
     for (int adj : graph[at]) {
-        if (not visited[adj]) {
+        if (disc[adj] == -1) {
             // check if the next node can reach node behind the current one
             // so, we can reach from the current node the same node behind
             // thus, the current node is part of SCC but not the start of one
-            dfs(graph, visited, adj, disc, lows, id, onstack, path);
+            dfs(graph, disc, lows, parent, onpath, path, idx, adj);
             lows[at] = min(lows[at], lows[adj]);
         }
-        else if (onstack[adj]) {
+        else if (onpath[adj]) {
             // we already was at that node
             // if we already constructed SCC by it we don't use it
             // if we at the process of constructing SCC by now we use it by
@@ -31,25 +29,23 @@ void dfs(Graph& graph, vb& visited, int at, vi& disc, vi& lows, int& id, vb& ons
         }
     }
 
-    if (lows[at] == disc[at]) {
-        while (true) {
-            int node = path.top(); path.pop();
-            onstack[node] = false;
+    if (disc[at] == lows[at]) {
+        while (not path.empty()) {
+            int node = path.back(); path.pop_back();
+            onpath[node] = 0;
             cout << node << ' ';
             if (node == at) break;
         }
-        cout << '\n';
+        cout << endl;
     }
 }
 
 void PrintSCCs(Graph& graph) {
-    int n = graph.size(), id = 0;
-    vb visited(n), onstack(n);
-    vi disc(n), lows(n);
-    stack<int> path;
-    for (int i = 0 ; i < n; ++i) {
-        if (not visited[i]) {
-            dfs(graph, visited, i, disc, lows, id, onstack, path);
+    int n = graph.size(), idx = 1;
+    vi disc(n, -1), lows(n, 0), parent(n, -1), onpath(n, 0), path;
+    for (int at = 0; at < n; ++at) {
+        if (disc[at] == -1) {
+            dfs(graph, disc, lows, parent, onpath, path, idx, at);
         }
     }
     debugn(disc);
