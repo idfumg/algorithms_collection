@@ -323,6 +323,13 @@ set<T> operator+(const set<T>& a, int value) {
     return ans;
 }
 
+struct Node { int value = INF; Node* left = nullptr; Node* right = nullptr; vector<Node*> children = {}; Node(const int value) : value(value), left(nullptr), right(nullptr) {} Node(const int value, Node* left, Node* right) : value(value), left(left), right(right) {}};
+void print_inorder(Node* root) { if (not root) return; print_inorder(root->left); cout << root->value << ' '; print_inorder(root->right); }
+void print_preorder(Node* root) { if (not root) return; cout << root->value << ' '; print_preorder(root->left); print_preorder(root->right); }
+void print_postorder(Node* root) { if (not root) return; print_postorder(root->left); print_postorder(root->right); cout << root->value << ' '; }
+Node* make_list(vi arr) { Node* head = nullptr; Node* current = nullptr; for (int value : arr) { if (head == nullptr) { current = head = new Node(value); } else { current->right = new Node(value); current = current->right; } } return head; }
+void print_list(Node* head) { for (Node* curr = head; curr; curr = curr->right) cout << curr->value << ' '; cout << endl; }
+
 #define trace() cout << "Line: " << __LINE__ << endl;
 
 [[maybe_unused]] static const auto __x = [](){ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0); cout.precision(15); cout.setf(ios::boolalpha);};
