@@ -1,27 +1,30 @@
 #include "../../template.hpp"
 
 struct Node {
-    int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    int value = -100;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
-void InorderTraversal(Node* root) {
+void inorder(Node* root) {
     if (not root) return;
-    InorderTraversal(root->left);
+    inorder(root->left);
     cout << root->value << ' ';
-    InorderTraversal(root->right);
+    inorder(root->right);
 }
 
-void InorderTraversalIter(Node* node) {
-    stack<Node*> stack;
-    for (; node; node = node->left) stack.push(node);
-    while (not stack.empty()) {
-        Node* node = stack.top(); stack.pop();
+void inorder_iter(Node* node) {
+    vector<Node*> path;
+    for (; node; node = node->left) {
+        path.push_back(node);
+    }
+    while (not path.empty()) {
+        Node* node = path.back(); path.pop_back();
         cout << node->value << ' ';
-        node = node->right;
-        for (; node; node = node->left) stack.push(node);
+        for (node = node->right; node; node = node->left) {
+            path.push_back(node);
+        }
     }
 }
 
@@ -31,7 +34,7 @@ int main() { TimeMeasure _; __x();
     root->right = new Node(3);
     root->left->left = new Node(4);
     root->left->right = new Node(5);
-    InorderTraversal(root); //  4 2 5 1 3
+    inorder(root); //  4 2 5 1 3
     cout << endl;
-    InorderTraversalIter(root);
+    inorder_iter(root); //  4 2 5 1 3
 }
