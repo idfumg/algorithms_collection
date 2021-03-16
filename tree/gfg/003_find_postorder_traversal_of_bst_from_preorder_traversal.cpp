@@ -1,40 +1,37 @@
 #include "../../template.hpp"
 
 struct Node {
-    int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    int value = -100;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
-Node* Construct(vi preorder, int i, int j) {
-    if (i > j) return nullptr;
-
-    Node* root = new Node(preorder[i]);
-
-    int k = i + 1;
-    while (k <= j and preorder[k] < preorder[i]) ++k;
-    if (k > j) {
-        root->left = Construct(preorder, i + 1, j);
-        return root;
-    }
-
-    root->left = Construct(preorder, i + 1, k - 1);
-    root->right = Construct(preorder, k, j);
-    return root;
-}
-
-void Postorder(Node* root) {
+void postorder(Node* root) {
     if (not root) return;
-    Postorder(root->left);
-    Postorder(root->right);
+    postorder(root->left);
+    postorder(root->right);
     cout << root->value << ' ';
 }
 
-void PostorderFromPreOrder(vi preorder) {
-    Node* root = Construct(preorder, 0, preorder.size() - 1);
-    Postorder(root);
-    cout << endl;
+Node* construct(vi pre, int i, int j) {
+    if (i > j) return nullptr;
+    int rootValue = pre[i];
+    int pivot = i + 1;
+    while (pivot <= j and pre[pivot] < rootValue) ++pivot;
+    Node* root = new Node(rootValue);
+    root->left = construct(pre, i + 1, pivot - 1);
+    root->right = construct(pre, pivot, j);
+    return root;
+}
+
+Node* construct(vi pre) {
+    return construct(pre, 0, pre.size() - 1);
+}
+
+void PostorderFromPreOrder(vi pre) {
+    Node* root = construct(pre);
+    postorder(root); cout << endl;
 }
 
 int main() { TimeMeasure _; __x();
