@@ -1,10 +1,10 @@
 #include "../../template.hpp"
 
 struct Node {
-    int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    int value = INF;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
 void inorder(Node* root) {
@@ -14,28 +14,28 @@ void inorder(Node* root) {
     inorder(root->right);
 }
 
-Node* construct(vi pre, vi preMirror, int& idx, int from, int to) {
-    if (from > to) return nullptr;
-    int currentRoot = pre[idx++];
-    int leftTreeRoot = pre[idx];
-    Node* root = new Node(currentRoot);
-    int i = from;
-    for (; i <= to and preMirror[i] != leftTreeRoot; ++i){}
-    if (i <= to) {
-        root->left = construct(pre, preMirror, idx, i, to);
-        root->right = construct(pre, preMirror, idx, from + 1, i - 1);
-    }
+Node* construct(vi pre, vi premirror, int& idx, int i, int j) {
+    if (i > j) return nullptr;
+    int n = pre.size();
+    int rootValue = pre[idx++];
+    if (idx == n) return new Node(rootValue);
+
+    int leftRootValue = pre[idx];
+    int pivot = i;
+    while (pivot <= j and premirror[pivot] != leftRootValue) ++pivot;
+
+    Node* root = new Node(rootValue);
+    root->left = construct(pre, premirror, idx, pivot, j);
+    root->right = construct(pre, premirror, idx, i + 1, pivot - 1);
     return root;
 }
 
-void construct(vi pre, vi preMirror) {
+Node* construct(vi pre, vi premirror) {
     int idx = 0;
-    Node* root = construct(pre, preMirror, idx, 0, pre.size() - 1);
-    inorder(root);
+    return construct(pre, premirror, idx, 0, pre.size() - 1);
 }
 
 int main() { TimeMeasure _; __x();
-    vi pre = {1,2,4,5,3,6,7};
-    vi preMirror = {1,3,7,6,2,5,4};
-    construct(pre, preMirror);
+    Node* root = construct({1,2,4,5,3,6,7}, {1,3,7,6,2,5,4});
+    inorder(root); // 4 2 5 1 6 3 7
 }
