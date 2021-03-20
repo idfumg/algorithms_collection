@@ -1,10 +1,10 @@
 #include "../../template.hpp"
 
 struct Node {
-    int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    int value = -100;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
 void inorder(Node* root) {
@@ -14,17 +14,16 @@ void inorder(Node* root) {
     inorder(root->right);
 }
 
-void convert(Node* root, Node* parent = nullptr) {
+void convert(Node* root, Node* parent) {
     if (not root) return;
-
     if (parent) parent->value += root->value;
     root->value = 0;
-
     convert(root->left, root);
     convert(root->right, root);
+}
 
-    if (root->left) root->value += root->left->value;
-    if (root->right) root->value += root->right->value;
+void convert(Node* root) {
+    convert(root, nullptr);
 }
 
 int main() { TimeMeasure _; __x();
