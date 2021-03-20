@@ -1,10 +1,10 @@
 #include "../../template.hpp"
 
 struct Node {
-    int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    int value = -100;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
 void inorder(Node* root) {
@@ -15,11 +15,9 @@ void inorder(Node* root) {
 }
 
 bool convert(Node* root) {
-    if (not root) return true;
+    if (not root) return false;
     if (not root->left and not root->right) return root->value;
-    bool left = convert(root->left);
-    bool right = convert(root->right);
-    return root->value = left & right;
+    return root->value = convert(root->left) & convert(root->right);
 }
 
 int main() { TimeMeasure _; __x();
