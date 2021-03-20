@@ -1,10 +1,10 @@
 #include "../../template.hpp"
 
 struct Node {
-    int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    int value = -100;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
 void inorder(Node* root) {
@@ -14,18 +14,16 @@ void inorder(Node* root) {
     inorder(root->right);
 }
 
-int traverse(Node* root) {
+int sum(Node* root) {
     if (not root) return 0;
-    int left = traverse(root->left);
-    int right = traverse(root->right);
-    return root->value + left + right;
+    return sum(root->left) + sum(root->right) + root->value;
 }
 
 void update(Node* root) {
     if (not root) return;
+    root->value += sum(root->left);
     update(root->left);
     update(root->right);
-    root->value += traverse(root->left);
 }
 
 int main() { TimeMeasure _; __x();
@@ -36,5 +34,5 @@ int main() { TimeMeasure _; __x();
     root->left->right = new Node(5);
     root->right->right = new Node(6);
     update(root);
-    inorder(root); // 4 6 5 16 3 6
+    inorder(root); // 4 6 5 12 3 6
 }
