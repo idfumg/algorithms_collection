@@ -30,6 +30,6 @@ Node* construct(string s) {
 }
 
 int main() { TimeMeasure _; __x();
-    Node* root = construct("a?b?c:d: e");
+    Node* root = construct("a?b?c:d:e");
     preorder(root); // a b c d e
 }
