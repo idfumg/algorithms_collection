@@ -1,10 +1,10 @@
 #include "../../template.hpp"
 
 struct Node {
-    int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    int value = -100;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
 void inorder(Node* root) {
@@ -28,7 +28,7 @@ int main() { TimeMeasure _; __x();
     root->left->left = new Node(4);
     root->left->right = new Node(5);
 
-    inorder(root); cout << endl;
+    inorder(root); cout << endl; // 4 2 5 1 3
     mirror(root);
     inorder(root); // 3 1 5 2 4
 }
