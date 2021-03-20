@@ -1,39 +1,38 @@
 #include "../../template.hpp"
 
 struct Node {
-    int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    char value = -1;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
-void Preorder(Node* root) {
+void preorder(Node* root) {
     if (not root) return;
     cout << root->value << ' ';
-    Inorder(root->left);
-    Inorder(root->right);
+    preorder(root->left);
+    preorder(root->right);
 }
 
 Node* construct(string s, int& idx) {
-    if (idx == s.size()) return nullptr;
-    Node* root = new Node(s[idx++] - '0');
-    if (idx < s.size() and s[idx++] == '(') {
+    int n = s.size();
+    if (idx == n) return nullptr;
+    Node* root = new Node(s[idx++]);
+    if (idx < n and s[idx++] == '(') {
         root->left = construct(s, idx);
     }
-    if (idx < s.size() and s[idx++] == '(') {
+    if (idx < n and s[idx++] == '(') {
         root->right = construct(s, idx);
     }
     return root;
 }
 
-void construct(string s) {
+Node* construct(string s) {
     int idx = 0;
-    Node* root = construct(s, idx);
-    Preorder(root);
-    cout << endl;
+    return construct(s, idx);
 }
 
 int main() { TimeMeasure _; __x();
-    construct("1(2)(3)");
-    construct("4(2(3)(1))(6(5))");
+    preorder(construct("1(2)(3)")); cout << endl; // 1 2 3
+    preorder(construct("4(2(3)(1))(6(5))")); // 4 2 3 1 6 5
 }
