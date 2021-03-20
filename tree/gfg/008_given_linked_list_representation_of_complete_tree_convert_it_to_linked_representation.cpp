@@ -1,72 +1,61 @@
 #include "../../template.hpp"
 
-struct TreeNode {
-    int value;
-    TreeNode* left;
-    TreeNode* right;
-    TreeNode(int value) : value(value), left(nullptr), right(nullptr) {}
+struct Node {
+    int value = -100;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
-struct ListNode {
-    int value;
-    ListNode* next;
-    ListNode(int value) : value(value), next(nullptr) {}
-};
+void inorder(Node* root) {
+    if (not root) return;
+    inorder(root->left);
+    cout << root->value << ' ';
+    inorder(root->right);
+}
 
-ListNode* MakeList(vi arr) {
-    ListNode* head = nullptr;
-    ListNode* node = nullptr;
+Node* MakeList(vi arr) {
+    Node* head = nullptr;
+    Node* current = nullptr;
     for (int v : arr) {
-        if (head == nullptr) {
-            head = new ListNode(v);
-            node = head;
+        if (not head) {
+            current = head = new Node(v);
         }
         else {
-            ListNode* current = new ListNode(v);
-            node->next = current;
-            node = current;
+            current->right = new Node(v);
+            current = current->right;
         }
     }
     return head;
 }
 
-void Inorder(TreeNode* root) {
-    if (not root) return;
-    Inorder(root->left);
-    cout << root->value << ' ';
-    Inorder(root->right);
-}
-
-TreeNode* Make(ListNode* head) {
-    deque<TreeNode*> q;
-
-    TreeNode* root = new TreeNode(head->value);
+Node* ConstructCompleteBinaryTree(Node* head) {
+    if (not head) return nullptr;
+    Node* root = new Node(head->value);
+    deque<Node*> q;
     q.push_back(root);
-    head = head->next;
-
+    head = head->right;
     while (not q.empty()) {
-        TreeNode* node = q.front(); q.pop_front();
-        if (head) {
-            node->left = new TreeNode(head->value);
-            q.push_back(node->left);
-            head = head->next;
-        }
-        if (head) {
-            node->right = new TreeNode(head->value);
-            q.push_back(node->right);
-            head = head->next;
+        int n = q.size();
+        for (int i = 0; i < n; ++i) {
+            Node* at = q.front(); q.pop_front();
+            if (head) {
+                at->left = new Node(head->value);
+                head = head->right;
+                q.push_back(at->left);
+            }
+            if (head) {
+                at->right = new Node(head->value);
+                head = head->right;
+                q.push_back(at->right);
+            }
         }
     }
-
     return root;
 }
 
-void ConstructCompleteBinaryTree(ListNode* head) {
-    if (not head) return;
-    Inorder(Make(head));
-}
-
 int main() { TimeMeasure _; __x();
-    ListNode* head = MakeList({10, 12, 15, 25, 30, 36});
-    ConstructCompleteBinaryTree(head); // 25 12 30 10 36 15
+    Node* head = MakeList({10, 12, 15, 25, 30, 36});
+    Node* root = ConstructCompleteBinaryTree(head);
+    inorder(root); // 25 12 30 10 36 15
 }
