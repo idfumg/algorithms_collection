@@ -1,10 +1,10 @@
 #include "../../template.hpp"
 
 struct Node {
-    int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    int value = INF;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
 void inorder(Node* root) {
@@ -14,41 +14,30 @@ void inorder(Node* root) {
     inorder(root->right);
 }
 
-Node* construct_(vvi arr) {
+Node* construct(vvi arr) {
+    priority_queue<pi, vpi, greater<pi>> pq;
     int n = arr.size();
-
-    priority_queue<pi, vector<pi>, greater<pi>> pq;
-    vector<Node*> node(n);
+    vector<Node*> nodes(n);
     for (int i = 0; i < n; ++i) {
-        int childrenCount = accumulate(arr[i].begin(), arr[i].end(), 0);
-        pq.push({childrenCount, i});
-        node[i] = new Node(i);
+        int children = accumulate(arr[i].begin(), arr[i].end(), 0);
+        pq.push({children, i});
+        nodes[i] = new Node(i);
     }
-
     vb used(n);
     Node* root = nullptr;
     while (not pq.empty()) {
-        const auto [childrenCount, at] = pq.top(); pq.pop();
-        root = node[at];
-
-        if (childrenCount == 0) {
-            continue;
-        }
-
+        const auto& [children, at] = pq.top(); pq.pop();
+        root = nodes[at];
+        if (children == 0) continue;
         for (int i = 0; i < n; ++i) {
             if (not used[i] and arr[at][i]) {
-                if (not node[at]->left) node[at]->left = node[i];
-                else if (not node[at]->right) node[at]->right = node[i];
                 used[i] = true;
+                if (not nodes[at]->left) nodes[at]->left = nodes[i];
+                else if (not nodes[at]->right) nodes[at]->right = nodes[i];
             }
         }
     }
     return root;
-}
-
-void construct(vvi arr) {
-    Node* root = construct_(arr);
-    inorder(root);
 }
 
 int main() { TimeMeasure _; __x();
@@ -60,5 +49,6 @@ int main() { TimeMeasure _; __x();
          { 0, 0, 0, 0, 0, 0 },
          { 1, 1, 1, 1, 1, 0 }};
 
-    construct(arr); // 0 1 4 5 3 2
+    Node* root = construct(arr); // 0 1 4 5 3 2
+    inorder(root);
 }
