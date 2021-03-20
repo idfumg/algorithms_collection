@@ -1,35 +1,37 @@
 #include "../../template.hpp"
 
 struct Node {
-    int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    int value = INF;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
-int inorder(vvi& arr, vi& ancestors, Node* root) {
+int count(Node* root) {
     if (not root) return 0;
-    int at = root->value;
-    for (int i = 0; i < ancestors.size(); ++i) {
-        arr[ancestors[i]][at] = 1;
-    }
-    ancestors.push_back(at);
-    int l = inorder(arr, ancestors, root->left);
-    int r = inorder(arr, ancestors, root->right);
-    ancestors.pop_back();
-    return l + r + 1;
+    return 1 + count(root->left) + count(root->right);
 }
 
-void construct(Node* root) {
-    vvi arr(100, vi(100));
-    vi ancestors;
-    int n = inorder(arr, ancestors, root);
+void traverse(Node* root, vvi& arr, vi& elems) {
+    if (not root) return;
+
+    elems.push_back(root->value);
+    traverse(root->left, arr, elems);
+    traverse(root->right, arr, elems);
+    elems.pop_back();
+
+    int n = elems.size();
     for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            cout << arr[i][j] << ' ';
-        }
-        cout << endl;
+        arr[elems[i]][root->value] = 1;
     }
+}
+
+vvi construct(Node* root) {
+    int n = count(root);
+    vvi arr(n, vi(n));
+    vi elems;
+    traverse(root, arr, elems);
+    return arr;
 }
 
 int main() { TimeMeasure _; __x();
@@ -39,7 +41,14 @@ int main() { TimeMeasure _; __x();
     root->left->left = new Node(0);
     root->left->right = new Node(4);
     root->right->left = new Node(3);
-    construct(root);
+    vvi arr = construct(root);
+    int n = arr.size();
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            cout << arr[i][j] << ' ';
+        }
+        cout << endl;
+    }
 /*
 0 0 0 0 0 0
 1 0 0 0 1 0
