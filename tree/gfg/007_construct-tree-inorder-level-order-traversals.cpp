@@ -1,50 +1,49 @@
 #include "../../template.hpp"
 
 struct Node {
-    int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    int value = INF;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
-void Inorder(Node* root) {
+void inorder(Node* root) {
     if (not root) return;
-    Inorder(root->left);
+    inorder(root->left);
     cout << root->value << ' ';
-    Inorder(root->right);
+    inorder(root->right);
 }
 
-vi MakeLevelorder(vi inorder, vi levelorder, int from, int to) {
-    vi ans;
-    for (int v : levelorder) {
-        for (int i = from; i <= to; ++i) {
-            if (inorder[i] == v) {
-                ans.push_back(v);
-            }
+vi MakeLevelOrder(vi in, vi level, int key, int i, int j) {
+    unordered_set<int> map;
+    for (int k = i; k <= j; ++k) {
+        map.insert(in[k]);
+    }
+    vi order;
+    for (int v : level) {
+        if (map.count(v)) {
+            order.push_back(v);
         }
     }
-    return ans;
+    return order;
 }
 
-Node* Make(vi inorder, vi levelorder, int i, int j) {
+Node* construct(vi in, vi level, int i, int j) {
     if (i > j) return nullptr;
-
-    int inidx = i;
-    for (; inidx <= j and inorder[inidx] != levelorder[0]; ++inidx);
-
-    Node* root = new Node(levelorder[0]);
-    root->left = Make(inorder, MakeLevelorder(inorder, levelorder, i, inidx - 1), i, inidx - 1);
-    root->right = Make(inorder, MakeLevelorder(inorder, levelorder, inidx +1, j), inidx + 1, j);
+    int rootValue = level[0];
+    int pivot = i;
+    while (pivot <= j and in[pivot] != rootValue) ++pivot;
+    Node* root = new Node(rootValue);
+    root->left = construct(in, MakeLevelOrder(in, level, rootValue, i, pivot - 1), i, pivot - 1);
+    root->right = construct(in, MakeLevelOrder(in, level, rootValue, pivot + 1, j), pivot + 1, j);
     return root;
 }
 
-void Construct(vi inorder, vi levelorder) {
-    Node* node = Make(inorder, levelorder, 0, inorder.size() - 1);
-    Inorder(node);
+Node* construct(vi in, vi level) {
+    return construct(in, level, 0, in.size() - 1);
 }
 
 int main() { TimeMeasure _; __x();
-    vi inorder = {4, 8, 10, 12, 14, 20, 22};
-    vi levelorder = {20, 8, 22, 4, 12, 10, 14};
-    Construct(inorder, levelorder);
+    Node* root = construct({4, 8, 10, 12, 14, 20, 22}, {20, 8, 22, 4, 12, 10, 14});
+    inorder(root); // 4 8 10 12 14 20 22
 }
