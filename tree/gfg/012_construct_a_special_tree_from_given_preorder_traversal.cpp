@@ -1,10 +1,10 @@
 #include "../../template.hpp"
 
 struct Node {
-    int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    int value = INF;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
 void inorder(Node* root) {
@@ -14,26 +14,29 @@ void inorder(Node* root) {
     inorder(root->right);
 }
 
-Node* construct(vi pre, vi preln, int& idx, int n) {
+Node* construct(vi pre, vi preln, int& idx) {
+    int n = pre.size();
     if (idx == n) return nullptr;
-    if (preln[idx] == 'L') {
-        Node* root = new Node(pre[idx++]);
-        return root;
-    }
+    if (preln[idx] == 'L') return new Node(pre[idx++]);
     Node* root = new Node(pre[idx++]);
-    root->left = construct(pre, preln, idx, n);
-    root->right = construct(pre, preln, idx, n);
+    root->left = construct(pre, preln, idx);
+    root->right = construct(pre, preln, idx);
     return root;
 }
 
-void construct(vi pre, vi preln) {
+Node* construct(vi pre, vi preln) {
     int idx = 0;
-    Node* root = construct(pre, preln, idx, pre.size());
-    inorder(root);
+    return construct(pre, preln, idx);
 }
 
 int main() { TimeMeasure _; __x();
-    vi pre = {10, 30, 20, 5, 15};
-    vi preln = {'N', 'N', 'L', 'L', 'L'};
-    construct(pre, preln);
+/*
+          10
+         /  \
+        30   15
+       /  \
+      20   5
+*/
+    Node* root = construct({10, 30, 20, 5, 15}, {'N', 'N', 'L', 'L', 'L'});
+    inorder(root); // 20 30 5 10 15
 }
