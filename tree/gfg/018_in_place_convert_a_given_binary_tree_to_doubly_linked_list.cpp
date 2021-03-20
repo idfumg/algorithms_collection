@@ -1,41 +1,34 @@
 #include "../../template.hpp"
 
 struct Node {
-    int value;
-    Node* left;
-    Node* right;
-    Node(int value) : value(value), left(nullptr), right(nullptr) {}
+    int value = -100;
+    Node* left = nullptr;
+    Node* right = nullptr;
+    Node(int value) : value(value) {}
 };
 
 void print(Node* head) {
-    while (head) {
-        cout << head->value << ' ';
-        head = head->right;
-    }
+    for (; head; head = head->right) cout << head->value << ' ';
 }
 
-Node* convert_(Node* root) {
-    if (not root) return nullptr;
-    Node* head = new Node(root->value);
-    if (root->left) {
-        head->left = convert_(root->left);
-        while (head->left->right) head->left = head->left->right;
-        head->left->right = head;
+void convert(Node* root, Node*& head, Node*& curr) {
+    if (not root) return;
+    convert(root->left, head, curr);
+    if (not head) {
+        head = new Node(root->value);
+        curr = head;
     }
-    if (root->right) {
-        head->right = convert_(root->right);
-        while (head->right->left) head->right = head->right->left;
-        head->right->left = head;
+    else {
+        curr->right = new  Node(root->value);
+        curr = curr->right;
     }
-    return head;
+    convert(root->right, head, curr);
 }
 
 Node* convert(Node* root) {
-    if (not root) return nullptr;
-    Node* head = convert_(root);
-    while (head and head->left != nullptr) {
-        head = head->left;
-    }
+    Node* head = nullptr;
+    Node* curr = nullptr;
+    convert(root, head, curr);
     return head;
 }
 
@@ -46,6 +39,7 @@ int main() { TimeMeasure _; __x();
     root->left->left = new Node(25);
     root->left->right = new Node(30);
     root->right->left = new Node(36);
+
     Node* head = convert(root);
     print(head); // 25 12 30 10 36 15
 }
