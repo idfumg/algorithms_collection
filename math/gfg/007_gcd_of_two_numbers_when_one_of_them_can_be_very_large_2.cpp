@@ -1,3 +1,4 @@
+
 #include "../../template.hpp"
 
 int GCDWithALargeNumber(int a, string b) {
