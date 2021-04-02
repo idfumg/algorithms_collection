@@ -61,7 +61,9 @@ int query2(const vector<int>& tree, int l, int r) {
 
 void update2(vector<int>& tree, int p, const int value) {
     const int n = tree.size() / 2 - 1;
-    for (tree[p += n] = value; p > 1; p >>= 1) tree[p >> 1] = tree[p] + tree[p ^ 1];
+    for (tree[p += n] = value; p > 1; p >>= 1) {
+        tree[p >> 1] = tree[p] + tree[p ^ 1];
+    }
 }
 
 int main() { TimeMeasure _;
