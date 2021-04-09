@@ -66,7 +66,7 @@ int tab2(int m, int n, int sum) {
 }
 
 int main() { TimeMeasure _; __x();
-    cout << rec(4, 2, 1) << endl; // 0
+    cout << rec(4, 2, 1) << endl; // 0 // faces n target
     cout << rec(2, 2, 3) << endl; // 2
     cout << rec(6, 3, 8) << endl; // 21
     cout << rec(4, 2, 5) << endl; // 4
