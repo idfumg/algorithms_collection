@@ -1,50 +1,36 @@
 #include "../../template.hpp"
 
-using Graph = vvi;
-
-void AddEdge(Graph& graph, int from, int to, int cost = 0) {
-    // graph[from].push_back(to);
-    // graph[to].push_back(from);
-    // graph.push_back({from, to});
-    // graph[from].push_back({to, cost});
-    // graph[to].push_back({from, cost});
-    graph.push_back({from, to, cost});
-    // graph[from][to] = cost;
-    // graph[to][from] = cost;
-}
-
-void BellmanFord(Graph& graph, int from, int V) {
-    vi dist(V, INF);
+void BellmanFord(vvi edges, int from, int n) {
+    vi dist(n, INF);
     dist[from] = 0;
-    for (int i = 0; i < V; ++i) {
-        for (const auto& edge : graph) {
+    for (int i = 0; i < n; ++i) {
+        for (vi edge : edges) {
             dist[edge[1]] = min(dist[edge[1]], dist[edge[0]] + edge[2]);
         }
     }
-    debugn(dist);
-    for (int i = 0; i < V; ++i) {
-        for (const auto& edge : graph) {
-            if (dist[edge[0]] + edge[2] < dist[edge[1]]) {
+    for (int i = 0; i < n; ++i) {
+        for (vi edge : edges) {
+            if (dist[edge[1]] > dist[edge[0]] + edge[2]) {
                 dist[edge[1]] = -INF;
             }
         }
     }
-    debugn(dist);
+    cout << dist << endl;
 }
 
 int main() { TimeMeasure _;
-    Graph graph;
-    AddEdge(graph, 0, 1, 1);
-    AddEdge(graph, 1, 2, 1);
-    AddEdge(graph, 2, 4, 1);
-    AddEdge(graph, 4, 3, -3);
-    AddEdge(graph, 3, 2, 1);
-    AddEdge(graph, 1, 5, 4);
-    AddEdge(graph, 1, 6, 4);
-    AddEdge(graph, 5, 6, 5);
-    AddEdge(graph, 6, 7, 4);
-    AddEdge(graph, 5, 7, 3);
-    BellmanFord(graph, 0, 8);
+    vvi edges;
+    edges.push_back({0, 1, 1});
+    edges.push_back({1, 2, 1});
+    edges.push_back({2, 4, 1});
+    edges.push_back({4, 3, -3});
+    edges.push_back({3, 2, 1});
+    edges.push_back({1, 5, 4});
+    edges.push_back({1, 6, 4});
+    edges.push_back({5, 6, 5});
+    edges.push_back({6, 7, 4});
+    edges.push_back({5, 7, 3});
+    BellmanFord(edges, 0, 8);
 // Output:
 // The cost to get from node 0 to 0 is 0.00
 // The cost to get from node 0 to 1 is 1.00
