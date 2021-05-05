@@ -111,34 +111,21 @@ int tab_straight(const string& s) {
 
 int tab_straight2(string s) {
     int n = s.size();
-    int sum = accumulate(s.begin(), s.end(), 0) - (n * '0');
-    vvvi dp(n + 2, vvi(sum + 2, vi(sum + 2)));
-
-    for (int j = sum; j >= 0; --j) {
-        for (int k = 0; k <= sum; ++k) {
-            if (j <= k) {
-                dp[0][j][k] = 1;
+    int total = 0;
+    for (char ch : s) {
+        total += ch - '0';
+    }
+    vvvi dp(n + 1, vvi(total + 10, vi(total + 10)));
+    for (int i = 0; i <= n; ++i) {
+        for (int j = total; j >= 0; --j) {
+            for (int k = 0; k <= total; ++k) {
+                if (j > k) dp[i][j][k] = 0;
+                else if (i == 0) dp[i][j][k] = 1;
+                else dp[i][j][k] = dp[i - 1][j + s[i - 1] - '0'][k] + dp[i - 1][s[i - 1] - '0'][j];
             }
         }
     }
-
-    for (int i = 1; i <= n; ++i) {
-        for (int j = sum; j >= 0; --j) {
-            for (int k = 0; k <= sum; ++k) {
-                if (j <= k) {
-                    const int digit = s[i - 1] - '0';
-                    if (j + digit <= k) {
-                        dp[i][j][k] = dp[i - 1][j + digit][k] + dp[i - 1][digit][j];
-                    }
-                    else {
-                        dp[i][j][k] = dp[i - 1][digit][j];
-                    }
-                }
-            }
-        }
-    }
-
-    return dp[n][0][sum];
+    return dp[n][0][total];
 }
 
 int main() { TimeMeasure _; __x();
