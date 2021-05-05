@@ -72,6 +72,32 @@ int tab2(int n, int sum) {
     return dp[idx][1][0];
 }
 
+int tab3(int n, int sum) {
+    vvi dp(sum + 1, vi(n + 1));
+    for (int i = 0; i <= sum; ++i) {
+        for (int j = 0; j <= n; ++j) {
+            if (i == 0 and j == 0) dp[i][j] = 1;
+            else if (j == 0) dp[i][j] = 0;
+            else {
+                int ans = 0;
+                for (int k = 0; k <= 9; ++k) {
+                    if (i >= k) {
+                        ans += dp[i - k][j - 1];
+                    }
+                }
+                dp[i][j] = ans;
+            }
+        }
+    }
+    int ans = 0;
+    for (int i = 1; i <= 9; ++i) {
+        if (sum >= i) {
+            ans += dp[sum - i][n - 1];
+        }
+    }
+    return ans;
+}
+
 int main() { TimeMeasure _; __x();
     cout << rec(2, 2) << endl; // 2
     cout << rec(2, 5) << endl; // 5
@@ -88,4 +114,8 @@ int main() { TimeMeasure _; __x();
     cout << tab2(2, 2) << endl;
     cout << tab2(2, 5) << endl;
     cout << tab2(3, 6) << endl;
+    cout << endl;
+    cout << tab3(2, 2) << endl;
+    cout << tab3(2, 5) << endl;
+    cout << tab3(3, 6) << endl;
 }
