@@ -1,45 +1,36 @@
 #include "../../template.hpp"
 
-struct Item {
-    char id;
-    int freq;
-    bool operator<(const Item& rhs) const { return freq < rhs.freq; }
-};
-
 void RearrangeNoTheSameAdjacent(string s) {
-    vi freq(27);
+    int n = s.size();
+
+    unordered_map<char, int> map;
     for (char ch : s) {
-        ++freq[ch - 'a'];
+        ++map[ch];
     }
 
-    priority_queue<Item> pq;
-    for (int i = 0; i <= 26; ++i) {
-        if (freq[i] > 0) {
-            pq.push({static_cast<char>(i + 'a'), freq[i]});
-        }
+    priority_queue<pair<int, char>> pq;
+    for (const auto& [ch, count] : map) {
+        pq.push({count, ch});
     }
 
-    Item prev = {' ', -1};
     string ans;
+    pair<int, char> saved {-1, -1};
 
     while (not pq.empty()) {
-        Item item = pq.top(); pq.pop();
-
-        ans += item.id;
-        --item.freq;
-
-        if (prev.freq > 0) {
-            pq.push(prev);
+        const auto [count, ch] = pq.top(); pq.pop();
+        ans += ch;
+        if (saved.first > 0) {
+            pq.push(saved);
         }
-
-        prev = item;
+        saved = {count - 1, ch};
     }
 
-    if (prev.freq > 0) {
-        cout << "Not possible to rearrange" << '\n';
-        return;
+    if (saved.first > 0) {
+        cout << -1 << endl;
     }
-    cout << ans << '\n';
+    else {
+        cout << ans << endl;
+    }
 }
 
 int main() { TimeMeasure _; __x();
