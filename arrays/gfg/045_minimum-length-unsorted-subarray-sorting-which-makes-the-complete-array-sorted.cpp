@@ -1,23 +1,24 @@
 #include "../../template.hpp"
 
 int MinLengthUnsorted(vi arr) {
-    int n = arr.size();
-    int left = 1;
-    int right = n - 2;
+    int n = arr.size(), left = 1, right = n - 2;
 
-    while (left < right and arr[left] > arr[left - 1]) ++left;
-    while (right > left and arr[right] < arr[right + 1]) --right;
+    while (arr[left] >= arr[left - 1]) ++left;
+    while (arr[right] <= arr[right + 1] and left < right) --right;
+
+    if (left > right) return 0;
 
     int mini = *min_element(arr.begin() + left, arr.begin() + right);
-    while (left > 0 and arr[left - 1] > mini) --left;
+    while (arr[left - 1] > mini) --left;
 
     int maxi = *max_element(arr.begin() + left, arr.begin() + right);
-    while (right < n - 1 and arr[right + 1] < maxi) ++right;
+    while (arr[right + 1] < maxi) ++right;
 
-    return right - left;
+    return right - left + 1;
 }
 
 int main() { TimeMeasure _;
-    cout << MinLengthUnsorted({10, 12, 20, 30, 25, 40, 32, 31, 35, 50, 60}) << '\n'; // 5
-    cout << MinLengthUnsorted({0, 1, 15, 25, 6, 7, 30, 40, 50}) << '\n'; // 3
+    cout << MinLengthUnsorted({10, 12, 20, 30, 25, 40, 32, 31, 35, 50, 60}) << '\n'; // 6
+    cout << MinLengthUnsorted({0, 1, 15, 25, 6, 7, 30, 40, 50}) << '\n'; // 4
+    cout << MinLengthUnsorted({0, 1, 2, 3, 4, 5}) << '\n'; // 0
 }
