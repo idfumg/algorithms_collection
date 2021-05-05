@@ -25,10 +25,23 @@ int fast(int n ) {
     return ans;
 }
 
+int fast2(int n) {
+    int ans = 0;
+    for (int i = 1; i <= sqrt(n); ++i) {
+        if (n % i == 0) {
+            ans += i + n / i;
+        }
+    }
+    return ans;
+}
+
 int main() { TimeMeasure _;
     cout << brute(12) << endl; // 28 // O(n)
     cout << brute(15) << endl; // 24
     cout << endl;
     cout << fast(12) << endl; // 28 O(sqrt(n))
     cout << fast(15) << endl; // 24
+    cout << endl;
+    cout << fast2(12) << endl; // 28 O(sqrt(n))
+    cout << fast2(15) << endl; // 24
 }
