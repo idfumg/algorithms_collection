@@ -66,6 +66,26 @@ void KNumsWithMostOccurences3(vi arr, size_t k) {
     cout << endl;
 }
 
+void KNumsWithMostOccurences4(vi arr, int k) {
+    int n = arr.size();
+    unordered_map<int, int> map;
+    for (int v : arr) {
+        ++map[v];
+    }
+    vector<pair<int, int>> nums(map.begin(), map.end());
+    sort(nums.begin(), nums.end(), [](pi a, pi b){
+        if (a.second == b.second) {
+            return a.first > b.first;
+        }
+        return a.second > b.second;
+    });
+    for (int i = 0; i < k; ++i) {
+        cout << nums[i].first << ' ';
+    }
+    cout << endl;
+}
+
+
 int main() { TimeMeasure _;
     KNumsWithMostOccurences({3, 1, 4, 4, 5, 2, 6, 1}, 2); // O(nlogn), Om(n)
     KNumsWithMostOccurences({7, 10, 11, 5, 2, 5, 5, 7, 11, 8, 9}, 4);
@@ -75,4 +95,7 @@ int main() { TimeMeasure _;
     cout << endl;
     KNumsWithMostOccurences3({3, 1, 4, 4, 5, 2, 6, 1}, 2); // O(n + klogk), Om(k)
     KNumsWithMostOccurences3({7, 10, 11, 5, 2, 5, 5, 7, 11, 8, 9}, 4);
+    cout << endl;
+    KNumsWithMostOccurences4({3, 1, 4, 4, 5, 2, 6, 1}, 2); // O(n + klogk), Om(k) // 4 1
+    KNumsWithMostOccurences4({7, 10, 11, 5, 2, 5, 5, 7, 11, 8, 9}, 4); // 5 11 7 10
 }
