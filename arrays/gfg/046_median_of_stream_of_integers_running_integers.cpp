@@ -1,56 +1,53 @@
 #include "../../template.hpp"
 
-template<class T, class U>
-int Avg(T& left, U& right) {
+int avg(priority_queue<int>& left, priority_queue<int, vi, greater<int>>& right) {
+    if (left.size() > right.size()) return left.top();
+    if (left.size() < right.size()) return right.top();
     return (left.top() + right.top()) / 2;
 }
 
-template<class T, class U>
-int PrintMedian(T& left, U& right, int elem) {
+int median(priority_queue<int>& left, priority_queue<int, vi, greater<int>>& right, int v) {
     if (left.empty() and right.empty()) {
-        left.push(elem);
-        return left.top();
+        left.push(v);
     }
-
-    if (left.size() == right.size()) {
-        if (elem > Avg(left, right)) {
-            right.push(elem);
-            return right.top();
-        }
-        else {
-            left.push(elem);
-            return left.top();
-        }
+    else if (left.empty() and v < right.top()) {
+        left.push(v);
     }
-
-    if (left.size() < right.size()) {
-        if (elem < right.top()) {
-            left.push(elem);
-        }
-        else {
-            left.push(right.top());
-            right.pop();
-            right.push(elem);
-        }
-        return Avg(left, right);
+    else if (left.empty() and v > right.top()) {
+        left.push(right.top()); right.pop(); right.push(v);
     }
-
-    if (elem > left.top()) {
-        right.push(elem);
+    else if (right.empty() and v > left.top()) {
+        right.push(v);
     }
-    else {
-        right.push(left.top());
-        left.pop();
-        left.push(elem);
+    else if (right.empty() and v < left.top()) {
+        right.push(left.top()); left.pop(); left.push(v);
     }
-    return Avg(left, right);
+    else if (left.size() == right.size() and v < left.top()) {
+        right.push(left.top()); left.pop(); left.push(v);
+    }
+    else if (left.size() == right.size() and v > right.top()) {
+        left.push(right.top()); right.pop(); right.push(v);
+    }
+    else if (left.size() < right.size() and v > right.top()) {
+        left.push(right.top()); right.pop(); right.push(v);
+    }
+    else if (left.size() < right.size() and v < right.top()) {
+        left.push(v);
+    }
+    else if (left.size() > right.size() and v < left.top()) {
+        right.push(left.top()); left.pop(); left.push(v);
+    }
+    else if (left.size() > right.size() and v > left.top()) {
+        right.push(v);
+    }
+    return avg(left, right);
 }
 
 void MediansOfTheStream(vi arr) {
-    priority_queue<int, vector<int>, less<int>> left;
-    priority_queue<int, vector<int>, greater<int>> right;
-    for (int i = 0; i < arr.size(); ++i) {
-        cout << PrintMedian(left, right, arr[i]) << ' ';
+    priority_queue<int> left;
+    priority_queue<int, vi, greater<int>> right;
+    for (int v : arr) {
+        cout << median(left, right, v) << ' ';
     }
 }
 
