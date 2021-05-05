@@ -2,26 +2,29 @@
 
 using Graph = vvi;
 
-void AddEdge(Graph& graph, int from, int to) {
+void AddEdge(Graph& graph, int from, int to, int cost = 0) {
     graph[from].push_back(to);
     graph[to].push_back(from);
 }
 
-bool dfs(Graph& graph, vb& visited, int at, int parent) {
+bool dfs(vvi graph, vb& visited, int at, int parent, int& handled) {
     visited[at] = true;
+    ++handled;
     for (int adj : graph[at]) {
         if (adj == parent) continue;
         if (visited[adj]) return true;
-        if (dfs(graph, visited, adj, at)) return true;
+        if (dfs(graph, visited, adj, at, handled)) return true;
     }
     return false;
 }
 
-bool IsTree(Graph& graph) {
+bool IsTree(vvi graph) {
     int n = graph.size();
+    int handled = 0;
     vb visited(n);
-    if (dfs(graph, visited, 0, -1)) return false; // cycle detected
-    return all_of(visited.begin(), visited.end(), [](bool v){return v;});
+    if (dfs(graph, visited, 0, -1, handled)) return false;
+    if (handled != n) return false;
+    return true;
 }
 
 int main() { TimeMeasure _;
@@ -31,7 +34,7 @@ int main() { TimeMeasure _;
         AddEdge(graph, 0, 2);
         AddEdge(graph, 0, 3);
         AddEdge(graph, 3, 4);
-        IsTree(graph) ? cout << "Graph is Tree\n" : cout << "Graph is not Tree\n";
+        IsTree(graph) ? cout << "Graph is Tree\n" : cout << "Graph is not Tree\n"; // 1
     }
 
     {
@@ -41,6 +44,6 @@ int main() { TimeMeasure _;
         AddEdge(graph, 2, 1);
         AddEdge(graph, 0, 3);
         AddEdge(graph, 3, 4);
-        IsTree(graph) ? cout << "Graph is Tree\n" : cout << "Graph is not Tree\n";
+        IsTree(graph) ? cout << "Graph is Tree\n" : cout << "Graph is not Tree\n"; // 0
     }
 }
