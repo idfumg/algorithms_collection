@@ -2,30 +2,39 @@
 
 using Graph = vvi;
 
-void AddEdge(Graph& graph, int from, int to) {
+void AddEdge(Graph& graph, int from, int to, int cost = 0) {
     graph[from].push_back(to);
     graph[to].push_back(from);
+    // graph.push_back({from, to});
+    // graph[from].push_back({to, cost});
+    // graph[to].push_back({from, cost});
+    // graph.push_back({from, to, cost});
+    // graph[from][to] = cost;
+    // graph[to][from] = cost;
 }
 
-bool dfs(Graph& graph, vb& visited, int at, int parent) {
+bool dfs(vvi graph, vb& visited, int root, int at, int parent) {
     visited[at] = true;
     for (int adj : graph[at]) {
         if (adj == parent) continue;
-        if (visited[adj]) return true;
-        if (dfs(graph, visited, adj, at)) return true;
+        if (adj == root) return true;
+        if (not visited[adj]) {
+            if (dfs(graph, visited, root, adj, at)) return true;
+        }
     }
     return false;
 }
 
-void CountWeaklyConnectedComponents(Graph& graph) {
-    int n = graph.size(), count = 0;
+void CountWeaklyConnectedComponents(vvi graph) {
+    int n = graph.size();
     vb visited(n);
+    int count = 0;
     for (int i = 0; i < n; ++i) {
         if (not visited[i]) {
-            if (not dfs(graph, visited, i, -1)) ++count; // no cycle
+            if (not dfs(graph, visited, i, i, -1)) ++count;
         }
     }
-    debugn(count);
+    cout << count << endl;
 }
 
 int main() { TimeMeasure _;
