@@ -3,14 +3,8 @@
 using Graph = vvvi;
 
 void AddEdge(Graph& graph, int from, int to, int cost = 0) {
-    // graph[from].push_back(to);
-    // graph[to].push_back(from);
-    // graph.push_back({from, to});
     graph[from].push_back({to, cost});
     graph[to].push_back({from, cost});
-    // graph.push_back({from, to, cost});
-    // graph[from][to] = cost;
-    // graph[to][from] = cost;
 }
 
 struct Item {
@@ -19,87 +13,54 @@ struct Item {
     bool operator<(const Item& rhs) const { return cost > rhs.cost; }
 };
 
-struct Result {
-    int cycleLength;
-    int from;
-    int to;
-    si nodes;
-    bool operator<(const Result& rhs) const {
-        return nodes != rhs.nodes;
-    }
-};
-
-Result Dijkstra(Graph& graph, int from, int to) {
+void dijkstra(vvvi graph, int from, int to, int& cost, deque<int>& path) {
     int n = graph.size();
-    int edgeCost = 0;
-
-    vi prev(n, -1);
-
+    priority_queue<Item> pq;
+    pq.push({from, 0});
     vi dist(n, INF);
     dist[from] = 0;
-
-    priority_queue<Item> pq;
-    pq.push({from, dist[from]});
-
     vb visited(n);
-
+    vi prev(n, -1);
     while (not pq.empty()) {
         Item item = pq.top(); pq.pop();
         int at = item.at;
-
         visited[at] = true;
-
         for (vi adj : graph[at]) {
-            if (at == from and adj[0] == to) {
-                edgeCost = adj[1];
-                continue;
-            }
-            if (adj[0] == from and at == to) {
-                edgeCost = adj[1];
-                continue;
-            }
+            if (at == from and adj[0] == to) continue;
+            if (at == to and adj[0] == from) continue;
             if (not visited[adj[0]]) {
                 int cost = dist[at] + adj[1];
                 if (cost < dist[adj[0]]) {
+                    pq.push({adj[0], cost});
                     dist[adj[0]] = cost;
                     prev[adj[0]] = at;
-                    pq.push({adj[0], cost});
                 }
             }
         }
     }
-    si nodes;
+    cost = dist[to];
     for (int at = to; at != -1; at = prev[at]) {
-        nodes.insert(at);
+        path.push_front(at);
     }
-    return {
-        dist[to] + edgeCost,
-        from,
-        to,
-        nodes
-    };
 }
 
-void FindMinCycle(Graph& graph) {
+void FindMinCycle(vvvi graph) {
     int n = graph.size();
-    int minCycleLength = INF;
-    set<Result> results;
-    for (int i = 0; i < n; ++i) {
-        for (vi adj : graph[i]) {
-            const auto result = Dijkstra(graph, i, adj[0]);
-            if (minCycleLength > result.cycleLength) {
-                minCycleLength = result.cycleLength;
-                results.clear();
-                results.insert(result);
-            }
-            if (minCycleLength == result.cycleLength) {
-                results.insert(result);
+    int cost = INF;
+    deque<int> path;
+    for (int at = 0; at < n; ++at) {
+        for (vi adj : graph[at]) {
+            int currcost = 0;
+            deque<int> currpath;
+            dijkstra(graph, at, adj[0], currcost, currpath);
+            if (cost > currcost + adj[1]) {
+                cost = currcost + adj[1];
+                path = currpath;
             }
         }
     }
-    for (const auto& result : results) {
-        debug(result.cycleLength); debugn(result.nodes);
-    }
+    cout << cost << endl;
+    cout << path << endl;
 }
 
 int main() { TimeMeasure _;
