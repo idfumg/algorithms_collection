@@ -2,56 +2,60 @@
 
 using Graph = vvi;
 
+void AddEdge(Graph& graph, int from, int to, int cost = 0) {
+    graph[from].push_back(to);
+    // graph[to].push_back(from);
+    // graph.push_back({from, to});
+    // graph[from].push_back({to, cost});
+    // graph[to].push_back({from, cost});
+    // graph.push_back({from, to, cost});
+    // graph[from][to] = cost;
+    // graph[to][from] = cost;
+}
+
 void ShortestPathWithLengthKDP(Graph& graph, int from, int to, int K) {
     int n = graph.size();
-    vvvi dp(n, vvi(n, vi(n, INF)));
+    vvvi dp(n, vvi(n, vi(K + 1, INF)));
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            if (graph[i][j] != INF) dp[1][i][j] = graph[i][j];
+            if (graph[i][j] != INF) {
+                dp[i][j][1] = graph[i][j];
+            }
         }
     }
     for (int k = 2; k <= K; ++k) {
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < n; ++j) {
-                for (int p = 0; p < n; ++p) {
-                    if (p == i or p == j) continue;
-                    dp[k][i][j] = min(dp[k][i][j], dp[k - 1][i][p] + dp[1][p][j]);
+                for (int l = 0; l < n; ++l) {
+                    if (j == i or j == l) continue;
+                    dp[i][l][k] = min(dp[i][l][k], dp[i][j][k - 1] + dp[j][l][1]);
                 }
             }
         }
     }
-    cout << dp[K][from][to] << '\n';
+    cout << dp[from][to][K] << endl;
 }
 
-void dfs(Graph& graph, vb& visited, int at, int to, int k, int& count, int& mini)
-{
-    if (k == 0 and at == to) {
-        mini = min(mini, count);
-        return;
-    }
-    if (k <= 0) {
-        return;
-    }
+void dfs(Graph& graph, vb& visited, int at, int to, int K, int& ans, int current) {
+    if (K == 0 and at == to) ans = min(ans, current);
+    if (K <= 0) return;
+    visited[at] = true;
     int n = graph.size();
-    for (int i = 0; i < n; ++i) {
-        if (graph[at][i]) {
-            if (not visited[i]) {
-                visited[i] = true;
-                count += graph[at][i];
-                dfs(graph, visited, i, to, k - 1, count, mini);
-                count -= graph[at][i];
-                visited[i] = false;
-            }
+    for (int adj = 0; adj < n; ++adj) {
+        if (not visited[adj] and graph[at][adj] != INF) {
+            dfs(graph, visited, adj, to, K - 1, ans, current + graph[at][adj]);
+
         }
     }
+    visited[at] = false;
 }
 
-void ShortestPathWithLengthK(Graph& graph, int from, int to, int k) {
-    int n = graph.size(), count = 0, mini = INF;
+void ShortestPathWithLengthK(Graph& graph, int from, int to, int K) {
+    int n = graph.size();
+    int ans = INF;
     vb visited(n);
-    visited[from] = true;
-    dfs(graph, visited, from, to, k, count, mini);
-    cout << mini << '\n';
+    dfs(graph, visited, from, to, K, ans, 0);
+    cout << ans << endl;
 }
 
 int main() { TimeMeasure _;
