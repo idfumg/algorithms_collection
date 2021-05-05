@@ -2,23 +2,29 @@
 
 using Graph = vvi;
 
-void AddEdge(Graph& graph, int from, int to) {
+void AddEdge(Graph& graph, int from, int to, int cost = 0) {
     graph[from].push_back(to);
     graph[to].push_back(from);
+    // graph.push_back({from, to});
+    // graph[from].push_back({to, cost});
+    // graph[to].push_back({from, cost});
+    // graph.push_back({from, to, cost});
+    // graph[from][to] = cost;
+    // graph[to][from] = cost;
 }
 
-void bfs(Graph& graph, qi& q, vb& visited, vi& prev) {
-    int at = q.front(); q.pop();
+void bfs(vvi graph, deque<int>& q, vb& visited, vi& prev) {
+    int at = q.front(); q.pop_front();
     visited[at] = true;
     for (int adj : graph[at]) {
         if (not visited[adj]) {
             prev[adj] = at;
-            q.push(adj);
+            q.push_back(adj);
         }
     }
 }
 
-int BothVisited(vb& visited1, vb& visited2) {
+int FindIntersection(vb& visited1, vb& visited2) {
     int n = visited1.size();
     for (int i = 0; i < n; ++i) {
         if (visited1[i] and visited2[i]) {
@@ -28,34 +34,40 @@ int BothVisited(vb& visited1, vb& visited2) {
     return -1;
 }
 
-void PrintPath(vi& prev1, vi& prev2, int node) {
-    vi path;
-    for (int at = prev1[node]; at != -1; at = prev1[at]) {
+void PrintIntersection(vi& prev1, vi& prev2, int idx) {
+    deque<int> path;
+    for (int at = idx; at != -1; at = prev1[at]) {
+        path.push_front(at);
+    }
+    for (int at = prev2[idx]; at != -1; at = prev2[at]) {
         path.push_back(at);
     }
-    reverse(path);
-    cout << path;
-    for (int at = node; at != -1; at = prev2[at]) {
-        cout << at << ' ';
-    }
-    cout << '\n';
+    cout << path << endl;
 }
 
-void BiSearch(Graph& graph, int from, int to) {
+void BiSearch(vvi graph, int from, int to) {
     int n = graph.size();
-    vb visited1(n), visited2(n);
-    vi prev1(n, -1), prev2(n, -1);
-    qi q1, q2;
-    q1.push(from);
-    q2.push(to);
+
+    deque<int> q1;
+    deque<int> q2;
+
+    q1.push_back(from);
+    q2.push_back(to);
+
+    vb visited1(n);
+    vb visited2(n);
+
+    vi prev1(n, -1);
+    vi prev2(n, -1);
+
     while (not q1.empty() and not q2.empty()) {
         bfs(graph, q1, visited1, prev1);
         bfs(graph, q2, visited2, prev2);
-        int at = BothVisited(visited1, visited2);
-        if (at != -1) {
-            cout << "Intersection found at position " << at << '\n';
-            PrintPath(prev1, prev2, at);
-            break;
+        int idx = FindIntersection(visited1, visited2);
+        if (idx != -1) {
+            cout << "found found intersection at " << idx << endl;
+            PrintIntersection(prev1, prev2, idx);
+            return;
         }
     }
 }
