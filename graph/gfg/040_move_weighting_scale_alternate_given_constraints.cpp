@@ -67,9 +67,53 @@ vi rec(vi arr, int steps) {
     return rec(arr, steps, 1, -1, 0, 0, {});
 }
 
+int findWeight(vi arr, int left, int right) {
+    int n = arr.size();
+    for (int i = 0; i < n; ++i) {
+        if (left + arr[i] > right) return arr[i];
+    }
+    return 0;
+}
+
+void rec3(vi arr, int k, int left, int right, vi& ans, vi& elems) {
+    if (k == 0) {
+        if (ans.empty()) ans = elems;
+        return;
+    }
+    if (left == 0 and right == 0) {
+        elems.push_back(arr[0]);
+        rec3(arr, k - 1, left + arr[0], right, ans, elems);
+    }
+    else if (left < right) {
+        int weight = findWeight(arr, left, right);
+        elems.push_back(weight);
+        rec3(arr, k - 1, left + weight, right, ans, elems);
+    }
+    else if (right < left) {
+        int weight = findWeight(arr, right, left);
+        elems.push_back(weight);
+        rec3(arr, k - 1, left, right + weight, ans, elems);
+    }
+    else {
+        assert(false);
+    }
+}
+
+vi rec3(vi arr, int k) {
+    sort(arr.begin(), arr.end());
+    vi ans;
+    vi elems;
+    rec3(arr, k, 0, 0, ans, elems);
+    return ans;
+}
+
 int main() { TimeMeasure _;
     cout << rec2({2, 3, 5, 6}, 10) << '\n'; // 2 3 2 3 5 6 5 3 2 3
     cout << rec2({7, 11}, 3) << '\n'; // 7 11 7
+    cout << endl;
     cout << rec({2, 3, 5, 6}, 10) << '\n'; // 2 3 2 3 5 6 5 3 2 3
     cout << rec({7, 11}, 3) << '\n'; // 7 11 7
+    cout << endl;
+    cout << rec3({2, 3, 5, 6}, 10) << '\n'; // 2 3 2 2 2 2 2 2 2 2
+    cout << rec3({7, 11}, 3) << '\n'; // 7 11 7
 }
