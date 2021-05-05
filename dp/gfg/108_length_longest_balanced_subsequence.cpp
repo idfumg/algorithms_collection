@@ -75,6 +75,37 @@ int tab(const string& s) {
     return dp[0][n - 1];
 }
 
+int rec(string s, int i, int j) {
+    if (i > j) return 0;
+    if (i == j) return 0;
+    if (s[i - 1] == '(' and s[j - 1] == ')') {
+        return max({2 + rec(s, i + 1, j - 1), rec(s, i + 1, j) + rec(s, i, j - 1) - rec(s, i + 1, j - 1)});
+    }
+    return max(rec(s, i + 1, j) + rec(s, i, j - 1) - rec(s, i + 1, j - 1));
+}
+
+int rec(string s) {
+    return rec(s, 1, s.size());
+}
+
+int tab2(string s) {
+    int n = s.size();
+    vvi dp(n + 1, vi(n + 1));
+    for (int i = n; i >= 1; --i) {
+        for (int j = 1; j <= n; ++j) {
+            if (i > j) dp[i][j] = 0;
+            else if (i == j) dp[i][j] = 0;
+            else if (s[i - 1] == '(' and s[j - 1] == ')') {
+                dp[i][j] = max(2 + dp[i + 1][j - 1], dp[i + 1][j] + dp[i][j - 1] - dp[i + 1][j - 1]);
+            }
+            else {
+                dp[i][j] = dp[i + 1][j] + dp[i][j - 1] - dp[i + 1][j - 1];
+            }
+        }
+    }
+    return dp[1][n];
+}
+
 int main() { TimeMeasure _; __x();
     cout << IsBalanced("()()") << '\n'; // true
     cout << IsBalanced("()())") << '\n'; // false
@@ -91,4 +122,14 @@ int main() { TimeMeasure _; __x();
     cout << tab("()(((((()") << '\n'; // 4
     cout << tab("((()))") << '\n'; // 6
     cout << tab("())") << '\n'; // 2
+    cout << '\n';
+    cout << rec("()())") << '\n'; // 4
+    cout << rec("()(((((()") << '\n'; // 4
+    cout << rec("((()))") << '\n'; // 6
+    cout << rec("())") << '\n'; // 2
+    cout << '\n';
+    cout << tab2("()())") << '\n'; // 4
+    cout << tab2("()(((((()") << '\n'; // 4
+    cout << tab2("((()))") << '\n'; // 6
+    cout << tab2("())") << '\n'; // 2
 }
