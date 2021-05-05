@@ -7,23 +7,21 @@ void AddEdge(Graph& graph, int from, int to) {
     graph[to].push_back(from);
 }
 
-void PrintNodesOnLevel(Graph& graph, int level, int from) {
-    qi q;
-    q.push(from);
-    int current_level = 0, n = graph.size();
+void PrintNodesOnLevel(vvi graph, int level, int from) {
+    int n = graph.size();
+    deque<int> q;
+    q.push_back(from);
     vb visited(n);
     while (not q.empty()) {
-        if (current_level++ == level) {
-            cout << q.size() << '\n';
+        if (level-- == 0) {
+            cout << q << endl;
             return;
         }
-        for (int count = q.size(); count > 0; --count) {
-            int at = q.front(); q.pop();
-            visited[at] = true;
-            for (int adj : graph[at]) {
-                if (not visited[adj]) {
-                    q.push(adj);
-                }
+        int at = q.front(); q.pop_front();
+        visited[at] = true;
+        for (int adj : graph[at]) {
+            if (not visited[adj]) {
+                q.push_back(adj);
             }
         }
     }
@@ -39,7 +37,7 @@ int main() { TimeMeasure _;
 
     int level = 2;
 
-    PrintNodesOnLevel(g, level, 0); // 3
+    PrintNodesOnLevel(g, level, 0); // 2 3
 
     Graph g2(7);
     AddEdge(g2, 0, 1);
@@ -49,5 +47,5 @@ int main() { TimeMeasure _;
     AddEdge(g2, 1, 5);
     AddEdge(g2, 2, 6);
 
-    PrintNodesOnLevel(g2, level, 0); // 4
+    PrintNodesOnLevel(g2, level, 0); // 2 3 4 5
 }
