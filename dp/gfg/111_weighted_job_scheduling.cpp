@@ -10,7 +10,7 @@ int rec(vector<Job>& jobs, int n, int prevstart) {
     if (n == 0) return 0;
     if (jobs[n - 1].stop <= prevstart) {
         return max(rec(jobs, n - 1, prevstart),
-                   rec(jobs, n - 1, jobs[n - 1].start) + jobs[n - 1].weight);
+                   rec(jobs, n - 1, jobs[n - 1].start) + jobs[n - 1].profit);
     }
     return rec(jobs, n - 1, prevstart);
 }
@@ -128,8 +128,8 @@ int main() { TimeMeasure _; __x();
         {2, 100, 200}
     };
 
-    cout << rec(jobs) << endl;
+    //cout << rec(jobs) << endl;
     cout << tab(jobs) << endl;
-    cout << tab2(jobs) << endl;
-    cout << tab3(jobs) << endl;
+    // cout << tab2(jobs) << endl;
+    // cout << tab3(jobs) << endl;
 }
