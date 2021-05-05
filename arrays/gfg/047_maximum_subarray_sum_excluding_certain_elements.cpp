@@ -47,10 +47,36 @@ void MaxSubArraySumExcludingSecondElements2(vi arr1, vi arr2) {
     cout << max(arr1) << endl;
 }
 
+void MaxSubArraySumExcludingSecondElements3(vi arr, vi arr2) {
+    unordered_set<int> forbidden;
+    for (int v : arr2) {
+        forbidden.insert(v);
+    }
+    int window = 0;
+    int windowSize = 0;
+    int n = arr.size();
+    int ans = 0;
+    for (int i = 0; i < n; ++i) {
+        if (forbidden.count(arr[i])) {
+            window = 0;
+            windowSize = 0;
+        }
+        else {
+            window += arr[i];
+            ++windowSize;
+        }
+        ans = max(ans, window);
+    }
+    cout << ans << endl;
+}
+
 int main() { TimeMeasure _;
     MaxSubArraySumExcludingSecondElements({1, 7, -10, 6, 2}, {5, 6, 7, 1}); // 2 // O(nlogn)
     MaxSubArraySumExcludingSecondElements({3, 4, 5, -4, 6}, {1, 8, 5}); // 7
     cout << endl;
     MaxSubArraySumExcludingSecondElements2({1, 7, -10, 6, 2}, {5, 6, 7, 1}); // 2 // O(n)
     MaxSubArraySumExcludingSecondElements2({3, 4, 5, -4, 6}, {1, 8, 5}); // 7
+    cout << endl;
+    MaxSubArraySumExcludingSecondElements3({1, 7, -10, 6, 2}, {5, 6, 7, 1}); // 2 // O(n)
+    MaxSubArraySumExcludingSecondElements3({3, 4, 5, -4, 6}, {1, 8, 5}); // 7
 }
