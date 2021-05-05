@@ -1,6 +1,4 @@
 #include "../../template.hpp"
-#include "../collection/graph.hpp"
-#include "../collection/tree_node.hpp"
 
 void AddEdgesKruskal(vvi& graph, const vvi& nodes) {
     for (const vi& node : nodes) {
