@@ -11,44 +11,37 @@ void AddEdge(Graph& graph, int from, int to, int cost = 0) {
     // graph.push_back({from, to, cost});
     // graph[from][to] = cost;
     // graph[to][from] = cost;
-    assert(cost >= 0 or cost <= 0);
 }
 
-void dfs(Graph& graph, vb& visited, int k, int at) {
-    if (k < 0) {
-        return;
-    }
+void dfs(vvi graph, vb& visited, int at, int k) {
+    if (k == -1) return;
     visited[at] = true;
     for (int adj : graph[at]) {
         if (not visited[adj]) {
-            dfs(graph, visited, k - 1, adj);
+            dfs(graph, visited, adj, k - 1);
         }
     }
 }
 
-int FindKDistance(Graph& graph, vi terminals, int k) {
+int FindKDistance(vvi graph, vi terminals, int k) {
     int n = graph.size();
-    vb reachable(n, true);
-
+    vb marked(n, true);
     for (int terminal : terminals) {
         vb visited(n);
-        dfs(graph, visited, k, terminal);
+        dfs(graph, visited, terminal, k);
         for (int i = 0; i < n; ++i) {
-            if (not visited[i]) {
-                reachable[i] = false;
-            }
+            marked[i] = marked[i] and visited[i];
         }
     }
-
-    int total = 0;
+    int ans = 0;
     for (int i = 0; i < n; ++i) {
-        if (reachable[i]) {
-            ++total;
+        if (marked[i]) {
             cout << i << ' ';
+            ++ans;
         }
     }
-    cout << '\n';
-    return total;
+    cout << endl;
+    return ans;
 }
 
 int main() { TimeMeasure _;
@@ -63,5 +56,4 @@ int main() { TimeMeasure _;
     AddEdge(graph, 4, 5);
     AddEdge(graph, 5, 9);
     cout << FindKDistance(graph, {1, 2, 4}, 3) << endl;
-    //cout << FindKDistance2(graph, {1, 2, 4}, 3) << endl;
 }
