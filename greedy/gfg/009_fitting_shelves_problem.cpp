@@ -96,23 +96,23 @@ void tab2(int w, int m, int n) {
     cout << anssmall << ' ' << anslarge << ' ' << answ << '\n';
 }
 
-void FitShelves(int w, int m, int n) {
-    int small = 0, large = 0, space = INF;
-    int maxLarge = w / n;
-    for (int currentLarge = maxLarge; currentLarge >= 0; --currentLarge) {
-        int currentSmall = (w - currentLarge * n) / m;
-        int currentSpace = w - currentSmall * m - currentLarge * n;
-        if (currentSpace == space and currentLarge > large) {
-            large = currentLarge;
-            small = currentSmall;
+void FitShelves(int W, int M, int N) {
+    int w = W, m = 0, n = 0;
+    for (int bigCount = 0; bigCount <= W / N; ++bigCount) {
+        int smallSpace = W - bigCount * N;
+        int smallCount = smallSpace / M;
+        int space = smallSpace - smallCount * M;
+        if (space < w) {
+            w = space;
+            m = smallCount;
+            n = bigCount;
         }
-        else if (currentSpace < space) {
-            space = currentSpace;
-            large = currentLarge;
-            small = currentSmall;
+        else if (space == w and bigCount > n) {
+            m = smallCount;
+            n = bigCount;
         }
     }
-    cout << small << ' ' << large << ' ' << space << '\n';
+    cout << m << ' ' << n << ' ' << w << endl;
 }
 
 int main() { TimeMeasure _;
