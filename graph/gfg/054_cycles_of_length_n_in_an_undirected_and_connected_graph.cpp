@@ -1,6 +1,4 @@
 #include "../../template.hpp"
-#include "../collection/graph.hpp"
-#include "../collection/tree_node.hpp"
 
 void dfs(vvb& graph, vb& visited, int len, int at, int& count, int root) {
     int n = graph.size();
