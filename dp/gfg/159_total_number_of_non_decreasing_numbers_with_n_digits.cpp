@@ -59,6 +59,48 @@ int tab(int n) {
     return dp[n][0][0];
 }
 
+int rec2(int n, int prev) {
+    if (n == 0) return 1;
+    int ans = 0;
+    for (int i = 0; i < 10; ++i) {
+        if (i >= prev) {
+            ans += rec2(n - 1, i);
+        }
+    }
+    return ans;
+}
+
+int rec2(int n) {
+    int ans = 0;
+    for (int i = 0; i < 10; ++i) {
+        ans += rec2(n - 1, i);
+    }
+    return ans;
+}
+
+int tab2(int n) {
+    vvi dp(n + 1, vi(10));
+    for (int i = 0; i <= n; ++i) {
+        for (int prev = 0; prev < 10; ++prev) {
+            if (i == 0) {
+                dp[i][prev] = 1;
+            }
+            else {
+                for (int k = 0; k < 10; ++k) {
+                    if (k >= prev) {
+                        dp[i][prev] += dp[i - 1][k];
+                    }
+                }
+            }
+        }
+    }
+    int ans = 0;
+    for (int k = 0; k < 10; ++k) {
+        ans += dp[n - 1][k];
+    }
+    return ans;
+}
+
 int main() { TimeMeasure _; __x();
     cout << naive(1) << endl; // 10
     cout << naive(2) << endl; // 55
@@ -71,4 +113,12 @@ int main() { TimeMeasure _; __x();
     cout << tab(1) << endl;
     cout << tab(2) << endl;
     cout << tab(3) << endl;
+    cout << '\n';
+    cout << rec2(1) << endl;
+    cout << rec2(2) << endl;
+    cout << rec2(3) << endl;
+    cout << '\n';
+    cout << tab2(1) << endl;
+    cout << tab2(2) << endl;
+    cout << tab2(3) << endl;
 }
