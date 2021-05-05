@@ -11,19 +11,19 @@ int FindMinimumInSortedAndRotated(vi arr) {
 }
 
 int FindMinimumInSortedAndRotated2(vi arr) {
-    int n = arr.size();
-    int low = 0;
-    int high = n - 1;
-    while (low != high) {
+    int n = arr.size(), low = 0, high = n - 1;
+    while (low <= high) {
         int mid = low + (high - low) / 2;
-        if (arr[mid] <= arr[high]) {
-            high = mid;
+        if (arr[mid] >= arr[0]) {
+            if (arr[mid] >= arr[high]) low = mid + 1;
+            else high = mid - 1;
         }
         else {
-            low = mid + 1;
+            if (mid - 1 >= low and arr[mid - 1] <= arr[mid]) high = mid - 1;
+            else return arr[mid];
         }
     }
-    return arr[low];
+    return arr[high];
 }
 
 int main() { TimeMeasure _;
