@@ -1,6 +1,4 @@
 #include "../../template.hpp"
-#include "../collection/graph.hpp"
-#include "../collection/tree_node.hpp"
 
 void dfs(Graph& graph, int at, vb& visited, vi& desc, vi& lows, int& id, vb& ap, int root, int parent, int& rootOutcomingEdges) {
     if (parent == root) {
