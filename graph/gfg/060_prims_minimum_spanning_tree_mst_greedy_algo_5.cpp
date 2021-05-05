@@ -1,43 +1,55 @@
 #include "../../template.hpp"
 
-struct Node {
-    int at;
-    int weight;
-    bool operator<(const Node& rhs) const { return weight > rhs.weight; }
-};
+using Graph = vvvi;
 
-using Graph = vector<vector<Node>>;
-
-void AddEdge(Graph& graph, int from, int to, int weight) {
-    graph[from].push_back({to, weight});
-    graph[to].push_back({from, weight});
+void AddEdge(Graph& graph, int from, int to, int cost = 0) {
+    // graph[from].push_back(to);
+    // graph[to].push_back(from);
+    // graph.push_back({from, to});
+    graph[from].push_back({to, cost});
+    graph[to].push_back({from, cost});
+    // graph.push_back({from, to, cost});
+    // graph[from][to] = cost;
+    // graph[to][from] = cost;
 }
 
-void PrimsMinSpanningTree(Graph& graph) {
+struct Item {
+    int at;
+    int cost;
+    bool operator<(const Item& rhs) const { return cost > rhs.cost; }
+};
+
+void PrimsMinSpanningTree(vvvi graph) {
     int n = graph.size();
-    priority_queue<Node> pq;
-    vb intree(n);
+
+    priority_queue<Item> q;
+    q.push({0, 0});
+
+    vb visited(n);
+
     vi dist(n, INF);
+    dist[0] = 0;
+
     vi prev(n, -1);
 
-    pq.push({0, 0});
-    while (not pq.empty()) {
-        Node node = pq.top(); pq.pop();
-        intree[node.at] = true;
-        for (Node& adj : graph[node.at]) {
-            if (not intree[adj.at] and dist[adj.at] > adj.weight) {
-                pq.push(adj);
-                dist[adj.at] = adj.weight;
-                prev[adj.at] = node.at;
+    while (not q.empty()) {
+        Item item = q.top(); q.pop();
+        int at = item.at;
+        visited[at] = true;
+        for (vi adj : graph[at]) {
+            if (not visited[adj[0]] and adj[1] < dist[adj[0]]) {
+                dist[adj[0]] = adj[1];
+                prev[adj[0]] = at;
+                q.push({adj[0], adj[1]});
             }
         }
     }
-    int total = 0;
-    for (int i = 1; i < n; ++i) {
-        cout << i << '-' << prev[i] << ' ' << dist[i] << '\n';
-        total += dist[i];
+    int totalCost = 0;
+    for (int at = 1; at < n; ++at) {
+        cout << at << '-' << prev[at] << ' ' << dist[at] << endl;
+        totalCost += dist[at];
     }
-    debugn(total);
+    debugn(totalCost);
 }
 
 int main() { TimeMeasure _;
