@@ -1,21 +1,21 @@
 #include "../../template.hpp"
 
 void CoundDistinctElementsInWindow(vi arr, int k) {
-    debugn(arr);
     int n = arr.size();
-    unordered_map<int, int> freq;
-    for (int i = 0; i < k; ++i) {
-        ++freq[arr[i]];
-    }
-    for (int i = k; i <= n; ++i) {
-        cout << freq.size() << ' ';
-        if (i == n) break;
-        if (--freq[arr[i - k]] == 0) {
-            freq.erase(arr[i - k]);
+    unordered_map<int, int> window;
+    int windowSize = 0;
+    for (int i = 0; i < n; ++i) {
+        ++window[arr[i]];
+        ++windowSize;
+        if (windowSize == k) {
+            cout << window.size() << ' ';
+            if (--window[arr[i - k + 1]] == 0) {
+                window.erase(arr[i - k + 1]);
+            }
+            --windowSize;
         }
-        ++freq[arr[i]];
     }
-    cout << '\n';
+    cout << endl;
 }
 
 int main() { TimeMeasure _;
