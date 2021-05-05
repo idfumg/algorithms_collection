@@ -7,20 +7,29 @@ void AddEdge(Graph& graph, int from, int to) {
     graph[to].push_back(from);
 }
 
-bool dfs(Graph& graph, int at, int to, int level, int parent) {
-    if (at == to) return true;
-    if (level < 0) return false;
+bool dfs(vvi graph, int to, vb& visited, int parent, int depth, int at) {
+    if (at == to and depth == 0) {
+        return true;
+    }
+    visited[at] = true;
     for (int adj : graph[at]) {
-        if (adj == parent) continue;
-        if (dfs(graph, adj, to, level - 1, at)) return true;
+        if (adj == parent) {
+            continue;
+        }
+        if (not visited[adj]) {
+            if (dfs(graph, to, visited, parent, depth - 1, adj)) {
+                return true;
+            }
+        }
     }
     return false;
 }
 
-bool iddfs(Graph& graph, int from, int to, int level) {
+int iddfs(vvi graph, int from, int to, int maxdepth) {
     int n = graph.size();
-    for (int i = 0; i < n; ++i) {
-        if (dfs(graph, from, to, level, -1)) {
+    for (int depth = 1; depth < maxdepth; ++depth) {
+        vb visited(n);
+        if (dfs(graph, to, visited, -1, depth, from)) {
             return true;
         }
     }
