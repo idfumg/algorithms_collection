@@ -3,15 +3,19 @@
 void RearrangePositiveAndNegative(vi arr) {
     int n = arr.size();
     int pos = 0;
-    for (int i = 0; i < n; ++i) {
-        if (arr[i] < 0) {
-            swap(arr[i], arr[pos++]);
+    int neg = n - 1;
+    while (pos < neg) {
+        if (arr[pos] < 0) {
+            swap(arr[pos], arr[neg--]);
+        }
+        else {
+            ++pos;
         }
     }
-    for (int neg = 0; arr[neg] < 0 and pos < n and neg < pos; ++pos, neg += 2) {
-        swap(arr[neg], arr[pos]);
+    for (pos = 1; pos < neg and neg < n; pos += 2, ++neg) {
+        swap(arr[pos], arr[neg]);
     }
-    cout << arr << '\n';
+    debugn(arr);
 }
 
 int main() { TimeMeasure _;
