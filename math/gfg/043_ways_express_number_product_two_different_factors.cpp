@@ -12,5 +12,5 @@ int WaysToFactorizionOfTwoFactors(int n) {
 
 int main() { TimeMeasure _;
     cout << WaysToFactorizionOfTwoFactors(12) << endl; // 3
-    cout << WaysToFactorizionOfTwoFactors(36) << endl;// 4
+    cout << WaysToFactorizionOfTwoFactors(36) << endl; // 4
 }
