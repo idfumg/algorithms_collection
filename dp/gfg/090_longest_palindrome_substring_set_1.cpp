@@ -116,6 +116,30 @@ int rec_elems(string s) {
     return rec_elems(s, dp, 1, n);
 }
 
+int tab3(string s) {
+    int n = s.size();
+    vvi pr(n + 2, vi(n + 1));
+    for (int i = n; i >= 1; --i) {
+        for (int j = 1; j <= n; ++j) {
+            if (i > j) pr[i][j] = 0;
+            else if (i == j) pr[i][j] = 1;
+            else if (j - i == 1) pr[i][j] = s[i - 1] == s[j - 1] ? 1 : 0;
+            else if (s[i - 1] == s[j - 1] and pr[i + 1][j - 1]) pr[i][j] = 1;
+        }
+    }
+    vvi dp(n + 2, vi(n + 1));
+    for (int i = n; i >= 1; --i) {
+        for (int j = 1; j <= n; ++j) {
+            if (i > j) dp[i][j] = 0;
+            else if (i == j) dp[i][j] = 1;
+            else if (j - i == 1) dp[i][j] = s[i - 1] == s[j - 1] ? 2 : 1;
+            else if (s[i - 1] == s[j - 1] and pr[i][j]) dp[i][j] = j - i + 1;
+            else dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
+        }
+    }
+    return dp[1][n];
+}
+
 int main() { TimeMeasure _; __x();
     static const string s1 = "forgeeksskeegfor"; // geeksskeeg // 10
     static const string s2 = "Geeks"; // ee // 2
@@ -130,4 +154,8 @@ int main() { TimeMeasure _; __x();
     cout << '\n';
     cout << rec_elems(s1) << endl;
     cout << rec_elems(s2) << endl;
+    cout << '\n';
+    cout << tab3(s1) << endl;
+    cout << tab3(s2) << endl;
+    cout << '\n';
 }
