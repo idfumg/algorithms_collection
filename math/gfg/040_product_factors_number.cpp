@@ -1,15 +1,16 @@
 #include "../../template.hpp"
 
-ll ProductOfFactors(ll n) {
-    ll ans = 1;
-    for (int i = 1; i * i < n; ++i) {
+int ProductOfFactors(int n) {
+    int mod = 1e9 + 7;
+    int ans = 1;
+    for (int i = 1; i <= sqrt(n); ++i) {
         if (n % i == 0) {
             ans *= i;
-        }
-    }
-    for (int i = sqrt(n); i >= 1; --i) {
-        if (n % i == 0) {
-            ans *= n / i;
+            ans %= mod;
+            if (n / i != i) {
+                ans *= n / i;
+                ans %= mod;
+            }
         }
     }
     return ans;
