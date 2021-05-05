@@ -46,10 +46,26 @@ void FindLeastAverage2(vi arr, int k) {
     cout << endl;
 }
 
+void FindLeastAverage3(vi arr, int k) {
+    int n = arr.size();
+    int avg = accumulate(arr.begin(), arr.begin() + k, 0);
+    int minavg = avg / k;
+    for (int i = k; i < n; ++i) {
+        avg -= arr[i - k];
+        avg += arr[i];
+        minavg = min(minavg, avg / k);
+    }
+    cout << minavg << endl;
+}
+
+
 int main() { TimeMeasure _;
     FindLeastAverage({3, 7, 90, 20, 10, 50, 40}, 3);
     FindLeastAverage({3, 7, 5, 20, -10, 0, 12}, 2);
     cout << endl;
     FindLeastAverage2({3, 7, 90, 20, 10, 50, 40}, 3);
     FindLeastAverage2({3, 7, 5, 20, -10, 0, 12}, 2);
+    cout << endl;
+    FindLeastAverage3({3, 7, 90, 20, 10, 50, 40}, 3);
+    FindLeastAverage3({3, 7, 5, 20, -10, 0, 12}, 2);
 }
