@@ -140,8 +140,45 @@ int tab_elems(vi wines) {
     for (vi at = prev[1][n]; not at.empty(); at = prev[at[0]][at[1]]) {
         elems.push_back(wines[at[2]]);
     }
-    debugn(elems);
+    cout << elems << '\n';
     return dp[1][n];
+}
+
+int rec_elems(vi wines, int i, int j, vvi dp) {
+    int year = wines.size() - (j - i);
+    if (i == j) {
+        cout << wines[i - 1] << ' ';
+        return year * wines[i - 1];
+    }
+    if (dp[i + 1][j] + wines[i - 1] * year >= dp[i][j - 1] + wines[j - 1] * year) {
+        cout << wines[i - 1] << ' ';
+        return rec_elems(wines, i + 1, j, dp) + wines[i - 1] * year;
+    }
+    cout << wines[j - 1] << ' ';
+    return rec_elems(wines, i, j - 1, dp) + wines[j - 1] * year;
+}
+
+int rec_elems(vi arr) {
+    int n = arr.size();
+    vvi dp(n + 2, vi(n + 1));
+    for (int i = n; i >= 1; --i) {
+        for (int j = 1; j <= n; ++j) {
+            int year = n - (j - i);
+            if (i > j) {
+                continue;
+            }
+            else if (i == j) {
+                dp[i][j] = year * arr[i - 1];
+            }
+            else {
+                dp[i][j] = max(dp[i + 1][j] + arr[i - 1] * year,
+                               dp[i][j - 1] + arr[j - 1] * year);
+            }
+        }
+    }
+    int ans = rec_elems(arr, 1, n, dp);
+    cout << '\n';
+    return ans;
 }
 
 int main() { TimeMeasure _; __x();
@@ -153,4 +190,5 @@ int main() { TimeMeasure _; __x();
     cout << tab2(wines) << endl;
     cout << tab3(wines) << endl;
     cout << tab_elems(wines) << endl; // 2 5 2 4 6
+    cout << rec_elems(wines) << endl; // 2 5 2 4 6
 }
