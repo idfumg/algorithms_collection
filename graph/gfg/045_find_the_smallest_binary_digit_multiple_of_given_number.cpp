@@ -15,6 +15,6 @@ int SmallestBinary(int n) {
 }
 
 int main() { TimeMeasure _;
-    cout << SmallestBinary(2) << endl;
-    cout << SmallestBinary(17) << endl;
+    cout << SmallestBinary(2) << endl; // 10
+    cout << SmallestBinary(17) << endl; // 11101
 }
