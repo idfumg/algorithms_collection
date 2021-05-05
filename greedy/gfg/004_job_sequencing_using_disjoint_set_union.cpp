@@ -9,39 +9,33 @@ struct Job {
 
 using Jobs = vector<Job>;
 
-int GetMaximumDeadlineSlotsCount(Jobs& jobs) {
-    int res = -INF;
-    for (Job& job : jobs) {
-        res = max(res, job.deadline);
-    }
-    return res;
-}
-
 int Find(vi& parent, int i) {
     if (parent[i] == -1) return i;
     return parent[i] = Find(parent, parent[i]);
 }
 
-void Union(vi& parent, int i, int j) {
-    parent[j] = i;
+void Union(vi& parent, int node, int root) {
+    parent[node] = root;
 }
 
-void JobScheduling(Jobs& jobs) {
-    int n = GetMaximumDeadlineSlotsCount(jobs), total = 0;
+void JobScheduling(Jobs jobs) {
+    int n = 0;
+    for (const auto& job : jobs) {
+        n = max(n, job.deadline);
+    }
     vi parent(n + 1, -1);
-    sort(jobs);
-    for (Job& job : jobs) {
-        int slot = Find(parent, job.deadline);
-        if (slot > 0) {
-            Union(parent, Find(parent, slot - 1), slot);
-            cout << job.id << ' ';
+    sort(jobs.begin(), jobs.end());
+    int total = 0;
+    for (const auto& job : jobs) {
+        if (int root = Find(parent, job.deadline); root > 0) {
+            Union(parent, root, Find(parent, root - 1));
             total += job.profit;
         }
     }
-    cout << ':' << ' ' << total << '\n';
+    cout << total << endl;
 }
 
-int main() { TimeMeasure _;
+int main() { TimeMeasure _; __x();
     {
         Jobs jobs = {
             {'a', 2, 100},
