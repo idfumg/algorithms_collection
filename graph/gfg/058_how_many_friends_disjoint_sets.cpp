@@ -10,7 +10,7 @@ int Find(vi& parent, vi& rank, int i) {
     int root = i, prev = i;
     if (parent[root] == -1) return root;
     for (; parent[root] != -1; root = parent[root]){}
-    for (i = parent[i]; i != -1; prev = i, i = parent[i]) rank[prev] = root;
+    for (i = parent[i]; i != -1; prev = i, i = parent[i]) parent[prev] = root;
     rank[root] = 1;
     return root;
 }
