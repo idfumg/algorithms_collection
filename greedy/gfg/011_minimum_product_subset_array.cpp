@@ -16,30 +16,6 @@ int MinimumProductSubset(vi& arr) { // O(nlogn)
     return prod;
 }
 
-int MinimumProductSubset2(vi& arr) { // O(n)
-    int n = arr.size(), negatives = 0, positives = 0, zeroes = 0, minPositive = INF, minNegative = INF, prod = 1;
-    for (int i = 0; i < n; ++i) {
-        if (arr[i] < 0) {
-            ++negatives;
-            minNegative = min(minNegative, arr[i]);
-            prod *= arr[i];
-        }
-        else if (arr[i] == 0) {
-            ++zeroes;
-        }
-        else if (arr[i] > 0) {
-            minPositive = min(minPositive, arr[i]);
-            ++positives;
-            prod *= arr[i];
-        }
-    }
-    if (n == 0) return 0;
-    if (zeroes == n) return 0;
-    if (negatives == 0) return minPositive;
-    if (negatives % 2 == 0) return prod / minNegative;
-    return prod;
-}
-
 int MinimumProductSubset3(vi arr) {
     int n = arr.size();
     int total = 0;
@@ -87,29 +63,65 @@ int MinimumProductSubset4(vi arr) {
     return negativesProd * positivesProd;
 }
 
+int MinimumProductSubset5(vi arr) {
+    sort(arr.begin(), arr.end());
+
+    if (arr[0] == 0 or arr[0] > 0) {
+        return arr[0];
+    }
+
+    int ans = 1;
+    int n = arr.size();
+    int i = 0;
+
+    while (i < n and arr[i] < 0) {
+        ans *= arr[i++];
+    }
+
+    if (ans > 0 and i > 0) {
+        ans *= arr[i - 1];
+    }
+
+    while (i < n and arr[i] == 0) {
+        ++i;
+    }
+
+    while (i < n) {
+        ans *= arr[i++];
+    }
+
+    return ans;
+}
+
+
 int main() { TimeMeasure _;
     vi arr1 = { -1, -1, -2, 4, 3 }; // -24
     vi arr2 = { -1, 0 }; // -1
     vi arr3 = { 0, 0, 0 }; // 0
     vi arr4 = { 1, 2, 3 }; // 1
+    vi arr5 = { -1, -1, -1, -2, 4, 3 }; // -24
 
     cout << MinimumProductSubset(arr1) << '\n';
     cout << MinimumProductSubset(arr2) << '\n';
     cout << MinimumProductSubset(arr3) << '\n';
     cout << MinimumProductSubset(arr4) << '\n';
-    cout << '\n';
-    cout << MinimumProductSubset2(arr1) << '\n';
-    cout << MinimumProductSubset2(arr2) << '\n';
-    cout << MinimumProductSubset2(arr3) << '\n';
-    cout << MinimumProductSubset2(arr4) << '\n';
+    cout << MinimumProductSubset(arr5) << '\n';
     cout << '\n';
     cout << MinimumProductSubset3(arr1) << '\n';
     cout << MinimumProductSubset3(arr2) << '\n';
     cout << MinimumProductSubset3(arr3) << '\n';
     cout << MinimumProductSubset3(arr4) << '\n';
+    cout << MinimumProductSubset3(arr5) << '\n';
     cout << '\n';
     cout << MinimumProductSubset4(arr1) << '\n';
     cout << MinimumProductSubset4(arr2) << '\n';
     cout << MinimumProductSubset4(arr3) << '\n';
     cout << MinimumProductSubset4(arr4) << '\n';
+    cout << MinimumProductSubset4(arr5) << '\n';
+    cout << '\n';
+    cout << MinimumProductSubset5(arr1) << '\n';
+    cout << MinimumProductSubset5(arr2) << '\n';
+    cout << MinimumProductSubset5(arr3) << '\n';
+    cout << MinimumProductSubset5(arr4) << '\n';
+    cout << MinimumProductSubset5(arr5) << '\n';
 }
