@@ -43,7 +43,7 @@ int MinSumProduct2(vi a, vi b, int k) {
 int main() { TimeMeasure _;
     cout << MinSumProduct({1, 2, -3}, {-2, 3, -5}, 5) << '\n'; // -31
     cout << MinSumProduct({2, 3, 4, 5, 4}, {3, 4, 2, 3, 2}, 3) << '\n'; // 25
-    cout << MinSumProduct2({3, 2, 4, 5, 4}, {4, 3, 2, 3, 2}, 3) << '\n'; // 25
+    cout << MinSumProduct({3, 2, 4, 5, 4}, {4, 3, 2, 3, 2}, 3) << '\n'; // 25
     cout << MinSumProduct({6,1,3,-4,-2,0}, {1,2,-3,-1,6,1}, 3) << '\n'; // -45
     cout << '\n';
     cout << MinSumProduct2({1, 2, -3}, {-2, 3, -5}, 5) << '\n'; // -31
