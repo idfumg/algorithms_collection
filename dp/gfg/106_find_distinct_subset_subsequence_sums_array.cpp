@@ -1,97 +1,101 @@
 #include "../../template.hpp"
 
-void naive(vi& arr, si& res, vi& elems, int from) {
-    int n = arr.size();
-    if (from == n) {
-        int sum = accumulate(elems.begin(), elems.end(), 0);
-        res.insert(sum);
-        return;
-    }
-    for (int i = from; i < n; ++i) {
-        naive(arr, res, elems, i + 1);
-        elems.push_back(arr[i]);
-        naive(arr, res, elems, i + 1);
-        elems.pop_back();
-    }
-}
-
-si naive(vi& arr) {
-    si res;
-    vi elems;
-    naive(arr, res, elems, 0);
-    return res;
-}
-
-void rec(vi arr, int n, int total, si& ans) {
-    if (n == 0) {
-        ans.insert(total);
-        return;
-    }
-    rec(arr, n - 1, total, ans);
-    rec(arr, n - 1, total + arr[n - 1], ans);
-}
-
-si rec(vi arr) {
+si naive(vi arr) {
     int n = arr.size();
     si ans;
-    rec(arr, n, 0, ans);
+    for (int i = 0; i < (1 << n); ++i) {
+        int current = 0;
+        for (int j = 0; j < n; ++j) {
+            if (i & (1 << j)) {
+                current += arr[j];
+            }
+        }
+        ans.insert(current);
+    }
     return ans;
 }
 
-// Can we make some sum with or without an element [sum][element]
-vi tab(vi& arr) {
-    vi res;
-    int n = arr.size();
-    int sum = accumulate(arr.begin(), arr.end(), 0);
-    vvb dp(sum + 1, vb(n + 1));
-    for (int i = 0; i <= n; ++i) {
-        dp[0][i] = true;
-    }
-    res.push_back(0);
-    for (int i = 1; i <= sum; ++i) {
-        bool wecan = false;
-        for (int j = 1; j <= n; ++j) {
-            dp[i][j] = dp[i][j - 1];
-            if (i >= arr[j - 1]) {
-                dp[i][j] = dp[i][j] or dp[i - arr[j - 1]][j - 1];
-            }
-            wecan = wecan or dp[i][j];
-        }
-        if (wecan) res.push_back(i);
-    }
-    return res;
+void rec(vi arr, si& ans, int n, int total) {
+    ans.insert(total);
+    if (n == 0) return;
+    rec(arr, ans, n - 1, total + arr[n - 1]);
+    rec(arr, ans, n - 1, total);
 }
 
-// Print such elements
-vi tab_elems(vi& arr) {
-    vi res;
+si rec(vi arr) {
+    si ans;
+    rec(arr, ans, arr.size(), 0);
+    return ans;
+}
+
+vi tab(vi arr) {
     int n = arr.size();
-    int sum = accumulate(arr.begin(), arr.end(), 0);
-    vvb dp(sum + 1, vb(n + 1));
-    vvvi prev(sum + 1, vvi(n + 1));
-    vb wecan(sum + 1);
-    vi fromwhere(sum + 1);
-    for (int i = 0; i <= n; ++i) {
-        dp[0][i] = true;
-    }
-    wecan[0] = true;
-    for (int i = 1; i <= sum; ++i) {
-        for (int j = 1; j <= n; ++j) {
-            dp[i][j] = dp[i][j - 1];
-            prev[i][j] = {i, j - 1, 0};
-            if (i >= arr[j - 1] and dp[i - arr[j - 1]][j - 1]) {
-                dp[i][j] = true;
-                prev[i][j] = {i - arr[j - 1], j - 1, 1};
-                fromwhere[i] = j;
+    int total = reduce(arr.begin(), arr.end(), 0);
+
+    vvi dp(total + 1, vi(n + 1));
+    vi ans;
+
+    for (int i = 0; i <= total; ++i) {
+        for (int j = 0; j <= n; ++j) {
+            if (i == 0) {
+                dp[i][j] = 1;
             }
-            wecan[i] = wecan[i] or dp[i][j];
+            else if (j > 0) {
+                if (dp[i][j - 1]) {
+                    dp[i][j] = 1;
+                }
+                if (i >= arr[j - 1] and dp[i - arr[j - 1]][j - 1]) {
+                    dp[i][j] = 1;
+                }
+            }
+            if (dp[i][j]) {
+                if (ans.empty() or ans.back() != i) {
+                    ans.push_back(i);
+                }
+            }
         }
-        if (wecan[i]) res.push_back(i);
     }
-    for (int i = 0; i <= sum; ++i) {
-        if (wecan[i]) {
+
+    return ans;
+}
+
+vi tab_elems(vi arr) {
+    int n = arr.size();
+    int total = reduce(arr.begin(), arr.end(), 0);
+
+    vvi dp(total + 1, vi(n + 1));
+    vi can(total + 1);
+    vi from(total + 1, -1);
+    vvvi prev(total + 1, vvi(n + 1));
+    vi ans;
+
+    for (int i = 0; i <= total; ++i) {
+        for (int j = 0; j <= n; ++j) {
+            if (i == 0) {
+                dp[i][j] = 1;
+            }
+            else if (j > 0) {
+                if (dp[i][j - 1]) {
+                    dp[i][j] = 1;
+                    prev[i][j] = {i, j - 1, 0};
+                }
+                if (i >= arr[j - 1] and dp[i - arr[j - 1]][j - 1]) {
+                    dp[i][j] = 1;
+                    prev[i][j] = {i - arr[j - 1], j - 1, 1};
+                }
+            }
+            if (dp[i][j] and can[i] == 0) {
+                can[i] = 1;
+                ans.push_back(i);
+                from[i] = j;
+            }
+        }
+    }
+
+    for (int i = 0; i <= total; ++i) {
+        if (can[i] and from[i] != -1) {
             cout << i << ':' << ' ';
-            for (vi at = prev[i][fromwhere[i]]; not at.empty(); at = prev[at[0]][at[1]]) {
+            for (vi at = prev[i][from[i]]; not at.empty(); at = prev[at[0]][at[1]]) {
                 if (at[2] == 1) {
                     cout << arr[at[1]] << ' ';
                 }
@@ -99,10 +103,11 @@ vi tab_elems(vi& arr) {
             cout << '\n';
         }
     }
-    return res;
+
+    return ans;
 }
 
-int main() { TimeMeasure _; __x();
+int main() { // TimeMeasure _; __x();
     vi arr1 = {1, 2, 3};
     vi arr2 = {2, 3, 4, 5, 6};
     vi arr3 = {20, 30, 50};
