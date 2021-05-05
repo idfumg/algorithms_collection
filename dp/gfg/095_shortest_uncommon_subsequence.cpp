@@ -1,36 +1,31 @@
 #include "../../template.hpp"
 
-void find_subsequences(const string& s, set<string>& seqs, string& current,const int from) {
-    if (from >= s.size()) {
-        seqs.insert(current);
-        return;
+set<string> GenSubsets(string s) {
+    int m = s.size();
+    set<string> as;
+    for (int i = 0; i < (1 << m); ++i) {
+        string elems;
+        for (int j = 0; j < m; ++j) {
+            if (i & (1 << j)) {
+                elems += s[j];
+            }
+        }
+        as.insert(elems);
     }
-    for (int i = from; i < s.size(); ++i) {
-        current.push_back(s[i]);
-        find_subsequences(s, seqs, current, i + 1);
-        current.pop_back();
-        find_subsequences(s, seqs, current, i + 1);
-    }
+    return as;
 }
 
-set<string> find_subsequences(const string& s) {
-    set<string> seqs;
-    string current;
-    find_subsequences(s, seqs, current, 0);
-    return seqs;
-}
+int brute(string a, string b) {
+    set<string> as = GenSubsets(a);
+    set<string> bs = GenSubsets(b);
 
-int brute(const string& s1, const string& s2) {
-    const set<string> s1parts = find_subsequences(s1);
-    const set<string> s2parts = find_subsequences(s2);
-
-    set<string> result;
-    for (const auto& part : s1parts) {
-        if (s2parts.count(part) == 0) {
-            result.insert(part);
+    int mini = INF;
+    for (const auto& elems : as) {
+        if (not bs.count(elems) and elems.size() < mini) {
+            mini = elems.size();
         }
     }
-    return result.size() != 0 ? result.begin()->size() : -1;
+    return mini == INF ? -1 : mini;
 }
 
 int rec(const string& s1, const string& s2, const int n1, const int n2) {
