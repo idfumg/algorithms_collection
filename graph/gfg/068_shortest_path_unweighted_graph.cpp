@@ -2,36 +2,48 @@
 
 using Graph = vvi;
 
-void AddEdge(Graph& graph, int from, int to) {
+[[maybe_unused]] void AddEdge(Graph& graph, int from, int to, int cost = 0) {
+    assert(cost != INF);
     graph[from].push_back(to);
     graph[to].push_back(from);
+    // graph.push_back({from, to});
+    // graph[from].push_back({to, cost});
+    // graph[to].push_back({from, cost});
+    // graph.push_back({from, to, cost});
+    // graph[from][to] = cost;
+    // graph[to][from] = cost;
 }
 
-void PrintShortestDistance(Graph& graph, int from, int to) {
+void PrintShortestDistance(vvi graph, int from, int to) {
     int n = graph.size();
-    vi prev(n, -1);
-    vi dist(n, -1);
-    qi q;
+
+    deque<int> q;
+    q.push_back(from);
+
+    vi dist(n, INF);
     dist[from] = 0;
-    q.push(from);
+
+    vb visited(n);
+
+    vi prev(n, -1);
+
     while (not q.empty()) {
-        int at = q.front(); q. pop();
-        if (at == to) break;
+        int at = q.front(); q.pop_front();
+        visited[at] = true;
+
         for (int adj : graph[at]) {
-            if (dist[adj] == -1) {
-                dist[adj] = dist[at] + 1;
+            if (not visited[adj] and dist[adj] > dist[at] + 1) {
+                dist[adj] = min(dist[adj], dist[at] + 1);
                 prev[adj] = at;
-                q.push(adj);
+                q.push_back(adj);
             }
         }
     }
-    cout << "MinimumDistance is: " << dist[to] << endl;
-    cout << "Path to the final vertex is: ";
-    vi path;
+    cout << dist[to] << endl;
+    deque<int> path;
     for (int at = to; at != -1; at = prev[at]) {
-        path.push_back(at);
+        path.push_front(at);
     }
-    reverse(path);
     cout << path << endl;
 }
 
@@ -47,7 +59,6 @@ int main() { TimeMeasure _;
     AddEdge(graph, 4, 7);
     AddEdge(graph, 5, 6);
     AddEdge(graph, 6, 7);
-    PrintShortestDistance(graph, 0, 7);
-// MinimumDistance is: 2
-// Path to the final vertex is: 0 3 7
+    PrintShortestDistance(graph, 0, 7); // 2 // 0 3 7
+    PrintShortestDistance(graph, 2, 6); // 5 // 2 1 0 3 4 6
 }
