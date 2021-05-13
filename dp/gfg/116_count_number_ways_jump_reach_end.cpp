@@ -1,94 +1,54 @@
 #include "../../template.hpp"
 
-int rec(vi arr, int i, vi& dp) {
-    int n = arr.size();
-    if (i == n) return 1;
-    if (i > n) return 0;
-    int ans = 0;
-    for (int j = i + 1; j <= i + arr[i - 1] and j <= n; ++j) {
-        ans += rec(arr, j, dp);
+int rec(vi arr, int n) {
+    if (n == arr.size() - 1) return 1;
+    if (n >= arr.size()) return 0;
+    if (arr[n] == 0) return 0;
+    int count = 0;
+    for (int i = 1; i <= arr[n]; ++i) {
+        count += rec(arr, n + i);
     }
-    return dp[i] = ans;
+    return count;
 }
 
 vi rec(vi arr) {
     int n = arr.size();
-    vi dp(n + 1);
-    rec(arr, 1, dp);
+    vi dp(n);
+    for (int i = 0; i < n - 1; ++i) {
+        if (int count = rec(arr, i); count != 0) {
+            dp[i] = count;
+        }
+        else {
+            dp[i] = -1;
+        }
+    }
     return dp;
 }
 
 vi tab(vi arr) {
     int n = arr.size();
-    vi dp(n + 1);
-    for (int i = n; i >= 1; --i) {
-        if (i == n) dp[i] = 1;
-        else {
-            for (int j = i + 1; j <= i + arr[i - 1] and j <= n; ++j) {
-                dp[i] += dp[j];
-            }
-        }
-    }
-    return dp;
-}
-
-int rec2(vi& arr, int n) {
-    if (n == 1) return 1;
-    if (n <= 0 or arr[n - 1] == 0) return 0;
-    int ans = 0;
-    for (int k = 1; k <= arr[n - 1]; ++k) {
-        ans += rec2(arr, n - k);
-    }
-    return ans;
-}
-
-vi rec2(vi arr) {
-    reverse(arr.begin(), arr.end());
-    int n = arr.size();
-    vi ways(n);
-    for (int i = 2; i <= n; ++i) {
-        ways[i - 1] = rec2(arr, i);
-        if (ways[i - 1] == 0) {
-            ways[i - 1] = -1;
-        }
-    }
-    reverse(ways.begin(), ways.end());
-    return ways;
-}
-
-vi tab2(vi arr) {
-    int n = arr.size();
-    reverse(arr.begin(), arr.end());
-    vi dp(n + 1, 0);
-    for (int i = 1; i <= n; ++i) {
-        if (i == 1) {
-            dp[i] = 1;
-        }
-        else if (arr[i - 1] == 0) {
+    vi dp(n, 0);
+    dp[n - 1] = 1;
+    for (int i = n - 2; i >= 0; --i) {
+        if (arr[i] == 0) {
             dp[i] = 0;
         }
         else {
-            int ans = 0;
-            for (int k = 1; k <= arr[i - 1]; ++k) {
-                if (i >= k) {
-                    ans += dp[i - k];
+            for (int p = 1; p <= arr[i]; ++p) {
+                if (i + p < arr.size() and dp[i + p] > 0) {
+                    dp[i] += dp[i + p];
                 }
             }
-            dp[i] = ans;
+        }
+        if (dp[i] == 0) {
+            dp[i] = -1;
         }
     }
-    vi ways(n, 0);
-    for (int i = 2; i <= n; ++i) {
-        ways[i - 1] = dp[i];
-        if (ways[i - 1] == 0) {
-            ways[i - 1] = -1;
-        }
-    }
-    reverse(ways.begin(), ways.end());
-    return ways;
+    dp[n - 1] = 0;
+    return dp;
 }
 
-int main() { // TimeMeasure _; __x();
+int main() { TimeMeasure _; __x();
     vi arr1 = {3, 2, 0, 1};
     vi arr2 = {1, 3, 5, 8, 9, 1, 0, 7, 6, 8, 9};
     cout << rec(arr1) << endl; // 2 1 -1 0
@@ -96,10 +56,4 @@ int main() { // TimeMeasure _; __x();
     cout << endl;
     cout << tab(arr1) << endl; // 2 1 -1 0
     cout << tab(arr2) << endl; // 52 52 28 16 8 -1 -1 4 2 1 0
-    cout << endl;
-    cout << rec2(arr1) << endl; // 2 1 -1 0
-    cout << rec2(arr2) << endl; // 52 52 28 16 8 -1 -1 4 2 1 0
-    cout << endl;
-    cout << tab2(arr1) << endl; // 2 1 -1 0
-    cout << tab2(arr2) << endl; // 52 52 28 16 8 -1 -1 4 2 1 0
 }
