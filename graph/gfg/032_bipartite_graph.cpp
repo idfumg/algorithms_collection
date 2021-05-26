@@ -11,61 +11,51 @@ void AddDirectedEdge(Graph& graph, int from, int to) {
     graph[from].push_back(to);
 }
 
-bool bfs(Graph& graph, vi& color, int from) {
+bool IsBipartiteBFS(vvi graph) {
     int n = graph.size();
-    qi q;
-    q.push(from);
-    color[from] = 0;
+    deque<int> q;
+    q.push_back(0);
+    vb visited(n);
+    vi color(n, -1);
+    color[0] = 1;
     while (not q.empty()) {
-        int at = q.front(); q.pop();
+        int at = q.front(); q.pop_front();
+        visited[at] = true;
         for (int adj = 0; adj < n; ++adj) {
-            if (not graph[at][adj]) {
-                continue;
-            }
-            if (color[adj] == color[at]) {
-                return false;
-            }
+            if (not graph[at][adj]) continue;
+            if (color[adj] == color[at]) return false;
             if (color[adj] == -1) {
                 color[adj] = 1 - color[at];
-                q.push(adj);
+                q.push_back(adj);
             }
         }
     }
     return true;
 }
 
-bool IsBipartiteBFS(Graph& graph) {
+bool dfs(vvi graph, vi& color, int at) {
     int n = graph.size();
-    vi color(n, -1);
-    for (int i = 0; i < n; ++i) {
-        if (color[i] == -1 and not bfs(graph, color, i)) return false;
+    for (int adj = 0; adj < n; ++adj) {
+        if (not graph[at][adj]) continue;
+        if (color[at] == color[adj]) return false;
+        if (color[adj] != -1) continue;
+        color[adj] = 1 - color[at];
+        if (not dfs(graph, color, adj)) {
+            return false;
+        }
     }
     return true;
 }
 
-bool dfs(Graph& graph, vi& color, int at) {
+bool IsBipartiteDFS(vvi graph) {
     int n = graph.size();
-    for (int i = 0; i < n; ++i) {
-        if (graph[at][i]) {
-            if (color[i] == color[at]) {
+    vi color(n, -1);
+    for (int at = 0; at < n; ++at) {
+        if (color[at] == -1) {
+            color[at] = 0;
+            if (not dfs(graph, color, at)) {
                 return false;
             }
-            if (color[i] == -1) {
-                color[i] = 1 - color[at];
-                if (dfs(graph, color, i)) return true;
-            }
-        }
-    }
-    return true;
-}
-
-bool IsBipartiteDFS(Graph& graph) {
-    int n = graph.size();
-    vi color(n, -1);
-    for (int i = 0; i < n; ++i) {
-        color[i] = 0;
-        if (color[i] == -1 and not dfs(graph, color, i)) {
-            return false;
         }
     }
     return true;
