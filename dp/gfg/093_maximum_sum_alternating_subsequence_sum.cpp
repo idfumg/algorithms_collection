@@ -89,6 +89,32 @@ int tab3(vi arr) {
     return dp[idx][1][true] + arr[0];
 }
 
+int rec3(vi arr, int n, int prev, int isdown) {
+    if (n == arr.size() + 1) {
+        return 0;
+    }
+    else if (isdown) {
+        if (arr[n - 1] < arr[prev - 1]) {
+            return max(rec3(arr, n + 1, n, 0) + arr[n - 1], rec3(arr, n + 1, prev, 1));
+        }
+        else {
+            return rec3(arr, n + 1, prev, 1);
+        }
+    }
+    else {
+        if (arr[n - 1] > arr[prev - 1]) {
+            return max(rec3(arr, n + 1, n, 1) + arr[n - 1], rec3(arr, n + 1, prev, 0));
+        }
+        else {
+            return rec3(arr, n + 1, prev, 0);
+        }
+    }
+}
+
+int rec3(vi arr) {
+    return rec3(arr, 2, 1, 1) + arr[0];
+}
+
 int main() { TimeMeasure _; __x();
     vi arr1 = {4, 3, 8, 5, 3, 8}; // 28
     vi arr2 = {4, 8, 2, 5, 6, 8}; // 14
@@ -130,4 +156,11 @@ int main() { TimeMeasure _; __x();
     cout << tab3(arr4) << endl;
     cout << tab3(arr5) << endl;
     cout << tab3(arr6) << endl;
+    cout << '\n';
+    cout << rec3(arr1) << endl;
+    cout << rec3(arr2) << endl;
+    cout << rec3(arr3) << endl;
+    cout << rec3(arr4) << endl;
+    cout << rec3(arr5) << endl;
+    cout << rec3(arr6) << endl;
 }
