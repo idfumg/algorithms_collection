@@ -13,19 +13,19 @@ void PrintNodesOnLevel(vvi graph, int level, int from) {
     q.push_back(from);
     vb visited(n);
     while (not q.empty()) {
-        if (level-- == 0) {
-            cout << q << endl;
-            return;
-        }
-        int at = q.front(); q.pop_front();
-        visited[at] = true;
-        for (int adj : graph[at]) {
-            if (not visited[adj]) {
-                q.push_back(adj);
+        if (level-- == 0) { cout << q << endl; return; }
+        for (int count = q.size(); count > 0; --count) {
+            int at = q.front(); q.pop_front();
+            visited[at] = true;
+            for (int adj : graph[at]) {
+                if (not visited[adj]) {
+                    q.push_back(adj);
+                }
             }
         }
     }
 }
+
 
 int main() { TimeMeasure _;
     Graph g(6);
@@ -37,7 +37,7 @@ int main() { TimeMeasure _;
 
     int level = 2;
 
-    PrintNodesOnLevel(g, level, 0); // 2 3
+    PrintNodesOnLevel(g, level, 0); // 3 4 5
 
     Graph g2(7);
     AddEdge(g2, 0, 1);
@@ -47,5 +47,5 @@ int main() { TimeMeasure _;
     AddEdge(g2, 1, 5);
     AddEdge(g2, 2, 6);
 
-    PrintNodesOnLevel(g2, level, 0); // 2 3 4 5
+    PrintNodesOnLevel(g2, level, 0); // 3 4 5 6
 }
