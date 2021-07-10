@@ -1,58 +1,53 @@
 #include "../../template.hpp"
 
 struct Cell {
-    int i, j, value;
-    bool operator<(const Cell& rhs) const { return value < rhs.value; }
+    int i;
+    int j;
+    friend ostream& operator<<(ostream& os, const Cell& cell) { return os << cell.i << ',' << cell.j; }
 };
 
-ostream& operator<<(ostream& os, const Cell& cell) {
-    return os << '{' << cell.i << ',' << cell.j << '}';
+static const vvi directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+void dfs(vvi graph, vvb& visited, Cell at) {
+    int n = graph.size();
+    visited[at.i][at.j] = true;
+    for (const auto& direction : directions) {
+        int i = at.i + direction[0];
+        int j = at.j + direction[1];
+        if (i >= 0 and j >= 0 and i < n and j < n and not visited[i][j] and graph[i][j] <= graph[at.i][at.j]) {
+            dfs(graph, visited, {i, j});
+        }
+    }
 }
 
-static const vvi directions = {
-    {0, 1}, {0, -1}, {1, 0}, {-1, 0},
-};
+vvi MinimalInitialVertices(vvi arr) {
+    const int n = arr.size();
 
-bool IsValid(vvi& arr, int m, int n, int i, int j, const Cell& from) {
-    return i >= 0 and j >= 0 and i < m and j < n and arr[i][j] <= from.value;
-}
-
-void bfs(vvi& arr, Cell from, vvb& visited) {
-    int m = arr.size(), n = arr[0].size();
-    queue<Cell> q;
-    q.push(from);
-
-    while (not q.empty()) {
-        Cell cell = q.front(); q.pop();
-        visited[cell.i][cell.j] = true;
-        for (const auto& direction : directions) {
-            int i = cell.i + direction[0];
-            int j = cell.j + direction[1];
-            if (IsValid(arr, m, n, i, j, cell) and not visited[i][j]) {
-                q.push({i, j, arr[i][j]});
+    vector<Cell> terminals;
+    int terminalmaxi = 0;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (arr[i][j] > terminalmaxi) {
+                terminalmaxi = arr[i][j];
+                terminals.clear();
+                terminals.push_back({i, j});
+            }
+            else if (arr[i][j] == terminalmaxi) {
+                terminals.push_back({i, j});
             }
         }
     }
-}
 
-vector<Cell> MinimalInitialVertices(vvi& arr) {
-    int n = arr.size(), count = 0;
-    priority_queue<Cell> cells;
-    vector<Cell> res;
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            cells.push({i, j, arr[i][j]});
-        }
-    }
+    vvi ans;
     vvb visited(n, vb(n));
-    while (not cells.empty()) {
-        Cell cell = cells.top(); cells.pop();
-        if (not visited[cell.i][cell.j]) {
-            res.push_back(cell);
-            bfs(arr, cell, visited);
+    for (const auto& terminal : terminals) {
+        if (not visited[terminal.i][terminal.j]) {
+            ans.push_back({terminal.i, terminal.j});
+            dfs(arr, visited, terminal);
         }
     }
-    return res;
+
+    return ans;
 }
 
 int main() { TimeMeasure _;
