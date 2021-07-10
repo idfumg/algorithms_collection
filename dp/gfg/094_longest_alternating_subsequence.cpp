@@ -84,6 +84,67 @@ int tab2(vi arr) {
     return max(dp[n - 1][n][0], dp[n - 1][n][1]) + 1;
 }
 
+int rec3(vi arr, int n, int isdown, int prev) {
+    if (n == 0) {
+        return 0;
+    }
+    if (isdown) {
+        if (arr[n - 1] < arr[prev - 1]) {
+            return max(rec3(arr, n - 1, 0, n) + 1, rec3(arr, n - 1, 1, prev));
+        }
+        else {
+            return rec3(arr, n - 1, 1, prev);
+        }
+    }
+    else {
+        if (arr[n - 1] > arr[prev - 1]) {
+            return max(rec3(arr, n - 1, 1, n) + 1, rec3(arr, n - 1, 0, prev));
+        }
+        else {
+            return rec3(arr, n - 1, 0, prev);
+        }
+    }
+}
+
+int rec3(vi arr) {
+    int ans = 0;
+    for (int i = arr.size(); i >= 1; --i) {
+        ans = max({ans, rec3(arr, i - 1, 1, i) + 1, rec3(arr, i - 1, 0, i) + 1});
+    }
+    return ans;
+}
+
+int tab3(vi arr) {
+    int n = arr.size();
+    vvvi dp(n + 1, vvi(n + 1, vi(2)));
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            for (int k = 0; k <= 1; ++k) {
+                if (k == 1) {
+                    if (arr[i - 1] < arr[j - 1]) {
+                        dp[i][j][k] = max(dp[i - 1][i][0] + 1, dp[i - 1][j][1]);
+                    }
+                    else {
+                        dp[i][j][k] = dp[i - 1][j][1];
+                    }
+                }
+                else {
+                    if (arr[i - 1] > arr[j - 1]) {
+                        dp[i][j][k] = max(dp[i - 1][i][1] + 1, dp[i - 1][j][0]);
+                    }
+                    else {
+                        dp[i][j][k] = dp[i - 1][j][0];
+                    }
+                }
+            }
+        }
+    }
+    int ans = 0;
+    for (int i = n; i >= 1; --i) {
+        ans = max({ans, dp[i - 1][i][1] + 1, dp[i - 1][i][0] + 1});
+    }
+    return ans;
+}
 
 int main() { TimeMeasure _; __x();
     vi arr1 = {1, 5, 4};
@@ -115,4 +176,16 @@ int main() { TimeMeasure _; __x();
     cout << tab2(arr3) << endl; // 6
     cout << tab2(arr4) << endl; // 6
     cout << tab2(arr5) << endl; // 3
+    cout << '\n';
+    cout << rec3(arr1) << endl; // 3
+    cout << rec3(arr2) << endl; // 2
+    cout << rec3(arr3) << endl; // 6
+    cout << rec3(arr4) << endl; // 6
+    cout << rec3(arr5) << endl; // 3
+    cout << '\n';
+    cout << tab3(arr1) << endl; // 3
+    cout << tab3(arr2) << endl; // 2
+    cout << tab3(arr3) << endl; // 6
+    cout << tab3(arr4) << endl; // 6
+    cout << tab3(arr5) << endl; // 3
 }
