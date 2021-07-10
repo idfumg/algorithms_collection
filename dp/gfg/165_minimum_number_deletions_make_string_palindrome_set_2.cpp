@@ -1,5 +1,15 @@
 #include "../../template.hpp"
 
+int rec(string s, int i, int j) {
+    if (i >= j) return 0;
+    if (s[i - 1] == s[j - 1]) return rec(s, i + 1, j - 1);
+    return min(rec(s, i + 1, j), rec(s, i, j - 1)) + 1;
+}
+
+int rec(string s) {
+    return rec(s, 1, s.size());
+}
+
 int tab(string s) {
     int n = s.size();
     vvi dp(n + 2, vi(n + 1));
@@ -26,6 +36,11 @@ int tab(string s) {
 }
 
 int main() { TimeMeasure _; __x();
+    cout << rec("baca") << endl; // 1
+    cout << rec("geek") << endl; // 2
+    cout << rec("aebcbda") << endl; // 2
+    cout << rec("geeksforgeeks") << endl; // 8
+    cout << endl;
     cout << tab("baca") << endl; // 1
     cout << tab("geek") << endl; // 2
     cout << tab("aebcbda") << endl; // 2
