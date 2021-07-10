@@ -1,34 +1,21 @@
 #include "../../template.hpp"
 
-int SmallestSubarrayWithGreaterSum(vi arr, int target) {
-    int window = 0;
-    int windowSize = 0;
-    int ans = INF;
-
+int SmallestSubarrayWithGreaterSum(vi arr, int key) {
     int n = arr.size();
-    int i = 0;
-    while (i < n) {
-        if (window <= target) {
-            window += arr[i++];
-            ++windowSize;
+    int window = 0;
+    int windowsize = 0;
+    int ans = INF;
+    for (int i = 0; i < n; ++i) {
+        if (window <= key) {
+            window += arr[i];
+            windowsize += 1;
         }
-        else {
-            window -= arr[i - windowSize];
-            --windowSize;
-        }
-        if (window > target) {
-            ans = min(ans, windowSize);
-        }
-    }
-
-    while (window > target) {
-        window -= arr[i - windowSize];
-        --windowSize;
-        if (window > target) {
-            ans = min(ans, windowSize);
+        while (window > key) {
+            ans = min(ans, windowsize + 1);
+            window -= arr[i - windowsize];
+            windowsize -= 1;
         }
     }
-
     return ans;
 }
 
