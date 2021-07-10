@@ -1,31 +1,20 @@
 #include "../../template.hpp"
 
-int PoliceThief(vector<char>& arr, int k) {
+int PoliceThief(vector<char> arr, int k) {
+    vi police, thieves;
     int n = arr.size();
-    vector<char> officers, thieves;
     for (int i = 0; i < n; ++i) {
-        if (arr[i] == 'P') {
-            officers.push_back(i);
-        }
-        else {
-            thieves.push_back(i);
-        }
+        if (arr[i] == 'P') police.push_back(i);
+        else if (arr[i] == 'T') thieves.push_back(i);
     }
-    int i = 0, j = 0, res = 0;
-    while (i < officers.size() and j < thieves.size()) {
-        if (abs(officers[i] - thieves[j]) <= k) {
-            ++i;
-            ++j;
-            ++res;
-        }
-        else if (officers[i] < thieves[j]) {
-            ++i;
-        }
-        else {
-            ++j;
-        }
+    int i = 0, j = 0, m = police.size(), ans = 0;
+    n = thieves.size();
+    while (i < m and j < n) {
+        if (abs(police[i] - thieves[j]) <= k) ++i, ++j, ++ans;
+        else if (police[i] < thieves[j]) ++j;
+        else ++i;
     }
-    return res;
+    return ans;
 }
 
 int main() { TimeMeasure _;
