@@ -1,63 +1,53 @@
 #include "../../template.hpp"
 
-struct Node {
-    int value = -100;
-    Node* left = nullptr;
-    Node* right = nullptr;
-    Node(int value) : value(value) {}
-};
-
-void inorder(Node* root) {
-    if (not root) return;
-    inorder(root->left);
-    cout << root->value << ' ';
-    inorder(root->right);
-}
+ostream& operator<<(ostream& os, Node* root) { print_inorder(root); return os; }
 
 Node* insert(Node* root, int value) {
     if (not root) return new Node(value);
     if (root->value > value) root->left = insert(root->left, value);
-    else if (root->value < value) root->right = insert(root->right, value);
+    if (root->value < value) root->right = insert(root->right, value);
     return root;
 }
 
-void inorder(Node* root, vi& arr) {
+void inorder(Node* root, vi& in) {
     if (not root) return;
-    inorder(root->left, arr);
-    arr.push_back(root->value);
-    inorder(root->right, arr);
+    inorder(root->left, in);
+    in.push_back(root->value);
+    inorder(root->right, in);
 }
 
+int find_mid(vi arr, int i, int j) {
+    return i + (j - i) / 2;
+}
+
+Node* construct(vi arr, int i, int j) {
+    if (i >= j) return nullptr;
+    int mid = find_mid(arr, i, j);
+    Node* root = new Node(arr[mid]);
+    root->left = construct(arr, i, mid);
+    root->right = construct(arr, mid + 1, j);
+    return root;
+}
 
 Node* MergeTrees(Node* root1, Node* root2) {
-    vi arr1;
-    inorder(root1, arr1);
+    vi in1, in2;
+    inorder(root1, in1);
+    inorder(root2, in2);
 
-    vi arr2;
-    inorder(root2, arr2);
-
-    if (arr1.size() > arr2.size()) swap(arr1, arr2);
-
-    int m = arr1.size();
-    int n = arr2.size();
-
-    int i = 0;
-    int j = 0;
-
-    Node* root = nullptr;
-
+    int k = 0, i = 0, j = 0, m = in1.size(), n = in2.size();
+    vi in(m + n);
     while (i < m and j < n) {
-        if (arr1[i] < arr2[j]) root = insert(root, arr1[i++]);
-        else root = insert(root, arr2[j++]);
+        if (in1[i] < in2[j]) in[k++] = in1[i++];
+        else in[k++] = in2[j++];
     }
-    while (i < m) root = insert(root, arr1[i++]);
-    while (j < n) root = insert(root, arr2[j++]);
+    while (i < m) in[k++] = in1[i++];
+    while (j < n) in[k++] = in2[j++];
 
-    return root;
+    return construct(in, 0, in.size());
 }
 
 int main() { TimeMeasure _; __x();
-/*
+    /*
      100
     /  \
   50   300
@@ -80,5 +70,5 @@ int main() { TimeMeasure _; __x();
     root2->right = new Node(120);
 
     Node* mergedTree = MergeTrees(root1, root2);
-    inorder(mergedTree); // 20 40 50 70 80 100 120 300
+    cout << mergedTree << endl; // 20 40 50 70 80 100 120 300
 }
