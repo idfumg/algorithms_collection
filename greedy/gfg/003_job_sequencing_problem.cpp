@@ -9,21 +9,30 @@ struct Job {
 using Jobs = vector<Job>;
 
 void JobScheduling(Jobs jobs) {
-    int n = 0;
-    for (const auto& job : jobs) {
-        n = max(n, job.deadline);
-    }
-    vi deadline(n + 1, 0);
-    sort(jobs.begin(), jobs.end(), [](auto a, auto b){return a.profit > b.profit;});
-    for (const auto& job : jobs) {
-        for (int idx = job.deadline; idx > 0; --idx) {
-            if (deadline[idx] == 0) {
-                deadline[idx] = job.profit;
-                break;
-            }
+    sort(jobs.begin(), jobs.end(), [](Job a, Job b){return a.profit > b.profit;});
+    int maxdeadline = 1;
+    for (Job job : jobs) {
+        if (job.deadline > maxdeadline) {
+            maxdeadline = job.deadline;
         }
     }
-    cout << reduce(deadline.begin(), deadline.end(), 0) << endl;
+    vi slots(maxdeadline + 1, 0);
+    for (Job job : jobs) {
+        int idx = job.deadline;
+        while (slots[idx] != 0 and idx != 0) {
+            --idx;
+        }
+        if (idx > 0) {
+            slots[idx] = job.profit;
+        }
+    }
+    int total = 0;
+    for (int profit : slots) {
+        if (profit > 0) {
+            total += profit;
+        }
+    }
+    cout << total << endl;
 }
 
 int main() { TimeMeasure _; __x();
@@ -35,7 +44,7 @@ int main() { TimeMeasure _; __x();
             {'d', 1, 25},
             {'e', 3, 15},
         };
-        JobScheduling(jobs); // 134
+        JobScheduling(jobs); // 142
     }
     {
         Jobs jobs = {
