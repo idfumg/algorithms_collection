@@ -7,33 +7,30 @@ void AddEdge(Graph& graph, int from, int to, int cost = 0) {
     graph[to].push_back(from);
 }
 
-void dfs(vvi graph, vi& disc, vi& lows, int& id, vi& parent, vi& ap, int at) {
-    disc[at] = lows[at] = id++;
-    int children = 0;
+void dfs(vvi graph, vi& lows, vi& disc, vi& parent, vi& ap, int& idx, int at) {
+    lows[at] = disc[at] = idx++;
+    int kids = 0;
     for (int adj : graph[at]) {
-        if (parent[at] == adj) {
-            continue;
-        }
-        else if (disc[adj] == -1) {
-            ++children;
+        if (lows[adj] == -1) {
+            ++kids;
             parent[adj] = at;
-            dfs(graph, disc, lows, id, parent, ap, adj);
+            dfs(graph, lows, disc, parent, ap, idx, adj);
             lows[at] = min(lows[at], lows[adj]);
+            if (parent[at] == -1 and kids > 1) ap[at] = 1;
             if (parent[at] != -1 and disc[at] <= lows[adj]) ap[at] = 1;
-            if (parent[at] == -1 and children > 1) ap[at] = 1;
         }
-        else {
+        else if (parent[at] != adj) {
             lows[at] = min(lows[at], disc[adj]);
         }
     }
 }
 
 void FindArticulationPoints(vvi graph) {
-    int n = graph.size(), id = 0;
-    vi disc(n, -1), lows(n), parent(n, -1), ap(n);
+    int n = graph.size(), idx = 0;
+    vi lows(n, -1), disc(n), parent(n, -1), ap(n);
     for (int at = 0; at < n; ++at) {
-        if (disc[at] == -1) {
-            dfs(graph, disc, lows, id, parent, ap, at);
+        if (lows[at] == -1) {
+            dfs(graph, lows, disc, parent, ap, idx, at);
         }
     }
     debugn(ap);
