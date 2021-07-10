@@ -1,27 +1,27 @@
 #include "../../template.hpp"
 
 int CountMinSteps(vi arr) {
+    if (count(arr.begin(), arr.end(), 0) != 0) return reduce(arr.begin(), arr.end(), 0);
+    if (count(arr.begin(), arr.end(), 1) != 0) return reduce(arr.begin(), arr.end(), 0);
     int n = arr.size();
-    int ans = 0;
-    int minNumber = INF;
-    int maxNumber = -INF;
+    int ans = arr.size(); // change all numbers into 1's with a cost of size of the array
+    int maxi = -INF;
+    int mini = +INF;
     for (int i = 0; i < n; ++i) {
-        if (arr[i] & 1 and arr[i] != 1) {
-            --arr[i];
-            ++ans;
+        if (arr[i] & 1) {
+            ++ans; // reduce into an even number with a cost of 1
+            maxi = max(maxi, arr[i] - 1);
+            mini = min(mini, arr[i] - 1);
         }
-        minNumber = min(minNumber, arr[i]);
-        maxNumber = max(maxNumber, arr[i]);
+        else {
+            maxi = max(maxi, arr[i]);
+            mini = min(mini, arr[i]);
+        }
     }
-    if (minNumber == 0 and maxNumber != 0) return INF; // we can't make it
-    if (minNumber == 0 and maxNumber == 0) return 0; // nothing to do
-    int p = log2(minNumber);
-    ans += p;
-    for (int i = 0; i < n; ++i) {
-        if (p > 0) {
-            arr[i] /= pow(2, p); // reduce by maximum power of 2 to 1 if we can
-        }
-        ans += arr[i]; // add 1s or whatever remains and we can't simplify it anymore
+    ans += log2(mini); // multiply 1s on 2 several times while we are below the minimum value
+    for (int i = 0; i < n; ++i) { // remove minimum value from the array and add remaining values
+        if (arr[i] & 1) ans += arr[i] - 1 - mini;
+        else ans += arr[i] - mini;
     }
     return ans;
 }
@@ -33,4 +33,5 @@ int main() { TimeMeasure _;
     cout << CountMinSteps({2, 5}) << '\n'; // 5
     cout << CountMinSteps({5, 3}) << '\n'; // 6
     cout << CountMinSteps({5, 1}) << '\n'; // 6
+    cout << CountMinSteps({5, 1, 0}) << '\n'; // 6
 }
