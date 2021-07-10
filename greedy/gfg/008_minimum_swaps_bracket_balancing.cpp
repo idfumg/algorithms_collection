@@ -1,28 +1,12 @@
 #include "../../template.hpp"
 
 void MinSwapsToBalanceBrackets(string s) {
-    int n = s.size();
-    int left = 0;
-    int right = 0;
-    int ans = 0;
+    int left = 0, right = 0, ans = 0;
     for (char ch : s) {
-        if (ch == '[') {
-            if (right == 0) {
-                ++left;
-            }
-            else {
-                ans += right;
-                --right;
-            }
-        }
-        else if (ch == ']') {
-            if (left == 0) {
-                ++right;
-            }
-            else {
-                --left;
-            }
-        }
+        if (ch == '[' and right == 0) ++left;
+        else if (ch == ']' and left == 0) ++right;
+        else if (ch == '[') ans += right, right -= 1;
+        else if (ch == ']') left -= 1;
     }
     cout << ans << endl;
 }
