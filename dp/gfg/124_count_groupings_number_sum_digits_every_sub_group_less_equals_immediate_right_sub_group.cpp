@@ -111,10 +111,7 @@ int tab_straight(const string& s) {
 
 int tab_straight2(string s) {
     int n = s.size();
-    int total = 0;
-    for (char ch : s) {
-        total += ch - '0';
-    }
+    int total = reduce(s.begin(), s.end(), 0) - n * '0';
     vvvi dp(n + 1, vvi(total + 10, vi(total + 10)));
     for (int i = 0; i <= n; ++i) {
         for (int j = total; j >= 0; --j) {
