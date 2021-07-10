@@ -1,32 +1,20 @@
 #include "../../template.hpp"
 
-struct Node {
-    int value = INF;
-    Node* left = nullptr;
-    Node* right = nullptr;
-    Node(int value) : value(value) {}
-};
+ostream& operator<<(ostream& os, Node* root) { print_inorder(root); return os; }
 
-void inorder(Node* root, int key, int& low, int& high) {
+void inorder(Node* root, int key, int& mini, int& maxi) {
     if (not root) return;
-    if (root->value == key) {
-        low = high = key;
-        return;
-    }
-    if (root->value > key) {
-        high = root->value;
-        inorder(root->left, key, low, high);
-    }
-    else if (root->value < key) {
-        low = root->value;
-        inorder(root->right, key, low, high);
-    }
+    if (key <= root->value) inorder(root->left, key, mini, maxi);
+    if (root->value >= key and root->value < maxi) maxi = root->value;
+    if (root->value <= key and root->value > mini) mini = root->value;
+    if (key >= root->value) inorder(root->right, key, mini, maxi);
 }
 
 void FloorAndCeilOfBST(Node* root, int key) {
-    int low = -1, high = -1;
-    inorder(root, key, low, high);
-    cout << low << ' ' << high << endl;
+    int mini = -INF;
+    int maxi = +INF;
+    inorder(root, key, mini, maxi);
+    debug(mini); debugn(maxi);
 }
 
 int main() { TimeMeasure _; __x();
